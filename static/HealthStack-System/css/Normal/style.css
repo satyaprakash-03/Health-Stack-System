@@ -1,3 +1,6 @@
+/* ── HealthStack Global Enhancement Layer (loaded after base styles) ── */
+@import url('healthstack-enhance.css');
+
 /*
 Author       : Dreamguys
 Template Name: Doccure - Bootstrap Template

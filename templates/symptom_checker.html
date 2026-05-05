@@ -1,0 +1,612 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI Symptom Checker — HealthStack</title>
+  <meta name="description" content="Check your symptoms with HealthStack's AI-powered symptom checker. Get instant health advice, precautions, and doctor recommendations." />
+
+  <!-- Favicon -->
+  <link type="image/x-icon" href="{% static 'HealthStack-System/images/Normal/favicon.png' %}" rel="icon" />
+
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="{% static 'HealthStack-System/css/Normal/bootstrap.min.css' %}" />
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+
+  <!-- Main CSS -->
+  <link rel="stylesheet" href="{% static 'HealthStack-System/css/Normal/style.css' %}" />
+
+  <style>
+    :root {
+      --primary: #1f4c7a;
+      --primary-light: #2a6cb0;
+      --primary-dark: #163a5f;
+      --accent: #00c4cc;
+      --accent-light: #e0f7f8;
+      --bg-page: #f0f6ff;
+      --bg-chat: #ffffff;
+      --msg-user-bg: #1f4c7a;
+      --msg-user-text: #ffffff;
+      --msg-bot-bg: #f0f6ff;
+      --msg-bot-text: #1a2a3a;
+      --border: #d0e4f5;
+      --shadow: 0 4px 24px rgba(31, 76, 122, 0.12);
+      --radius: 18px;
+      --radius-sm: 10px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg-page);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── HEADER ── */
+    .sc-header {
+      background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-light) 100%);
+      padding: 14px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.18);
+    }
+    .sc-header-brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: #fff;
+      text-decoration: none;
+    }
+    .sc-header-brand img { height: 40px; border-radius: 6px; }
+    .sc-header-brand span { font-size: 1.2rem; font-weight: 700; }
+    .sc-back-btn {
+      background: rgba(255,255,255,0.18);
+      color: #fff;
+      border: 1px solid rgba(255,255,255,0.35);
+      padding: 8px 18px;
+      border-radius: 30px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      text-decoration: none;
+      transition: background 0.2s, transform 0.15s;
+    }
+    .sc-back-btn:hover { background: rgba(255,255,255,0.3); color:#fff; transform:translateY(-1px); }
+
+    /* ── HERO BANNER ── */
+    .sc-hero {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+      color: #fff;
+      text-align: center;
+      padding: 36px 20px 28px;
+    }
+    .sc-hero .ai-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255,255,255,0.18);
+      border: 1px solid rgba(255,255,255,0.35);
+      border-radius: 30px;
+      padding: 6px 18px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+      margin-bottom: 14px;
+    }
+    .sc-hero h1 { font-size: 2rem; font-weight: 700; margin-bottom: 8px; }
+    .sc-hero p { font-size: 1rem; opacity: 0.9; max-width: 560px; margin: 0 auto; }
+
+    /* ── MAIN LAYOUT ── */
+    .sc-container {
+      max-width: 900px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 28px 16px 40px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    /* ── QUICK CHIPS ── */
+    .sc-chips-label {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--primary);
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      margin-bottom: 8px;
+    }
+    .sc-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .sc-chip {
+      background: #fff;
+      border: 1.5px solid var(--border);
+      color: var(--primary);
+      border-radius: 30px;
+      padding: 6px 16px;
+      font-size: 0.82rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+      user-select: none;
+    }
+    .sc-chip:hover {
+      background: var(--primary);
+      color: #fff;
+      border-color: var(--primary);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(31,76,122,0.2);
+    }
+
+    /* ── CHAT WINDOW ── */
+    .sc-chat-window {
+      background: var(--bg-chat);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      height: 500px;
+      overflow: hidden;
+    }
+
+    .sc-chat-title-bar {
+      background: linear-gradient(90deg, var(--primary) 0%, var(--primary-light) 100%);
+      color: #fff;
+      padding: 14px 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      flex-shrink: 0;
+    }
+    .sc-chat-title-bar .status-dot {
+      width: 10px; height: 10px;
+      background: #4cff91;
+      border-radius: 50%;
+      box-shadow: 0 0 0 3px rgba(76,255,145,0.3);
+      animation: pulse-dot 2s infinite;
+    }
+    @keyframes pulse-dot {
+      0%,100% { box-shadow: 0 0 0 3px rgba(76,255,145,0.3); }
+      50% { box-shadow: 0 0 0 6px rgba(76,255,145,0.1); }
+    }
+
+    /* Messages area */
+    .sc-messages {
+      flex: 1;
+      overflow-y: auto;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      scroll-behavior: smooth;
+    }
+    .sc-messages::-webkit-scrollbar { width: 6px; }
+    .sc-messages::-webkit-scrollbar-track { background: transparent; }
+    .sc-messages::-webkit-scrollbar-thumb { background: #c5d8ed; border-radius: 10px; }
+
+    /* Message bubbles */
+    .msg-row { display: flex; gap: 10px; align-items: flex-end; animation: fadeUp 0.3s ease; }
+    .msg-row.user { flex-direction: row-reverse; }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(10px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .msg-avatar {
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1rem;
+      flex-shrink: 0;
+    }
+    .msg-avatar.bot { background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%); color:#fff; }
+    .msg-avatar.user { background: #e6eef7; color: var(--primary); }
+
+    .msg-bubble {
+      max-width: 78%;
+      padding: 12px 16px;
+      border-radius: var(--radius);
+      font-size: 0.9rem;
+      line-height: 1.6;
+      position: relative;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+    .msg-bubble.bot {
+      background: var(--msg-bot-bg);
+      color: var(--msg-bot-text);
+      border-bottom-left-radius: 4px;
+      border: 1px solid var(--border);
+    }
+    .msg-bubble.user {
+      background: var(--msg-user-bg);
+      color: var(--msg-user-text);
+      border-bottom-right-radius: 4px;
+    }
+
+    /* Rich text formatting inside bot bubbles */
+    .msg-bubble.bot strong { color: var(--primary); font-weight: 700; }
+    .msg-bubble.bot em { color: #666; font-style: italic; }
+
+    /* Loading dots */
+    .typing-indicator {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      padding: 12px 18px;
+    }
+    .typing-indicator span {
+      width: 8px; height: 8px;
+      background: var(--primary-light);
+      border-radius: 50%;
+      animation: typing-bounce 1.2s infinite;
+    }
+    .typing-indicator span:nth-child(2) { animation-delay: 0.2s; }
+    .typing-indicator span:nth-child(3) { animation-delay: 0.4s; }
+    @keyframes typing-bounce {
+      0%, 60%, 100% { transform: translateY(0); opacity: 0.5; }
+      30% { transform: translateY(-6px); opacity: 1; }
+    }
+
+    /* Input bar */
+    .sc-input-bar {
+      border-top: 1px solid var(--border);
+      padding: 14px 16px;
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      background: #fff;
+      flex-shrink: 0;
+    }
+    .sc-input-bar input {
+      flex: 1;
+      border: 1.5px solid var(--border);
+      border-radius: 30px;
+      padding: 10px 18px;
+      font-size: 0.9rem;
+      font-family: 'Inter', sans-serif;
+      outline: none;
+      color: #222;
+      background: var(--bg-page);
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .sc-input-bar input:focus {
+      border-color: var(--primary-light);
+      box-shadow: 0 0 0 3px rgba(42,108,176,0.12);
+    }
+    .sc-send-btn {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+      color: #fff;
+      border: none;
+      width: 44px; height: 44px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: transform 0.15s, box-shadow 0.2s;
+      flex-shrink: 0;
+    }
+    .sc-send-btn:hover { transform: scale(1.08); box-shadow: 0 4px 14px rgba(31,76,122,0.3); }
+    .sc-send-btn:active { transform: scale(0.96); }
+    .sc-send-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+    /* ── INFO CARDS ── */
+    .sc-info-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 14px;
+    }
+    .sc-info-card {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      box-shadow: 0 2px 10px rgba(31,76,122,0.06);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .sc-info-card:hover { transform: translateY(-3px); box-shadow: 0 6px 20px rgba(31,76,122,0.12); }
+    .sc-info-card .icon {
+      width: 44px; height: 44px;
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.25rem;
+      flex-shrink: 0;
+    }
+    .sc-info-card .icon.blue { background: #e8f0fe; color: #1f4c7a; }
+    .sc-info-card .icon.teal { background: var(--accent-light); color: #00a0a8; }
+    .sc-info-card .icon.green { background: #e6f9ee; color: #1d8a4c; }
+    .sc-info-card .icon.orange { background: #fff3e6; color: #c8680a; }
+    .sc-info-card h6 { font-size: 0.82rem; font-weight: 600; color: var(--primary); margin-bottom: 2px; }
+    .sc-info-card p { font-size: 0.78rem; color: #666; margin: 0; }
+
+    /* ── DISCLAIMER ── */
+    .sc-disclaimer {
+      background: #fff8e6;
+      border: 1px solid #ffe0a0;
+      border-radius: var(--radius-sm);
+      padding: 14px 18px;
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      font-size: 0.82rem;
+      color: #7a5500;
+      line-height: 1.5;
+    }
+    .sc-disclaimer .disc-icon { font-size: 1.2rem; flex-shrink: 0; margin-top: 2px; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 600px) {
+      .sc-hero h1 { font-size: 1.4rem; }
+      .sc-chat-window { height: 420px; }
+      .msg-bubble { max-width: 92%; font-size: 0.85rem; }
+      .sc-header-brand span { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <div class="sc-header">
+    <a href="{% url 'hospital_home' %}" class="sc-header-brand">
+      <img src="{% static 'HealthStack-System/images/Normal/logo.jpg' %}" alt="HealthStack Logo" />
+      <span>HealthStack</span>
+    </a>
+    <a href="{% url 'hospital_home' %}" class="sc-back-btn">
+      <i class="fas fa-arrow-left me-1"></i> Back to Home
+    </a>
+  </div>
+
+  <!-- Hero Banner -->
+  <div class="sc-hero">
+    <div class="ai-badge">
+      <i class="fas fa-robot"></i> AI Health Assistant
+    </div>
+    <h1>Check Your Symptoms</h1>
+    <p>Describe how you're feeling and get instant, AI-powered health advice, precautions, and specialist recommendations.</p>
+  </div>
+
+  <!-- Main Container -->
+  <div class="sc-container">
+
+    <!-- Info Cards -->
+    <div class="sc-info-cards">
+      <div class="sc-info-card">
+        <div class="icon blue"><i class="fas fa-stethoscope"></i></div>
+        <div><h6>15+ Conditions</h6><p>Fever, cough, headache, and more</p></div>
+      </div>
+      <div class="sc-info-card">
+        <div class="icon teal"><i class="fas fa-shield-heart"></i></div>
+        <div><h6>Safe Precautions</h6><p>Evidence-based home care tips</p></div>
+      </div>
+      <div class="sc-info-card">
+        <div class="icon green"><i class="fas fa-user-doctor"></i></div>
+        <div><h6>Doctor Advice</h6><p>Know when to see a specialist</p></div>
+      </div>
+      <div class="sc-info-card">
+        <div class="icon orange"><i class="fas fa-bolt"></i></div>
+        <div><h6>Instant Results</h6><p>No wait, no appointment needed</p></div>
+      </div>
+    </div>
+
+    <!-- Quick Symptom Chips -->
+    <div>
+      <div class="sc-chips-label"><i class="fas fa-hand-pointer me-1"></i> Quick Select Symptoms</div>
+      <div class="sc-chips" id="sc-chips">
+        <span class="sc-chip" onclick="sendChip('I have a fever')">🌡️ Fever</span>
+        <span class="sc-chip" onclick="sendChip('I have a cough')">😮‍💨 Cough</span>
+        <span class="sc-chip" onclick="sendChip('I have a headache')">🤕 Headache</span>
+        <span class="sc-chip" onclick="sendChip('I have a cold')">🤧 Cold</span>
+        <span class="sc-chip" onclick="sendChip('I have a sore throat')">😔 Sore Throat</span>
+        <span class="sc-chip" onclick="sendChip('I am feeling dizzy')">😵 Dizziness</span>
+        <span class="sc-chip" onclick="sendChip('I have stomach pain')">🤢 Stomach Pain</span>
+        <span class="sc-chip" onclick="sendChip('I have fatigue and tiredness')">😴 Fatigue</span>
+        <span class="sc-chip" onclick="sendChip('I have a skin rash')">🔴 Rash</span>
+        <span class="sc-chip" onclick="sendChip('I have back pain')">🦴 Back Pain</span>
+        <span class="sc-chip" onclick="sendChip('I have chest pain')">❤️ Chest Pain</span>
+        <span class="sc-chip" onclick="sendChip('I have shortness of breath')">😮 Breathlessness</span>
+      </div>
+    </div>
+
+    <!-- Chat Window -->
+    <div class="sc-chat-window" id="sc-chat-window">
+      <div class="sc-chat-title-bar">
+        <div class="status-dot"></div>
+        <i class="fas fa-robot"></i>
+        <span>HealthStack AI — Symptom Assistant</span>
+      </div>
+
+      <div class="sc-messages" id="sc-messages">
+        <!-- Welcome message -->
+        <div class="msg-row bot">
+          <div class="msg-avatar bot"><i class="fas fa-robot"></i></div>
+          <div class="msg-bubble bot">👋 Hello! I'm the HealthStack AI Symptom Assistant.
+
+I can help you understand your symptoms, suggest precautions, and advise when to see a doctor.
+
+📝 <strong>Tell me your symptoms</strong> — for example:
+<em>"I have a fever and sore throat"</em>
+<em>"I feel dizzy and tired"</em>
+<em>"I have a cough and chest pain"</em>
+
+Or tap one of the quick-select chips above! ⬆️</div>
+        </div>
+      </div>
+
+      <!-- Input Bar -->
+      <div class="sc-input-bar">
+        <input
+          type="text"
+          id="sc-input"
+          placeholder="Describe your symptoms here… e.g. 'I have a fever and headache'"
+          maxlength="500"
+          autocomplete="off"
+        />
+        <button class="sc-send-btn" id="sc-send-btn" onclick="sendMessage()" title="Send">
+          <i class="fas fa-paper-plane"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Disclaimer -->
+    <div class="sc-disclaimer">
+      <div class="disc-icon">⚠️</div>
+      <div>
+        <strong>Medical Disclaimer:</strong> This AI symptom checker provides general health information for educational purposes only. It is <strong>not a substitute</strong> for professional medical advice, diagnosis, or treatment. Always consult a licensed healthcare provider for medical concerns. In case of emergency, call <strong>108</strong> immediately.
+      </div>
+    </div>
+
+  </div><!-- /.sc-container -->
+
+  <!-- jQuery -->
+  <script src="{% static 'HealthStack-System/js/Normal/jquery.min.js' %}"></script>
+  <!-- Bootstrap -->
+  <script src="{% static 'HealthStack-System/js/Normal/popper.min.js' %}"></script>
+  <script src="{% static 'HealthStack-System/js/Normal/bootstrap.min.js' %}"></script>
+
+  <script>
+    const CHAT_API_URL = "{% url 'ai-chat' %}";
+    const CSRF_TOKEN   = "{{ csrf_token }}";
+
+    const messagesEl = document.getElementById('sc-messages');
+    const inputEl    = document.getElementById('sc-input');
+    const sendBtn    = document.getElementById('sc-send-btn');
+
+    /* Scroll to bottom */
+    function scrollDown() {
+      messagesEl.scrollTop = messagesEl.scrollHeight;
+    }
+
+    /* Append a message bubble */
+    function appendMessage(text, role) {
+      const row    = document.createElement('div');
+      row.className = `msg-row ${role}`;
+
+      const avatar = document.createElement('div');
+      avatar.className = `msg-avatar ${role}`;
+      avatar.innerHTML = role === 'bot'
+        ? '<i class="fas fa-robot"></i>'
+        : '<i class="fas fa-user"></i>';
+
+      const bubble = document.createElement('div');
+      bubble.className = `msg-bubble ${role}`;
+      bubble.innerHTML = formatMarkdown(text);
+
+      row.appendChild(avatar);
+      row.appendChild(bubble);
+      messagesEl.appendChild(row);
+      scrollDown();
+      return bubble;
+    }
+
+    /* Minimal markdown renderer */
+    function formatMarkdown(text) {
+      return text
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+        .replace(/\*(.+?)\*/g, '<em>$1</em>')
+        .replace(/^---$/gm, '<hr style="border-color:#c5d8ed;margin:10px 0;">')
+        .replace(/\n/g, '<br>');
+    }
+
+    /* Show typing indicator */
+    function showTyping() {
+      const row = document.createElement('div');
+      row.className = 'msg-row bot';
+      row.id = 'typing-row';
+
+      const avatar = document.createElement('div');
+      avatar.className = 'msg-avatar bot';
+      avatar.innerHTML = '<i class="fas fa-robot"></i>';
+
+      const bubble = document.createElement('div');
+      bubble.className = 'msg-bubble bot';
+      bubble.style.padding = '0';
+
+      const indicator = document.createElement('div');
+      indicator.className = 'typing-indicator';
+      indicator.innerHTML = '<span></span><span></span><span></span>';
+
+      bubble.appendChild(indicator);
+      row.appendChild(avatar);
+      row.appendChild(bubble);
+      messagesEl.appendChild(row);
+      scrollDown();
+    }
+
+    /* Remove typing indicator */
+    function hideTyping() {
+      const el = document.getElementById('typing-row');
+      if (el) el.remove();
+    }
+
+    /* Send message */
+    async function sendMessage() {
+      const msg = inputEl.value.trim();
+      if (!msg) return;
+
+      appendMessage(msg, 'user');
+      inputEl.value = '';
+      sendBtn.disabled = true;
+      showTyping();
+
+      try {
+        const res = await fetch(CHAT_API_URL, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': CSRF_TOKEN,
+          },
+          body: JSON.stringify({ message: msg }),
+        });
+        const data = await res.json();
+        hideTyping();
+        appendMessage(data.reply || 'Sorry, I could not process your request.', 'bot');
+      } catch (err) {
+        hideTyping();
+        appendMessage('⚠️ Connection error. Please check your internet and try again.', 'bot');
+      } finally {
+        sendBtn.disabled = false;
+        inputEl.focus();
+        scrollDown();
+      }
+    }
+
+    /* Chip quick-send */
+    function sendChip(text) {
+      inputEl.value = text;
+      sendMessage();
+    }
+
+    /* Enter key to send */
+    inputEl.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        sendMessage();
+      }
+    });
+  </script>
+</body>
+</html>

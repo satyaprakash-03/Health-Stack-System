@@ -1,0 +1,549 @@
+{% load static %}
+<!-- ═══════════════════════════════════════════════════════════
+     FLOATING AI CHATBOT WIDGET — HealthStack
+     Included in footer.html — appears on every page
+     ═══════════════════════════════════════════════════════════ -->
+
+<style>
+  /* ── CSS VARIABLES ── */
+  :root {
+    --hs-primary:      #1f4c7a;
+    --hs-primary-lt:   #2a6cb0;
+    --hs-accent:       #00c4cc;
+    --hs-accent-lt:    #e0f7f8;
+    --hs-bg:           #f0f6ff;
+    --hs-border:       #cfe0f5;
+    --hs-shadow:       0 8px 32px rgba(31, 76, 122, 0.22);
+    --hs-radius:       18px;
+    --hs-radius-sm:    10px;
+    --hs-z:            9999;
+  }
+
+  /* ── FLOATING BUTTON ── */
+  #hs-fab {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--hs-primary) 0%, var(--hs-accent) 100%);
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.45rem;
+    box-shadow: 0 6px 24px rgba(31,76,122,0.35);
+    z-index: var(--hs-z);
+    transition: transform 0.25s cubic-bezier(.34,1.56,.64,1), box-shadow 0.2s;
+    outline: none;
+  }
+  #hs-fab:hover {
+    transform: scale(1.12);
+    box-shadow: 0 10px 30px rgba(31,76,122,0.45);
+  }
+  #hs-fab:active { transform: scale(0.96); }
+
+  /* Pulse ring */
+  #hs-fab::before {
+    content: '';
+    position: absolute;
+    width: 100%; height: 100%;
+    border-radius: 50%;
+    background: rgba(0, 196, 204, 0.35);
+    animation: hs-pulse-ring 2s infinite;
+    z-index: -1;
+  }
+  @keyframes hs-pulse-ring {
+    0%   { transform: scale(1); opacity: 0.8; }
+    70%  { transform: scale(1.55); opacity: 0; }
+    100% { transform: scale(1.55); opacity: 0; }
+  }
+
+  /* Notification badge */
+  #hs-fab .hs-notif {
+    position: absolute;
+    top: -2px;
+    right: -2px;
+    background: #f44c4c;
+    color: #fff;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    font-size: 0.6rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid #fff;
+    animation: hs-badge-pop 0.4s ease;
+  }
+  @keyframes hs-badge-pop {
+    0%   { transform: scale(0); }
+    80%  { transform: scale(1.2); }
+    100% { transform: scale(1); }
+  }
+
+  /* ── CHAT PANEL ── */
+  #hs-chat-panel {
+    position: fixed;
+    bottom: 105px;
+    right: 30px;
+    width: 370px;
+    max-width: calc(100vw - 40px);
+    background: #fff;
+    border-radius: var(--hs-radius);
+    box-shadow: var(--hs-shadow);
+    border: 1px solid var(--hs-border);
+    z-index: var(--hs-z);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    transform: scale(0.85) translateY(20px);
+    transform-origin: bottom right;
+    opacity: 0;
+    pointer-events: none;
+    transition: transform 0.3s cubic-bezier(.34,1.56,.64,1), opacity 0.25s ease;
+    max-height: 520px;
+  }
+  #hs-chat-panel.hs-open {
+    transform: scale(1) translateY(0);
+    opacity: 1;
+    pointer-events: all;
+  }
+  #hs-chat-panel.hs-minimized {
+    max-height: 56px;
+    overflow: hidden;
+  }
+
+  /* Panel header */
+  .hs-panel-header {
+    background: linear-gradient(90deg, var(--hs-primary) 0%, var(--hs-primary-lt) 100%);
+    color: #fff;
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+    cursor: pointer;
+    user-select: none;
+  }
+  .hs-panel-header .hs-dot {
+    width: 9px; height: 9px;
+    background: #4cff91;
+    border-radius: 50%;
+    flex-shrink: 0;
+    animation: hs-dot-pulse 2s infinite;
+  }
+  @keyframes hs-dot-pulse {
+    0%,100% { box-shadow: 0 0 0 2px rgba(76,255,145,0.3); }
+    50%      { box-shadow: 0 0 0 5px rgba(76,255,145,0.08); }
+  }
+  .hs-panel-header .hs-title {
+    flex: 1;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 600;
+  }
+  .hs-panel-header .hs-title small {
+    display: block;
+    font-size: 0.7rem;
+    font-weight: 400;
+    opacity: 0.85;
+  }
+  .hs-header-btns { display: flex; gap: 6px; }
+  .hs-header-btn {
+    background: rgba(255,255,255,0.18);
+    border: none;
+    color: #fff;
+    width: 28px; height: 28px;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: background 0.2s;
+    flex-shrink: 0;
+  }
+  .hs-header-btn:hover { background: rgba(255,255,255,0.30); }
+
+  /* Messages */
+  .hs-messages {
+    flex: 1;
+    overflow-y: auto;
+    padding: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    scroll-behavior: smooth;
+    background: var(--hs-bg);
+    min-height: 0;
+  }
+  .hs-messages::-webkit-scrollbar { width: 4px; }
+  .hs-messages::-webkit-scrollbar-thumb { background: #bcd2ea; border-radius: 10px; }
+
+  /* Rows */
+  .hs-msg-row { display: flex; gap: 8px; align-items: flex-end; animation: hs-fade-up 0.28s ease; }
+  .hs-msg-row.hs-user { flex-direction: row-reverse; }
+  @keyframes hs-fade-up {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .hs-avatar {
+    width: 30px; height: 30px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.85rem;
+    flex-shrink: 0;
+  }
+  .hs-avatar.bot { background: linear-gradient(135deg, var(--hs-primary), var(--hs-accent)); color:#fff; }
+  .hs-avatar.usr { background: #dde9f7; color: var(--hs-primary); }
+
+  .hs-bubble {
+    max-width: 82%;
+    padding: 9px 13px;
+    border-radius: 14px;
+    font-size: 0.82rem;
+    line-height: 1.55;
+    word-break: break-word;
+    white-space: pre-wrap;
+    font-family: 'Inter', sans-serif;
+  }
+  .hs-bubble.bot {
+    background: #fff;
+    color: #1a2a3a;
+    border: 1px solid var(--hs-border);
+    border-bottom-left-radius: 4px;
+  }
+  .hs-bubble.bot strong { color: var(--hs-primary); font-weight: 700; }
+  .hs-bubble.bot em { color: #666; font-style: italic; }
+  .hs-bubble.usr {
+    background: var(--hs-primary);
+    color: #fff;
+    border-bottom-right-radius: 4px;
+  }
+
+  /* Typing indicator */
+  .hs-typing {
+    display: flex; align-items: center; gap: 4px;
+    padding: 9px 13px;
+  }
+  .hs-typing span {
+    width: 7px; height: 7px;
+    background: var(--hs-primary-lt);
+    border-radius: 50%;
+    animation: hs-typing-bounce 1.2s infinite;
+  }
+  .hs-typing span:nth-child(2) { animation-delay: 0.2s; }
+  .hs-typing span:nth-child(3) { animation-delay: 0.4s; }
+  @keyframes hs-typing-bounce {
+    0%,60%,100% { transform: translateY(0); opacity: 0.5; }
+    30% { transform: translateY(-5px); opacity: 1; }
+  }
+
+  /* Quick chips inside widget */
+  .hs-quick-chips {
+    padding: 8px 14px 4px;
+    display: flex;
+    gap: 6px;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    background: var(--hs-bg);
+    border-top: 1px solid var(--hs-border);
+    scrollbar-width: none;
+    flex-shrink: 0;
+  }
+  .hs-quick-chips::-webkit-scrollbar { display: none; }
+  .hs-qchip {
+    background: #fff;
+    border: 1.5px solid var(--hs-border);
+    color: var(--hs-primary);
+    border-radius: 20px;
+    padding: 4px 11px;
+    font-size: 0.72rem;
+    font-weight: 500;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.18s;
+    font-family: 'Inter', sans-serif;
+  }
+  .hs-qchip:hover { background: var(--hs-primary); color:#fff; border-color: var(--hs-primary); }
+
+  /* Input bar */
+  .hs-input-bar {
+    display: flex;
+    gap: 8px;
+    padding: 10px 12px;
+    border-top: 1px solid var(--hs-border);
+    background: #fff;
+    align-items: center;
+    flex-shrink: 0;
+  }
+  .hs-input-bar input {
+    flex: 1;
+    border: 1.5px solid var(--hs-border);
+    border-radius: 20px;
+    padding: 8px 14px;
+    font-size: 0.82rem;
+    font-family: 'Inter', sans-serif;
+    outline: none;
+    color: #222;
+    background: var(--hs-bg);
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  .hs-input-bar input:focus {
+    border-color: var(--hs-primary-lt);
+    box-shadow: 0 0 0 3px rgba(42,108,176,0.10);
+  }
+  .hs-send-btn {
+    background: linear-gradient(135deg, var(--hs-primary) 0%, var(--hs-accent) 100%);
+    color: #fff;
+    border: none;
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: transform 0.15s, box-shadow 0.2s;
+    flex-shrink: 0;
+  }
+  .hs-send-btn:hover { transform: scale(1.1); box-shadow: 0 4px 12px rgba(31,76,122,0.25); }
+  .hs-send-btn:disabled { opacity: 0.45; cursor: not-allowed; transform: none; }
+
+  /* Full-page link */
+  .hs-fullpage-link {
+    display: block;
+    text-align: center;
+    padding: 8px 12px;
+    background: var(--hs-accent-lt);
+    color: var(--hs-primary);
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-decoration: none;
+    border-top: 1px solid var(--hs-border);
+    transition: background 0.2s;
+    flex-shrink: 0;
+    font-family: 'Inter', sans-serif;
+  }
+  .hs-fullpage-link:hover { background: #c8f0f2; color: var(--hs-primary); }
+
+  /* Mobile tweaks */
+  @media (max-width: 480px) {
+    #hs-chat-panel { right: 10px; bottom: 90px; width: calc(100vw - 20px); }
+    #hs-fab { right: 16px; bottom: 20px; }
+  }
+</style>
+
+<!-- ── FLOATING BUTTON ── -->
+<button id="hs-fab" onclick="hsToggleChat()" aria-label="Open AI Health Assistant">
+  <i class="fas fa-stethoscope" id="hs-fab-icon"></i>
+  <span class="hs-notif" id="hs-notif">1</span>
+</button>
+
+<!-- ── CHAT PANEL ── -->
+<div id="hs-chat-panel" role="dialog" aria-label="AI Health Assistant Chat">
+
+  <!-- Header (click to minimize) -->
+  <div class="hs-panel-header" onclick="hsToggleMinimize()">
+    <div class="hs-dot"></div>
+    <i class="fas fa-robot" style="font-size:1rem;"></i>
+    <div class="hs-title">
+      HealthStack AI
+      <small>Symptom Assistant • Online</small>
+    </div>
+    <div class="hs-header-btns" onclick="event.stopPropagation()">
+      <button class="hs-header-btn" onclick="hsToggleMinimize()" title="Minimize" id="hs-min-btn">
+        <i class="fas fa-minus"></i>
+      </button>
+      <button class="hs-header-btn" onclick="hsToggleChat()" title="Close">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- Messages -->
+  <div class="hs-messages" id="hs-messages"></div>
+
+  <!-- Quick Chips -->
+  <div class="hs-quick-chips" id="hs-qchips">
+    <span class="hs-qchip" onclick="hsSendChip('I have a fever')">🌡️ Fever</span>
+    <span class="hs-qchip" onclick="hsSendChip('I have a cough')">😮‍💨 Cough</span>
+    <span class="hs-qchip" onclick="hsSendChip('I have a headache')">🤕 Headache</span>
+    <span class="hs-qchip" onclick="hsSendChip('I have a sore throat')">😔 Sore Throat</span>
+    <span class="hs-qchip" onclick="hsSendChip('I feel dizzy')">😵 Dizziness</span>
+    <span class="hs-qchip" onclick="hsSendChip('I have stomach pain')">🤢 Stomach Pain</span>
+    <span class="hs-qchip" onclick="hsSendChip('I have chest pain')">❤️ Chest Pain</span>
+    <span class="hs-qchip" onclick="hsSendChip('I have back pain')">🦴 Back Pain</span>
+  </div>
+
+  <!-- Input bar -->
+  <div class="hs-input-bar">
+    <input
+      type="text"
+      id="hs-input"
+      placeholder="Describe your symptoms…"
+      maxlength="400"
+      autocomplete="off"
+    />
+    <button class="hs-send-btn" id="hs-send-btn" onclick="hsSendMessage()" title="Send">
+      <i class="fas fa-paper-plane"></i>
+    </button>
+  </div>
+
+  <!-- Full-page link -->
+  <a href="{% url 'symptom-checker' %}" class="hs-fullpage-link">
+    <i class="fas fa-expand-alt me-1"></i> Open Full Symptom Checker
+  </a>
+
+</div>
+
+<!-- ── WIDGET JAVASCRIPT ── -->
+<script>
+(function () {
+  const HS_API = "{% url 'ai-chat' %}";
+  const HS_CSRF = "{{ csrf_token }}";
+
+  let hsIsOpen     = false;
+  let hsMinimized  = false;
+  let hsInitiated  = false;
+
+  const panel     = document.getElementById('hs-chat-panel');
+  const messages  = document.getElementById('hs-messages');
+  const inputEl   = document.getElementById('hs-input');
+  const sendBtn   = document.getElementById('hs-send-btn');
+  const fabIcon   = document.getElementById('hs-fab-icon');
+  const notifBadge = document.getElementById('hs-notif');
+  const minBtn    = document.getElementById('hs-min-btn');
+
+  /* Toggle open/close */
+  window.hsToggleChat = function () {
+    hsIsOpen = !hsIsOpen;
+    panel.classList.toggle('hs-open', hsIsOpen);
+
+    if (hsIsOpen) {
+      fabIcon.className = 'fas fa-times';
+      notifBadge.style.display = 'none';
+      hsMinimized = false;
+      panel.classList.remove('hs-minimized');
+      minBtn.querySelector('i').className = 'fas fa-minus';
+      if (!hsInitiated) {
+        hsInitiated = true;
+        hsAppendMessage(
+          '👋 Hi there! I\'m your HealthStack AI assistant.\n\n' +
+          'Tell me your symptoms and I\'ll give you:\n' +
+          '• <strong>Possible conditions</strong>\n' +
+          '• <strong>Home care precautions</strong>\n' +
+          '• <strong>When to see a doctor</strong>\n\n' +
+          'How are you feeling today? 🏥',
+          'bot'
+        );
+      }
+      setTimeout(() => { messages.scrollTop = messages.scrollHeight; }, 100);
+      inputEl.focus();
+    } else {
+      fabIcon.className = 'fas fa-stethoscope';
+    }
+  };
+
+  /* Toggle minimize */
+  window.hsToggleMinimize = function () {
+    if (!hsIsOpen) return;
+    hsMinimized = !hsMinimized;
+    panel.classList.toggle('hs-minimized', hsMinimized);
+    minBtn.querySelector('i').className = hsMinimized ? 'fas fa-expand' : 'fas fa-minus';
+  };
+
+  /* Append message */
+  function hsAppendMessage(text, role) {
+    const row    = document.createElement('div');
+    row.className = `hs-msg-row hs-${role}`;
+
+    const avatar = document.createElement('div');
+    avatar.className = `hs-avatar ${role === 'bot' ? 'bot' : 'usr'}`;
+    avatar.innerHTML = role === 'bot'
+      ? '<i class="fas fa-robot"></i>'
+      : '<i class="fas fa-user"></i>';
+
+    const bubble = document.createElement('div');
+    bubble.className = `hs-bubble ${role === 'bot' ? 'bot' : 'usr'}`;
+    bubble.innerHTML = hsFmt(text);
+
+    row.appendChild(avatar);
+    row.appendChild(bubble);
+    messages.appendChild(row);
+    messages.scrollTop = messages.scrollHeight;
+  }
+
+  /* Minimal markdown */
+  function hsFmt(t) {
+    return t
+      .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+      .replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>')
+      .replace(/\*(.+?)\*/g,'<em>$1</em>')
+      .replace(/^---$/gm,'<hr style="border-color:#cfe0f5;margin:6px 0;">')
+      .replace(/\n/g,'<br>');
+  }
+
+  /* Typing */
+  function hsShowTyping() {
+    const row = document.createElement('div');
+    row.className = 'hs-msg-row hs-bot'; row.id = 'hs-typing';
+    const av = document.createElement('div');
+    av.className = 'hs-avatar bot'; av.innerHTML = '<i class="fas fa-robot"></i>';
+    const bub = document.createElement('div');
+    bub.className = 'hs-bubble bot'; bub.style.padding='0';
+    const ind = document.createElement('div');
+    ind.className = 'hs-typing';
+    ind.innerHTML = '<span></span><span></span><span></span>';
+    bub.appendChild(ind); row.appendChild(av); row.appendChild(bub);
+    messages.appendChild(row);
+    messages.scrollTop = messages.scrollHeight;
+  }
+  function hsHideTyping() {
+    const el = document.getElementById('hs-typing');
+    if (el) el.remove();
+  }
+
+  /* Send message */
+  window.hsSendMessage = async function () {
+    const msg = inputEl.value.trim();
+    if (!msg) return;
+    hsAppendMessage(msg, 'user');
+    inputEl.value = '';
+    sendBtn.disabled = true;
+    hsShowTyping();
+
+    try {
+      const res = await fetch(HS_API, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-CSRFToken': HS_CSRF },
+        body: JSON.stringify({ message: msg }),
+      });
+      const data = await res.json();
+      hsHideTyping();
+      hsAppendMessage(data.reply || 'Sorry, something went wrong.', 'bot');
+    } catch {
+      hsHideTyping();
+      hsAppendMessage('⚠️ Connection error. Please try again.', 'bot');
+    } finally {
+      sendBtn.disabled = false;
+      inputEl.focus();
+    }
+  };
+
+  /* Chip */
+  window.hsSendChip = function (text) {
+    inputEl.value = text;
+    hsSendMessage();
+  };
+
+  /* Enter key */
+  if (inputEl) {
+    inputEl.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); hsSendMessage(); }
+    });
+  }
+})();
+</script>

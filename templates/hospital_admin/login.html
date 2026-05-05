@@ -1,143 +1,134 @@
-{% load static%}
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
-    
-<!-- Mirrored from dreamguys.co.in/demo/doccure/admin/login.html by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 30 Nov 2019 04:12:46 GMT -->
 <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
-        <title>HealthStack</title>
-		
-		<!-- Favicon -->
-        <link rel="shortcut icon" type="image/x-icon" href="{% static 'HealthStack-System/images/Normal/favicon.png' %}"> 
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0"/>
+  <title>Admin Login — HealthStack</title>
+  <link rel="shortcut icon" type="image/x-icon" href="{% static 'HealthStack-System/images/Normal/favicon.png' %}"/>
+  <!-- Use admin CSS base for compatibility, then layer our modern CSS -->
+  <link rel="stylesheet" href="{% static 'HealthStack-System/css/admin/bootstrap.min.css' %}"/>
+  <link rel="stylesheet" href="{% static 'HealthStack-System/css/admin/font-awesome.min.css' %}"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="{% static 'HealthStack-System/plugins/Normal/fontawesome/css/all.min.css' %}"/>
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0;}
+    :root{--p:#4f1c7a;--a:#a855f7;--dk:#2d0d50;--b:#e9d5ff;}
+    body{background:linear-gradient(135deg,#1a0535 0%,#4f1c7a 55%,#7c3aed 100%) !important;min-height:100vh;font-family:'Inter',sans-serif;display:flex;align-items:center;justify-content:center;padding:30px 20px;}
+    .admin-outer{width:100%;max-width:920px;display:flex;border-radius:24px;overflow:hidden;box-shadow:0 24px 64px rgba(0,0,0,0.38);}
+    /* Left */
+    .admin-left{flex:0 0 360px;background:linear-gradient(155deg,#1a0535 0%,#4f1c7a 55%,#6d28d9 100%);padding:50px 36px;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;}
+    .admin-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.25);border-radius:30px;padding:6px 18px;font-size:0.73rem;font-weight:600;color:#fff;text-transform:uppercase;letter-spacing:1px;margin-bottom:20px;}
+    .admin-left h2{color:#fff;font-size:1.7rem;font-weight:800;margin-bottom:10px;line-height:1.25;}
+    .admin-left p{color:rgba(255,255,255,0.75);font-size:0.88rem;line-height:1.7;margin-bottom:28px;}
+    .admin-logo-img{width:120px;height:120px;border-radius:50%;border:3px solid rgba(255,255,255,0.25);object-fit:cover;margin-bottom:24px;background:rgba(255,255,255,0.1);display:flex;align-items:center;justify-content:center;}
+    .admin-icon-ring{width:110px;height:110px;border-radius:50%;background:rgba(255,255,255,0.10);border:2px solid rgba(255,255,255,0.25);display:flex;align-items:center;justify-content:center;font-size:3rem;color:rgba(255,255,255,0.9);margin-bottom:24px;}
+    .admin-feat{display:flex;align-items:center;gap:9px;background:rgba(255,255,255,0.08);border-radius:10px;padding:9px 14px;color:rgba(255,255,255,0.88);font-size:0.8rem;font-weight:500;margin-bottom:8px;text-align:left;width:100%;}
+    .admin-feat i{color:#c084fc;width:14px;flex-shrink:0;}
+    /* Right */
+    .admin-right{flex:1;background:#fff;padding:52px 48px;display:flex;flex-direction:column;justify-content:center;}
+    .admin-right-logo{display:flex;align-items:center;gap:10px;margin-bottom:28px;}
+    .admin-right-logo img{height:36px;border-radius:6px;}
+    .admin-right-logo span{font-size:1.15rem;font-weight:800;color:var(--p);}
+    .admin-right h1{font-size:1.6rem;font-weight:800;color:#1a0535;margin-bottom:4px;}
+    .admin-right h1 span{color:var(--a);}
+    .admin-sub{color:#64748b;font-size:0.82rem;margin-bottom:26px;}
+    .admin-sub a{color:var(--a);font-weight:600;text-decoration:none;}
+    .fgrp{margin-bottom:16px;}
+    .fgrp label{display:block;font-size:0.74rem;font-weight:600;color:#475569;margin-bottom:5px;text-transform:uppercase;letter-spacing:0.4px;}
+    .inp-wrap{position:relative;}
+    .inp-wrap i{position:absolute;left:13px;top:50%;transform:translateY(-50%);color:#94a3b8;font-size:0.88rem;pointer-events:none;}
+    .inp-wrap input{width:100%;padding:11px 13px 11px 38px;border:1.5px solid var(--b);border-radius:10px;font-size:0.875rem;font-family:'Inter',sans-serif;color:#1e293b;background:#faf5ff;transition:all 0.2s;outline:none;}
+    .inp-wrap input:focus{border-color:var(--p);background:#fff;box-shadow:0 0 0 3px rgba(79,28,122,0.12);}
+    .show-pw-row{display:flex;align-items:center;justify-content:space-between;margin-top:7px;}
+    .show-pw-label{display:flex;align-items:center;gap:6px;font-size:0.78rem;color:#64748b;cursor:pointer;}
+    .show-pw-label input[type=checkbox]{accent-color:var(--p);}
+    .btn-admin{width:100%;padding:13px;background:linear-gradient(135deg,var(--dk) 0%,var(--p) 55%,#7c3aed 100%);border:none;border-radius:12px;color:#fff;font-size:1rem;font-weight:700;font-family:'Inter',sans-serif;cursor:pointer;transition:all 0.22s;box-shadow:0 5px 18px rgba(79,28,122,0.30);margin-top:18px;}
+    .btn-admin:hover{transform:translateY(-2px);box-shadow:0 9px 26px rgba(79,28,122,0.42);}
+    .admin-links{display:flex;flex-direction:column;gap:10px;margin-top:18px;}
+    .admin-links a{display:flex;align-items:center;gap:8px;font-size:0.82rem;color:#64748b;text-decoration:none;font-weight:500;transition:color 0.2s;}
+    .admin-links a i{color:var(--a);font-size:0.8rem;}
+    .admin-links a:hover{color:var(--p);}
+    .admin-security-note{background:#faf5ff;border:1px solid var(--b);border-radius:10px;padding:12px 16px;font-size:0.78rem;color:#6b21a8;margin-top:16px;display:flex;align-items:flex-start;gap:8px;}
+    .admin-security-note i{color:var(--a);margin-top:1px;flex-shrink:0;}
+    @media(max-width:767px){.admin-outer{flex-direction:column;border-radius:16px;}.admin-left{display:none;}.admin-right{padding:30px 22px;}}
+  </style>
+</head>
+<body>
+  <div class="admin-outer">
+    <!-- Left Panel -->
+    <div class="admin-left">
+      <div class="admin-badge"><i class="fas fa-shield-alt"></i> Admin Portal</div>
+      <div class="admin-icon-ring"><i class="fas fa-user-shield"></i></div>
+      <h2>Hospital<br/>Administration</h2>
+      <p>Secure access to the HealthStack admin dashboard. Manage doctors, patients, hospitals, and system settings.</p>
+      <div style="width:100%;">
+        <div class="admin-feat"><i class="fas fa-users-cog"></i> Manage doctors &amp; patients</div>
+        <div class="admin-feat"><i class="fas fa-hospital-alt"></i> Control hospital settings</div>
+        <div class="admin-feat"><i class="fas fa-chart-bar"></i> View reports &amp; analytics</div>
+        <div class="admin-feat"><i class="fas fa-lock"></i> Secure encrypted access</div>
+      </div>
+    </div>
+    <!-- Right Panel -->
+    <div class="admin-right">
+      <div class="admin-right-logo">
+        <img src="{% static 'HealthStack-System/images/Normal/logo.jpg' %}" alt="HealthStack"/>
+        <span>HealthStack</span>
+      </div>
+      <h1>Admin <span>Sign In</span></h1>
+      <p class="admin-sub">
+        Authorized personnel only. &nbsp;
+        <a href="{% url 'hospital_home' %}"><i class="fas fa-home"></i> Return to Homepage</a>
+      </p>
 
-		<!-- Bootstrap CSS -->
-        <link rel="stylesheet" href="{% static 'HealthStack-System/css/admin/bootstrap.min.css' %}">  
-		
-		<!-- Fontawesome CSS -->
-        <link rel="stylesheet" href="{% static 'HealthStack-System/css/admin/font-awesome.min.css' %}"> 
-		
-		<!-- Main CSS -->
-        <link rel="stylesheet" href="{% static 'HealthStack-System/css/admin/style.css' %}"> 
-		
-		<!--[if lt IE 9]>
-			<script src="assets/js/html5shiv.min.js"></script>
-			<script src="assets/js/respond.min.js"></script>
-		<![endif]-->
-    </head>
-    <body>
-	
-		<!-- Main Wrapper -->
-        <div class="main-wrapper login-body">
-            <div class="login-wrapper">
-            	<div class="container">
-                	<div class="loginbox">
-                    	<div class="login-left">
-							<img class="img-fluid" src="{% static 'HealthStack-System/images/Normal/footer_logo.png' %}" alt="Logo"> 
-                        </div>
-                        <div class="login-right">
-							<div class="login-right-wrap">
-								<h1>Login</h1>
-								<p class="account-subtitle">Access to our dashboard</p>
-								
-								<!-- Form -->
-								<form action="{% url 'admin-login'%}" method="POST">
-									{% csrf_token %}
+      {% include 'message.html' %}
 
-									{% include 'message.html' %}
-
-
-
-									{% comment %} {% if messages %}
-                      
-                          				{% for message in messages %}
-                          					<div class="alert alert-danger alert-dismissible fade show" id="CredentialCheck" role="alert">
-                           						 <a href="#" class="alert-link"></a><a{% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}</a>
-                            					<button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                              						<span aria-hidden="true">&times;</span>
-                            					</button>
-                          					</div>
-                          				{% endfor %}
-                      
-                      				{% endif %} {% endcomment %}
-
-									<div class="form-group">
-										<input class="form-control" type="text" placeholder="Username" name="username">
-									</div>
-
-									<div class="form-group">
-										<input class="form-control" type="password" id="myInput" placeholder="Password" name= "password">
-										<input type="checkbox" class="mt-2" onclick="myFunction11()">Show Password
-									</div>
-
-									<div class="form-group">
-										<button class="btn btn-primary btn-block" type="submit">Login</button>
-									</div>
-								</form>
-								<!-- /Form -->
-								
-								<div class="text-center forgotpass"><a href="forgot-password.html">Forgot Password?</a></div>
-								<div class="login-or">
-									<span class="or-line"></span>
-									<span class="span-or">or</span>
-								</div>
-								  
-								<div class="text-center dont-have">Return to <a href="{%url 'hospital_home' %}">Homepage</a></div>
-								
-								<div class="text-center dont-have">Don't have an account? <a href="{%url 'admin_register'%}">Register</a></div>
-							</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+      <form action="{% url 'admin-login' %}" method="POST">
+        {% csrf_token %}
+        <div class="fgrp">
+          <label>Admin Username</label>
+          <div class="inp-wrap">
+            <i class="fas fa-user-shield"></i>
+            <input type="text" name="username" placeholder="Enter admin username" autocomplete="username"/>
+          </div>
         </div>
-		<!-- /Main Wrapper -->
+        <div class="fgrp">
+          <label>Password</label>
+          <div class="inp-wrap">
+            <i class="fas fa-lock"></i>
+            <input type="password" name="password" id="pwInput" placeholder="Enter password" autocomplete="current-password"/>
+          </div>
+          <div class="show-pw-row">
+            <label class="show-pw-label">
+              <input type="checkbox" onclick="togglePw()"/> Show password
+            </label>
+          </div>
+        </div>
+        <button type="submit" class="btn-admin">
+          <i class="fas fa-sign-in-alt me-2"></i> Sign In to Admin Panel
+        </button>
+      </form>
 
-		
-		
-		<!-- jQuery -->
-        <script src="{% static 'HealthStack-System/js/admin/jquery-3.2.1.min.js' %}"></script> 
-		
-		<!-- Bootstrap Core JS -->
-        <script src="{% static 'HealthStack-System/js/admin/popper.min.js' %}"></script> 
-        <script src="{% static 'HealthStack-System/js/admin/bootstrap.min.js' %}"></script> 
-		
-		<!-- Custom JS -->
-		<script src="{% static 'HealthStack-System/js/admin/script.js' %}"></script>
+      <div class="admin-links">
+        <a href="{% url 'admin_register' %}"><i class="fas fa-user-plus"></i> Register New Admin</a>
+        <a href="{% url 'login' %}"><i class="fas fa-user"></i> Patient Login</a>
+        <a href="{% url 'doctor-login' %}"><i class="fas fa-user-md"></i> Doctor Login</a>
+      </div>
 
-		<!-- alert js -->
-		<script>
-			var x = document.getElementById('CredentialCheck');
-			if (x.style.display === "none") {
-				x.style.display = "block";
-			}
-			$('#CredentialCheck').delay(4000).fadeOut('slow');     
-		</script>
+      <div class="admin-security-note">
+        <i class="fas fa-shield-alt"></i>
+        <span>This is a restricted area. Unauthorized access attempts are logged and monitored.</span>
+      </div>
+    </div>
+  </div>
 
-		<!-- show password js -->
-		<script>
-			function myFunction11() {
-			var x = document.getElementById('myInput');
-			if (x.type === "password") {
-				x.type = "text";
-			} else {
-				x.type = "password";
-			}
-			}
-			</script>
-		  
-
-		{% if messages %}
-		<script>
-			{% for message in messages %}
-				$(document).ready(function () {
-					$('.toast').toast('show');
-				});
-			{% endfor %}
-		</script>
-	  {% endif %}
-		
-    </body>
-
-<!-- Mirrored from dreamguys.co.in/demo/doccure/admin/login.html by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 30 Nov 2019 04:12:46 GMT -->
+  <script src="{% static 'HealthStack-System/js/admin/jquery-3.2.1.min.js' %}"></script>
+  <script src="{% static 'HealthStack-System/js/admin/popper.min.js' %}"></script>
+  <script src="{% static 'HealthStack-System/js/admin/bootstrap.min.js' %}"></script>
+  <script src="{% static 'HealthStack-System/js/admin/script.js' %}"></script>
+  <script>
+    function togglePw(){var x=document.getElementById('pwInput');x.type=x.type==='password'?'text':'password';}
+  </script>
+  {% if messages %}<script>{% for message in messages %}$(document).ready(function(){$('.toast').toast('show');});{% endfor %}</script>{% endif %}
+</body>
 </html>

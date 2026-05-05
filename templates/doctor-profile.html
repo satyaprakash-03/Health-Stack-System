@@ -1,524 +1,295 @@
 {% load static %}
-<!DOCTYPE html> 
+<!DOCTYPE html>
 <html lang="en">
-	
-<!-- doccure/doctor-profile.html  30 Nov 2019 04:12:16 GMT -->
 <head>
-		<meta charset="utf-8">
-		<title>HealthStack</title>
-		<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
-		
-		<!-- Favicons -->
-		<link type="image/x-icon" href=" {% static 'HealthStack-System/images/Normal/favicon.png' %}" rel="icon">
-		
-		<!-- Bootstrap CSS -->
-		<link rel="stylesheet" href="{% static 'HealthStack-System/css/Normal/bootstrap.min.css' %}">
-		
-		<!-- Fontawesome CSS -->
-		<link rel="stylesheet" href="{% static 'HealthStack-System/plugins/Normal/fontawesome/css/fontawesome.min.css' %}">
-		<link rel="stylesheet" href="{% static 'HealthStack-System/plugins/Normal/fontawesome/css/all.min.css' %}">
-	
-		<!-- Fancybox CSS -->
-		<link rel="stylesheet" href="{% static 'HealthStack-System/plugins/Normal/fancybox/jquery.fancybox.min.css'%}">
-		
-		<!-- Main CSS -->
-		<link rel="stylesheet" href="{% static 'HealthStack-System/css/Normal/style.css' %}">
-		
-		<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
-		<!--[if lt IE 9]>
-			<script src="assets/js/html5shiv.min.js"></script>
-			<script src="assets/js/respond.min.js"></script>
-		<![endif]-->
-		<style>
-			.zoom {
-			  transition: transform .2s; /* Animation */
-			}
-			
-			.zoom:hover {
-			  transform: scale(1.5); /* (150% zoom - Note: if the zoom is too large, it will go outside of the viewport) */
-			}
-		</style>
-	
-	</head>
-	<body>
-		<!-- Main Wrapper -->
-		<div class="main-wrapper">
-		
-			<!-- Header -->
-			<header class="header">
-				
-				{% if user.is_authenticated and user.is_patient %}
-				{% include 'patient_navbar.html' %}
-				{% endif %}
-				
-				{% if user.is_authenticated and user.is_doctor %}
-				{% include 'doctor-navbar.html' %}
-				{% endif %}
-			
-			
-			</header>
-			<!-- /Header -->
-			
-			<!-- Breadcrumb -->
-			<div class="breadcrumb-bar">
-				<div class="container-fluid">
-					<div class="row align-items-center">
-						<div class="col-md-12 col-12">
-							<nav aria-label="breadcrumb" class="page-breadcrumb">
-								<ol class="breadcrumb">
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Dr. {{doctor.name}} — HealthStack</title>
+  <link rel="icon" href="{% static 'HealthStack-System/images/Normal/favicon.png' %}" type="image/x-icon"/>
+  <link rel="stylesheet" href="{% static 'HealthStack-System/css/Normal/bootstrap.min.css' %}"/>
+  <link rel="stylesheet" href="{% static 'HealthStack-System/plugins/Normal/fontawesome/css/all.min.css' %}"/>
+  <link rel="stylesheet" href="{% static 'HealthStack-System/css/Normal/style.css' %}"/>
+  <link rel="stylesheet" href="{% static 'HealthStack-System/plugins/Normal/fancybox/jquery.fancybox.min.css' %}"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <style>
+    :root{--p:#1f4c7a;--a:#00b8c8;--g:linear-gradient(135deg,#1f4c7a,#00b8c8);}
+    body{background:#f0f6ff;font-family:'Inter',sans-serif;}
+    /* ── HERO BANNER ── */
+    .dp-hero{background:var(--g);padding:36px 0 80px;position:relative;}
+    .dp-hero::after{content:'';position:absolute;bottom:0;left:0;right:0;height:60px;background:#f0f6ff;clip-path:ellipse(55% 100% at 50% 100%);}
+    /* ── PROFILE CARD ── */
+    .dp-card{background:#fff;border-radius:20px;box-shadow:0 4px 28px rgba(31,76,122,0.12);overflow:hidden;margin-bottom:22px;}
+    .dp-avatar-wrap{display:flex;align-items:flex-end;gap:24px;padding:0 32px;margin-top:-56px;margin-bottom:20px;flex-wrap:wrap;}
+    .dp-avatar{width:120px;height:120px;border-radius:50%;border:5px solid #fff;object-fit:cover;box-shadow:0 4px 20px rgba(31,76,122,0.2);flex-shrink:0;}
+    .dp-avatar-ico{width:120px;height:120px;border-radius:50%;border:5px solid #fff;background:var(--g);display:flex;align-items:center;justify-content:center;font-size:2.8rem;color:#fff;box-shadow:0 4px 20px rgba(31,76,122,0.2);flex-shrink:0;}
+    .dp-name{font-size:1.55rem;font-weight:800;color:#0f2942;margin:0;}
+    .dp-spec{font-size:0.9rem;color:var(--a);font-weight:600;margin:2px 0;}
+    .dp-hosp{font-size:0.82rem;color:#64748b;}
+    /* Stats row */
+    .dp-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:#f0f6ff;}
+    .dp-stat{background:#fff;text-align:center;padding:18px 10px;}
+    .dp-stat .num{font-size:1.5rem;font-weight:800;color:var(--p);}
+    .dp-stat .lbl{font-size:0.72rem;color:#94a3b8;font-weight:600;text-transform:uppercase;letter-spacing:0.4px;}
+    /* Info grid */
+    .dp-info-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:22px 28px;}
+    .dp-info-item{display:flex;align-items:flex-start;gap:12px;background:#f8fafc;border-radius:12px;padding:14px 16px;}
+    .dp-info-item .ico{width:36px;height:36px;border-radius:10px;background:#e8f0fe;display:flex;align-items:center;justify-content:center;font-size:0.9rem;color:var(--p);flex-shrink:0;}
+    .dp-info-item .lbl{font-size:0.67rem;color:#94a3b8;font-weight:600;text-transform:uppercase;letter-spacing:0.3px;}
+    .dp-info-item .val{font-size:0.87rem;font-weight:600;color:#0f2942;}
+    /* Section head */
+    .dp-sec-head{display:flex;align-items:center;gap:10px;font-size:1rem;font-weight:800;color:#0f2942;padding:20px 28px 10px;border-bottom:1px solid #f0f6ff;}
+    .dp-sec-head i{color:var(--a);}
+    /* Timeline */
+    .dp-timeline{padding:16px 28px;}
+    .dp-tl-item{display:flex;gap:16px;margin-bottom:20px;}
+    .dp-tl-item:last-child{margin-bottom:0;}
+    .dp-tl-dot{width:44px;height:44px;border-radius:12px;background:linear-gradient(135deg,#e8f0fe,#dbeafe);display:flex;align-items:center;justify-content:center;font-size:1rem;color:var(--p);flex-shrink:0;}
+    .dp-tl-title{font-size:0.9rem;font-weight:700;color:#0f2942;margin:0;}
+    .dp-tl-sub{font-size:0.78rem;color:#64748b;margin:2px 0 0;}
+    .dp-tl-badge{display:inline-block;background:#e0f2fe;color:#0369a1;border-radius:20px;padding:2px 10px;font-size:0.7rem;font-weight:600;margin-top:4px;}
+    /* Book button */
+    .dp-book-btn{display:inline-flex;align-items:center;gap:8px;background:var(--g);color:#fff;border-radius:12px;padding:12px 24px;font-size:0.9rem;font-weight:700;text-decoration:none;transition:all 0.2s;box-shadow:0 4px 16px rgba(31,76,122,0.3);}
+    .dp-book-btn:hover{transform:translateY(-2px);color:#fff;box-shadow:0 8px 24px rgba(31,76,122,0.4);}
+    /* Review card */
+    .dp-review{background:#f8fafc;border-radius:14px;padding:16px;margin-bottom:14px;}
+    .dp-review:last-child{margin-bottom:0;}
+    .dp-review-head{display:flex;align-items:center;gap:12px;margin-bottom:10px;}
+    .dp-review-head img{width:42px;height:42px;border-radius:50%;object-fit:cover;}
+    .dp-review-head .ico{width:42px;height:42px;border-radius:50%;background:var(--g);display:flex;align-items:center;justify-content:center;color:#fff;font-size:1rem;}
+    /* About */
+    .dp-about{padding:16px 28px;font-size:0.88rem;color:#475569;line-height:1.75;}
+    /* Tab nav */
+    .dp-tabs{display:flex;gap:4px;padding:16px 28px 0;border-bottom:2px solid #f0f6ff;}
+    .dp-tab{padding:10px 20px;border:none;background:none;font-size:0.85rem;font-weight:600;color:#94a3b8;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px;transition:all 0.2s;font-family:'Inter',sans-serif;}
+    .dp-tab.active{color:var(--p);border-bottom-color:var(--p);}
+    .dp-tab-pane{display:none;padding:20px 0;}
+    .dp-tab-pane.active{display:block;}
+    @media(max-width:600px){.dp-stats{grid-template-columns:repeat(2,1fr);}.dp-info-grid{grid-template-columns:1fr;}.dp-avatar-wrap{flex-direction:column;align-items:center;text-align:center;}}
+  </style>
+</head>
+<body>
+<div class="main-wrapper">
+  <!-- Header -->
+  <header class="header">
+    {% if user.is_authenticated and user.is_patient %}{% include 'patient_navbar.html' %}{% endif %}
+    {% if user.is_authenticated and user.is_doctor %}{% include 'doctor-navbar.html' %}{% endif %}
+  </header>
 
-									{% if user.is_authenticated and user.is_patient %}
-									<li class="breadcrumb-item"><a href="{% url 'patient-dashboard' %}">Home</a></li>
-									{% endif %}
+  <!-- Hero -->
+  <div class="dp-hero">
+    <div class="container">
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb" style="background:transparent;padding:0;margin-bottom:8px;">
+          {% if user.is_patient %}<li class="breadcrumb-item"><a href="{% url 'patient-dashboard' %}" style="color:rgba(255,255,255,0.7);">Dashboard</a></li>{% endif %}
+          {% if user.is_doctor %}<li class="breadcrumb-item"><a href="{% url 'doctor-dashboard' %}" style="color:rgba(255,255,255,0.7);">Dashboard</a></li>{% endif %}
+          <li class="breadcrumb-item active" style="color:#fff;">Doctor Profile</li>
+        </ol>
+      </nav>
+      <h1 style="color:#fff;font-size:1.1rem;font-weight:600;margin:0;opacity:0.85;">👨‍⚕️ Doctor Profile</h1>
+    </div>
+  </div>
 
-									{% if user.is_authenticated and user.is_doctor %}
-									<li class="breadcrumb-item"><a href="{% url 'doctor-dashboard' %}">Home</a></li>
-									{% endif %}
+  <!-- Content -->
+  <div class="content" style="margin-top:-40px;position:relative;z-index:2;">
+    <div class="container-fluid">
+      <div class="row">
+        <!-- LEFT SIDEBAR -->
+        <div class="col-md-5 col-lg-4 col-xl-3">
+          {% if user.is_patient %}{% include 'patient-sidebar.html' %}{% endif %}
+          {% if user.is_doctor %}{% include 'doctor-sidebar.html' %}{% endif %}
+        </div>
 
+        <!-- MAIN -->
+        <div class="col-md-7 col-lg-8 col-xl-9">
 
-									<li class="breadcrumb-item active" aria-current="page">Doctor Profile</li>
-								</ol>
-							</nav>
-							<h2 class="breadcrumb-title">Doctor Profile</h2>
-						</div>
-					</div>
-				</div>
-			</div>
-			<!-- /Breadcrumb -->
-			
-			<!-- Page Content -->
-			<div class="content">
-				<div class="container-fluid">
-					<div class="row">
+          <!-- Profile Header Card -->
+          <div class="dp-card">
+            <div style="height:90px;background:var(--g);"></div>
+            <div class="dp-avatar-wrap">
+              {% if doctor.featured_image %}
+              <img src="{{doctor.featured_image.url}}" alt="Doctor" class="dp-avatar"/>
+              {% else %}
+              <div class="dp-avatar-ico"><i class="fas fa-user-md"></i></div>
+              {% endif %}
+              <div style="padding-bottom:8px;flex:1;">
+                <h2 class="dp-name">Dr. {{doctor.name|default:"—"}}</h2>
+                <div class="dp-spec">{{doctor.department_name.hospital_department_name|default:"—"}} · {{doctor.specialization.specialization_name|default:""}}</div>
+                <div class="dp-hosp"><i class="fas fa-hospital me-1"></i>{{doctor.hospital_name|default:"HealthStack Hospital"}}</div>
+                <div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap;">
+                  <span style="background:#d1fae5;color:#065f46;border-radius:20px;padding:3px 12px;font-size:0.72rem;font-weight:700;">
+                    <i class="fas fa-check-circle me-1"></i>Verified Doctor
+                  </span>
+                  <span style="background:#dbeafe;color:#1e40af;border-radius:20px;padding:3px 12px;font-size:0.72rem;font-weight:700;">
+                    <i class="fas fa-star me-1"></i>{{doctor.department}}
+                  </span>
+                </div>
+              </div>
+              {% if user.is_authenticated and user.is_patient %}
+              <div style="padding-bottom:12px;">
+                <a class="dp-book-btn" href="{% url 'booking' pk=doctor.doctor_id %}">
+                  <i class="fas fa-calendar-plus"></i> Book Appointment
+                </a>
+              </div>
+              {% endif %}
+            </div>
 
-						<div class="col-md-5 col-lg-4 col-xl-3 theiaStickySidebar">
-							<!-- Profile Sidebar -->
-							<div>
-								
-								{% if user.is_authenticated and user.is_patient %}
-								{% include 'patient-sidebar.html' %}
-								{% endif %}
-				
-								{% if user.is_authenticated and user.is_doctor %}
-								{% include 'doctor-sidebar.html' %}
-								{% endif %}
-							</div>
-							<!-- /Profile Sidebar -->
-						</div>
+            <!-- Stats -->
+            <div class="dp-stats">
+              <div class="dp-stat"><div class="num">{{doctor.consultation_fee|default:"—"}}</div><div class="lbl">Consult Fee</div></div>
+              <div class="dp-stat"><div class="num">{{doctor.report_fee|default:"—"}}</div><div class="lbl">Report Fee</div></div>
+              <div class="dp-stat"><div class="num">{{doctor.visiting_hour|default:"—"}}</div><div class="lbl">Visiting Hours</div></div>
+              <div class="dp-stat"><div class="num">{{doctor.gender|default:"—"}}</div><div class="lbl">Gender</div></div>
+            </div>
+          </div>
 
-						<div class="col-md-7 col-lg-8 col-xl-9">
+          <!-- Info Grid -->
+          <div class="dp-card">
+            <div class="dp-sec-head"><i class="fas fa-id-card"></i> Personal & Contact Info</div>
+            <div class="dp-info-grid">
+              <div class="dp-info-item">
+                <div class="ico"><i class="fas fa-envelope"></i></div>
+                <div><div class="lbl">Email</div><div class="val">{{doctor.email|default:"—"}}</div></div>
+              </div>
+              <div class="dp-info-item">
+                <div class="ico"><i class="fas fa-phone"></i></div>
+                <div><div class="lbl">Phone</div><div class="val">{{doctor.phone_number|default:"—"}}</div></div>
+              </div>
+              <div class="dp-info-item">
+                <div class="ico"><i class="fas fa-birthday-cake"></i></div>
+                <div><div class="lbl">Date of Birth</div><div class="val">{{doctor.dob|default:"—"}}</div></div>
+              </div>
+              <div class="dp-info-item">
+                <div class="ico"><i class="fas fa-id-badge"></i></div>
+                <div><div class="lbl">NID / Reg. No</div><div class="val">{{doctor.nid|default:"—"}}</div></div>
+              </div>
+              <div class="dp-info-item">
+                <div class="ico"><i class="fas fa-stethoscope"></i></div>
+                <div><div class="lbl">Department</div><div class="val">{{doctor.department_name.hospital_department_name|default:"—"}}</div></div>
+              </div>
+              <div class="dp-info-item">
+                <div class="ico"><i class="fas fa-hospital"></i></div>
+                <div><div class="lbl">Hospital</div><div class="val">{{doctor.hospital_name|default:"—"}}</div></div>
+              </div>
+            </div>
+          </div>
 
-							<!-- Doctor Widget -->
-							<div class="card">
-								<div class="card-body">
-									<div class="doctor-widget">
-										<div class="doc-info-left">
-											<div class="doctor-img">
-												<img src="{{doctor.featured_image.url}}" class="img-fluid" alt="User Image">
-											</div>
-											<div class="doc-info-cont">
-												<h4 class="doc-name">Dr. {{doctor.name}}</h4>
-												<p class="doc-speciality">{{doctor.department_name.hospital_department_name}}</p>
-												<h4 class="doc-hospital">{{doctor.hospital_name}}</h4>
-												<p class="doc-department">{{doctor.specialization.specialization_name}}</p>
-												{% comment %} <div class="rating">
-													<i class="fas fa-star filled"></i>
-													<i class="fas fa-star filled"></i>
-													<i class="fas fa-star filled"></i>
-													<i class="fas fa-star filled"></i>
-													<i class="fas fa-star"></i>
-													<span class="d-inline-block average-rating">(35)</span>
-												</div> {% endcomment %}
-												<div class="clinic-details">
-													<p class="doc-location"><i class="fas fa-map-marker-alt"></i> Lucknow, Uttar Pradesh</p>
+          <!-- Tabs: Overview / Certificate / Reviews -->
+          <div class="dp-card">
+            <div class="dp-tabs">
+              <button class="dp-tab active" onclick="showTab('overview',this)">📋 Overview</button>
+              <button class="dp-tab" onclick="showTab('certificate',this)">🎓 Certificate</button>
+              <button class="dp-tab" onclick="showTab('reviews',this)">💬 Reviews</button>
+            </div>
 
-													<ul class="clinic-gallery">
-														<li>
-															<a href="{% static 'HealthStack-System/images/Normal/gyno1.jpg'%}" data-fancybox="gallery">
-																<img src="{% static 'HealthStack-System/images/Normal/gyno1.jpg'%}" alt="Feature">
-															</a>
-														</li>
-														<li>
-															<a href="{% static 'HealthStack-System/images/Normal/gyno2.jpg'%}" data-fancybox="gallery">
-																<img  src="{% static 'HealthStack-System/images/Normal/gyno2.jpg'%}" alt="Feature">
-															</a>
-														</li>
-														<li>
-															<a href="{% static 'HealthStack-System/images/Normal/gyno3.jpg'%}" data-fancybox="gallery">
-																<img src="{% static 'HealthStack-System/images/Normal/gyno3.jpg'%}" alt="Feature">
-															</a>
-														</li>
-														<li>
-															<a href="{% static 'HealthStack-System/images/Normal/gyno4.jpg'%}" data-fancybox="gallery">
-																<img src="{% static 'HealthStack-System/images/Normal/gyno4.jpg'%}" alt="Feature">
-															</a>
-														</li>
-													</ul> 
+            <!-- Overview -->
+            <div id="overview" class="dp-tab-pane active">
+              <div class="dp-sec-head" style="padding-top:16px;"><i class="fas fa-info-circle"></i> About Dr. {{doctor.name}}</div>
+              <div class="dp-about">{{doctor.description|default:"No description available."}}</div>
 
-												</div>
-												{% comment %} <div class="clinic-services">
-													<span>obgyn specialist</span>
-													<span>ultra sonogram</span>
-												</div> {% endcomment %}
-											</div>
-										</div>
-										<div class="doc-info-right">
-											<div class="clini-infos">
-												<ul>
-													{% comment %} <li><i class="far fa-thumbs-up"></i> 99%</li>
-													<li><i class="far fa-comment"></i> 35 Feedback</li> {% endcomment %}
-													<li><i class="fas fa-map-marker-alt"></i> Lucknow, Uttar Pradesh</li>
-													<li><i class="far fa-money-bill-alt"></i>{{doctor.consultation_fee}} BDT</li>
-												</ul>
-											</div>
-											
+              <!-- Education -->
+              <div class="dp-sec-head"><i class="fas fa-graduation-cap"></i> Education</div>
+              <div class="dp-timeline">
+                {% for e in educations %}
+                <div class="dp-tl-item">
+                  <div class="dp-tl-dot"><i class="fas fa-graduation-cap"></i></div>
+                  <div>
+                    <div class="dp-tl-title">{{e.degree}}</div>
+                    <div class="dp-tl-sub">{{e.institute}}</div>
+                    <span class="dp-tl-badge">{{e.year_of_completion}}</span>
+                  </div>
+                </div>
+                {% empty %}
+                <p style="color:#94a3b8;font-size:0.85rem;">No education records added.</p>
+                {% endfor %}
+              </div>
 
-											{% if user.is_authenticated and user.is_patient %}
-											<div class="clinic-booking">
-												<a class="apt-btn" href="{% url 'booking' pk=doctor.doctor_id  %}">Book Your Appointment</a>
-											</div>
-											{% endif %}
+              <!-- Experience -->
+              <div class="dp-sec-head"><i class="fas fa-briefcase-medical"></i> Work Experience</div>
+              <div class="dp-timeline">
+                {% for e in experiences %}
+                <div class="dp-tl-item">
+                  <div class="dp-tl-dot"><i class="fas fa-hospital-user"></i></div>
+                  <div>
+                    <div class="dp-tl-title">{{e.designation}}</div>
+                    <div class="dp-tl-sub">{{e.work_place_name}}</div>
+                    <span class="dp-tl-badge">{{e.from_year}} – {{e.to_year}}</span>
+                  </div>
+                </div>
+                {% empty %}
+                <p style="color:#94a3b8;font-size:0.85rem;">No experience records added.</p>
+                {% endfor %}
+              </div>
+            </div>
 
+            <!-- Certificate -->
+            <div id="certificate" class="dp-tab-pane">
+              <div style="padding:24px;text-align:center;">
+                {% if doctor.certificate_image %}
+                <a href="{{doctor.certificate_image.url}}" data-fancybox="cert">
+                  <img src="{{doctor.certificate_image.url}}" alt="Certificate" class="img-fluid" style="max-width:500px;border-radius:12px;box-shadow:0 4px 20px rgba(0,0,0,0.1);"/>
+                </a>
+                <p style="margin-top:12px;font-size:0.78rem;color:#94a3b8;">Click to enlarge</p>
+                {% else %}
+                <div style="padding:40px;color:#94a3b8;"><i class="fas fa-certificate" style="font-size:3rem;margin-bottom:12px;display:block;"></i>No certificate uploaded.</div>
+                {% endif %}
+              </div>
+            </div>
 
+            <!-- Reviews -->
+            <div id="reviews" class="dp-tab-pane">
+              <!-- Write review (patients only) -->
+              {% if user.is_authenticated and user.is_patient %}
+              <div style="padding:20px 28px;border-bottom:1px solid #f0f6ff;">
+                <div class="dp-sec-head" style="padding:0 0 14px;border:none;"><i class="fas fa-pen"></i> Write a Review</div>
+                <form action="{% url 'doctor_review' pk=doctor.doctor_id %}" method="POST">
+                  {% csrf_token %}
+                  <input type="text" name="title" placeholder="Review Title" class="form-control mb-3" style="border-radius:10px;font-size:0.85rem;"/>
+                  <textarea name="message" rows="3" placeholder="Share your experience..." class="form-control mb-3" style="border-radius:10px;font-size:0.85rem;"></textarea>
+                  <button type="submit" style="background:var(--g);color:#fff;border:none;border-radius:10px;padding:10px 24px;font-weight:700;font-size:0.85rem;cursor:pointer;">Submit Review</button>
+                </form>
+              </div>
+              {% endif %}
+              <!-- Review list -->
+              <div style="padding:20px 28px;">
+                <div class="dp-sec-head" style="padding:0 0 14px;border:none;"><i class="fas fa-star"></i> Patient Reviews ({{doctor_review|length}})</div>
+                {% for review in doctor_review %}
+                <div class="dp-review">
+                  <div class="dp-review-head">
+                    {% if review.patient.featured_image %}<img src="{{review.patient.featured_image.url}}" alt=""/>{% else %}<div class="ico"><i class="fas fa-user"></i></div>{% endif %}
+                    <div>
+                      <div style="font-weight:700;font-size:0.88rem;color:#0f2942;">{{review.patient.name|default:review.patient.username}}</div>
+                      <div style="font-size:0.75rem;color:#94a3b8;">{{review.title}}</div>
+                    </div>
+                  </div>
+                  <p style="font-size:0.83rem;color:#475569;margin:0;">{{review.message}}</p>
+                </div>
+                {% empty %}
+                <p style="color:#94a3b8;font-size:0.85rem;text-align:center;padding:20px;">No reviews yet. Be the first to review!</p>
+                {% endfor %}
+              </div>
+            </div>
+          </div>
 
-										</div>
-									</div>
-								</div>
-							</div>
-							<!-- /Doctor Widget -->
-					
-							<!-- Doctor Details Tab -->
-							<div class="card">
-								<div class="card-body pt-0">
-								
-									<!-- Tab Menu -->
-									<nav class="user-tabs mb-4">
-										<ul class="nav nav-tabs nav-tabs-bottom nav-justified">
-											<li class="nav-item">
-												<a class="nav-link active" href="#doc_overview" data-toggle="tab">Overview</a>
-											</li>
-											<li class="nav-item">
-												<a class="nav-link" href="#doc_certificate" data-toggle="tab">Certificate</a>
-											</li>
-											<li class="nav-item">
-												<a class="nav-link" href="#doc_reviews" data-toggle="tab">Reviews</a>
-											</li>
-											
-										</ul>
-									</nav>
-									<!-- /Tab Menu -->
-									
-									<!-- Tab Content -->
-									<div class="tab-content pt-0">
-									
-										<!-- Overview Content -->
-										<div role="tabpanel" id="doc_overview" class="tab-pane fade show active">
-											<div class="row">
-												<div class="col-md-12 col-lg-9">
-												
-													<!-- About Details -->
-													<div class="widget about-widget">
-														<h4 class="widget-title">About Me</h4>
-														<p>{{doctor.description}}</p>
-													</div>
-													<!-- /About Details -->
-												
-													<!-- Education Details -->
-													<div class="widget education-widget">
-														<h4 class="widget-title">Education</h4>
-														<div class="experience-box">
-															<ul class="experience-list">
+        </div><!-- /col -->
+      </div><!-- /row -->
+    </div>
+  </div>
 
+  {% include 'footer.html' %}
+</div>
 
-																{% for e in educations %}
-																<li>
-																	<div class="experience-user">
-																		<div class="before-circle"></div>
-																	</div>
-																	<div class="experience-content">
-																		<div class="timeline-content">
-																			<a href="#/" class="name">{{e.degree}}</a>
-																			<div>{{e.institute}}</div>
-																			<span class="time">{{e.year_of_completion}}</span>
-																		</div>
-																	</div>
-																</li>
-																{% endfor %}
-															
-
-															</ul>
-														</div>
-													</div>
-													<!-- /Education Details -->
-											
-													<!-- Experience Details -->
-													<div class="widget experience-widget">
-														<h4 class="widget-title">Work & Experience</h4>
-														<div class="experience-box">
-															<ul class="experience-list">
-
-																{% for e in experiences %}
-																<li>
-																	<div class="experience-user">
-																		<div class="before-circle"></div>
-																	</div>
-																	<div class="experience-content">
-																		<div class="timeline-content">
-																			<a href="#/" class="name">{{e.designation}}</a>
-																			<span class="time">{{ e.work_place_name }}</span>
-																			<span class="time">{{ e.from_year }} - {{e.to_year}}</span>
-																		</div>
-																	</div>
-																</li>
-																{% endfor %}
-
-
-														
-
-
-															</ul>
-														</div>
-													</div>
-													<!-- /Experience Details -->
-										
-													
-													
-													
-													<!-- Specializations List -->
-													<div class="service-list">
-														<h4>Visiting Time</h4>
-														<ul class="clearfix">
-															<li>{{doctor.visiting_hour}}</li>
-															
-														</ul>
-													</div>
-													<!-- /Specializations List -->
-
-												</div>
-											</div>
-										</div>
-										<!-- /Overview Content -->
-
-										<!-- Certificate Content -->
-										<div role="tabpanel" id="doc_certificate" class="tab-pane fade">
-											<div class="row">
-
-												<div class="col-md-6 offset-md-3 zoom">
-													<img src="{{doctor.certificate_image.url}}" alt="logo" class="img-fluid">
-															
-												</div>
-												
-											</div>
-										</div>
-										<!-- /Certificate Content -->
-										
-										
-										
-										<!-- Reviews Content -->
-										<div role="tabpanel" id="doc_reviews" class="tab-pane fade">
-
-										
-											{% if user.is_authenticated and user.is_patient %}
-											<div class="write-review">
-												<h4>Write a review for <strong>Dr. {{doctor.name}}</strong></h4>
-												
-												<form action="{% url 'doctor_review' pk=doctor.doctor_id %}" method="POST" enctype="multipart/form-data">
-													{% csrf_token %}
-												  <div class="card card-table">
-													<div class="card-body">
-														<h4 class="card-title"><b>Review</b></h4>
-														<div class="doctor_review-info">
-															<div class="row form-row doctor_review-cont">
-														
-																<div class="col-12 col-md-10 col-lg-11">
-																	<div class="row form-row">
-																		  
-																		  
-																  <div class="col-12 col-md-6 col-lg-8">
-																	<div class="form-group">
-																		<label>Review Title</label>
-																		<input type="text" class="form-control" name="title" id="title">
-																	</div> 
-																  </div>
-																  <div class="col-12 col-md-6 col-lg-8">
-																	<div class="form-group">
-																		<label>Message</label>
-																		<textarea type="text" class="form-control" name="message" id="message" rows="5"></textarea>
-																	</div> 
-																  </div>
-																  
-																	  
-																	  
-														        </div>
-													        </div>
-                                                        </div>
-                                                    </div>
-											
-										           </div>
-								
-												   <div class="submit-section submit-btn-bottom">
-													<button type="submit" class="btn btn-primary submit-btn">Save Review</button>
-												   </div>
-												   	
-											    </form>
-											</div>
-											{% endif %}
-
-											{% if user.is_authenticated and user.is_doctor %}
-											<!-- Review Listing -->
-									<div class="widget review-listing">
-										<ul class="comments-list">
-										
-										
-											<div class="invoice-item invoice-table-wrap">
-												<div class="widget education-widget">
-													<h4 class="widget-title">Review</h4>
-													<div class="experience-box">
-														<ul class="experience-list">
-
-
-															<div class="invoice-item">
-																<div class="row">
-																	<div class="col-md-6">
-																		<div class="invoice-info">
-																			<strong class="customer-text"></strong>
-													                        {% for review in doctor_review %}
-																				<!-- Comment List -->
-																				<li>
-																					<div class="comment">
-																						<img class="avatar avatar-sm rounded-circle" alt="User Image" src="{{review.patient.featured_image.url}}">
-																						<div class="comment-body">
-																							<div class="meta-data">
-																								<span class="comment-author">{{review.patient.name}}</span>
-																								
-																							</div>
-																							<p class="recommended"><i class="far fa-thumbs-up"></i> {{review.title}}</p>
-																							<p class="comment-content">{{review.message}}
-																							
-																							</p>
-																							
-																						</div>
-																					</div>	
-																				</li>
-																				<!-- /Comment List -->
-																			
-																			{% endfor %}
-													
-																		</div>
-																	</div>
-														
-																</div>
-															</div>
-															
-															
-														
-
-														</ul>
-													</div>
-												</div>
-											</div>
-											{% endif %}
-										</div>
-										<!-- /Reviews Content -->
-										
-										
-								
-										
-									</div>
-								</div>
-						</div>
-					</div>
-					<!-- /Doctor Details Tab -->
-
-				</div>
-			</div>		
-			<!-- /Page Content -->
-   
-			<!-- Footer -->
-			{% include 'footer.html' %}
-			<!-- /Footer -->
-		   
-		</div>
-		<!-- /Main Wrapper -->
-		
-		<!-- Voice Call Modal -->
-		<div class="modal fade call-modal" id="voice_call">
-			<div class="modal-dialog modal-dialog-centered" role="document">
-				<div class="modal-content">
-					<div class="modal-body">
-						<!-- Outgoing Call -->
-						<div class="call-box incoming-box">
-							<div class="call-wrapper">
-								<div class="call-inner">
-									<div class="call-user">
-										<img alt="User Image" src="assets/img/doctors/doctor-thumb-02.jpg" class="call-avatar">
-										<h4>Dr. Darren Elder</h4>
-										<span>Connecting...</span>
-									</div>							
-									<div class="call-items">
-										<a href="javascript:void(0);" class="btn call-item call-end" data-dismiss="modal" aria-label="Close"><i class="material-icons">call_end</i></a>
-										<a href="voice-call.html" class="btn call-item call-start"><i class="material-icons">call</i></a>
-									</div>
-								</div>
-							</div>
-						</div>
-						<!-- Outgoing Call -->
-
-					</div>
-				</div>
-			</div>
-		</div>
-		<!-- /Voice Call Modal -->
-		
-		<!-- Video Call Modal -->
-		<div class="modal fade call-modal" id="video_call">
-			<div class="modal-dialog modal-dialog-centered" role="document">
-				<div class="modal-content">
-					<div class="modal-body">
-					
-						<!-- Incoming Call -->
-						<div class="call-box incoming-box">
-							<div class="call-wrapper">
-								<div class="call-inner">
-									<div class="call-user">
-										<img class="call-avatar" src="assets/img/doctors/doctor-thumb-02.jpg" alt="User Image">
-										<h4>Dr. Darren Elder</h4>
-										<span>Calling ...</span>
-									</div>							
-									<div class="call-items">
-										<a href="javascript:void(0);" class="btn call-item call-end" data-dismiss="modal" aria-label="Close"><i class="material-icons">call_end</i></a>
-										<a href="video-call.html" class="btn call-item call-start"><i class="material-icons">videocam</i></a>
-									</div>
-								</div>
-							</div>
-						</div>
-						<!-- /Incoming Call -->
-						
-					</div>
-				</div>
-			</div>
-		</div>
-		<!-- Video Call Modal -->
-		
-	
-		<!-- jQuery -->
-		<script src="{% static 'HealthStack-System/js/Normal/jquery.min.js' %}"></script>
-		
-		<!-- Bootstrap Core JS -->
-		<script src="{% static 'HealthStack-System/js/Normal/popper.min.js' %}"></script>
-		<script src="{% static 'HealthStack-System/js/Normal/bootstrap.min.js' %}"></script>
-		
-		<!-- Fancybox JS -->
-		<script src="{% static 'HealthStack-System/plugins/Normal/fancybox/jquery.fancybox.min.js'%}"></script>
-		
-
-		<!-- Custom JS -->
-		<script src="{% static 'HealthStack-System/Outside_assets/js/script.js' %}"></script>
-
-		<!-- Searchbar JS -->
-		<script src="{% static 'HealthStack-System/js/Normal/sidebar.js' %}"></script>
-		
-	</body>
-
-<!-- doccure/doctor-profile.html  30 Nov 2019 04:12:16 GMT -->
+<script src="{% static 'HealthStack-System/js/Normal/jquery.min.js' %}"></script>
+<script src="{% static 'HealthStack-System/js/Normal/popper.min.js' %}"></script>
+<script src="{% static 'HealthStack-System/js/Normal/bootstrap.min.js' %}"></script>
+<script src="{% static 'HealthStack-System/plugins/Normal/fancybox/jquery.fancybox.min.js' %}"></script>
+<script src="{% static 'HealthStack-System/Outside_assets/js/script.js' %}"></script>
+<script>
+function showTab(id, btn) {
+  document.querySelectorAll('.dp-tab-pane').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.dp-tab').forEach(b => b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  btn.classList.add('active');
+}
+</script>
+</body>
 </html>

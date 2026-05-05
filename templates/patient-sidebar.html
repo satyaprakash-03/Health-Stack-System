@@ -1,89 +1,166 @@
 {% load static %}
+<style>
+  .hs-sidebar-wrap {
+    background: #fff;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(31,76,122,0.10);
+    border: 1px solid #dde9f7;
+    margin-bottom: 20px;
+  }
+  /* Profile Hero */
+  .hs-sidebar-hero {
+    background: linear-gradient(155deg, #163a5f 0%, #1f4c7a 60%, #0891b2 100%);
+    padding: 28px 20px 22px;
+    text-align: center;
+    position: relative;
+  }
+  .hs-sidebar-avatar {
+    width: 88px; height: 88px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid rgba(255,255,255,0.55);
+    box-shadow: 0 4px 18px rgba(0,0,0,0.22);
+    display: block;
+    margin: 0 auto 12px;
+    transition: transform 0.2s;
+  }
+  .hs-sidebar-avatar:hover { transform: scale(1.04); }
+  .hs-sidebar-name {
+    color: #fff;
+    font-size: 1rem;
+    font-weight: 700;
+    margin: 0 0 4px;
+    font-family: 'Inter', sans-serif;
+  }
+  .hs-sidebar-meta {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 6px;
+    margin-top: 8px;
+  }
+  .hs-sidebar-pill {
+    background: rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.3);
+    border-radius: 20px;
+    padding: 3px 10px;
+    font-size: 0.72rem;
+    color: rgba(255,255,255,0.9);
+    font-family: 'Inter', sans-serif;
+  }
+  /* Nav */
+  .hs-sidebar-nav { padding: 10px; }
+  .hs-sidebar-nav ul { list-style: none; margin: 0; padding: 0; }
+  .hs-sidebar-nav ul li { margin-bottom: 3px; }
+  .hs-sidebar-nav ul li a {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    padding: 10px 14px;
+    border-radius: 10px;
+    color: #475569;
+    font-size: 0.875rem;
+    font-weight: 500;
+    text-decoration: none;
+    font-family: 'Inter', sans-serif;
+    transition: all 0.2s;
+  }
+  .hs-sidebar-nav ul li a i {
+    width: 18px;
+    text-align: center;
+    font-size: 0.9rem;
+    color: #94a3b8;
+    transition: color 0.2s;
+    flex-shrink: 0;
+  }
+  .hs-sidebar-nav ul li a:hover {
+    background: #e0f7f8;
+    color: #1f4c7a;
+  }
+  .hs-sidebar-nav ul li a:hover i { color: #00c4cc; }
+  .hs-sidebar-nav ul li.hs-active > a {
+    background: linear-gradient(135deg, #1f4c7a, #2a6cb0);
+    color: #fff;
+    box-shadow: 0 4px 14px rgba(31,76,122,0.25);
+  }
+  .hs-sidebar-nav ul li.hs-active > a i { color: #fff; }
+  .hs-sidebar-nav ul li.hs-logout > a {
+    color: #dc2626;
+    background: #fff5f5;
+  }
+  .hs-sidebar-nav ul li.hs-logout > a i { color: #dc2626; }
+  .hs-sidebar-nav ul li.hs-logout > a:hover { background: #fee2e2; }
+  .hs-sidebar-divider {
+    height: 1px;
+    background: #dde9f7;
+    margin: 8px 10px;
+  }
+  /* AI Checker shortcut */
+  .hs-sidebar-ai {
+    margin: 0 10px 10px;
+    background: linear-gradient(135deg, #0d2d50, #00b8c8);
+    border-radius: 12px;
+    padding: 14px 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .hs-sidebar-ai:hover { transform: translateY(-2px); box-shadow: 0 6px 18px rgba(0,196,204,0.35); }
+  .hs-sidebar-ai i { color: #4cffb0; font-size: 1.1rem; }
+  .hs-sidebar-ai span { color: #fff; font-size: 0.82rem; font-weight: 600; font-family: 'Inter', sans-serif; }
+</style>
 
-    <div class="profile-sidebar">
-      <div class="widget-profile pro-widget-content">
-        <div class="profile-info-widget">
-          <a href="#" class="booking-doc-img">
-            <img
-              src="{{ patient.featured_image.url }}"
-              alt="User Image"
-            />
-          </a>
-          <div class="profile-det-info">
-            <h3>{{patient.name}}</h3>
-            <div class="patient-details">
-              <h5>
-                <i class="fas fa-birthday-cake"></i> {{ patient.dob }}
-              </h5>
-              <h5 class="mb-0">
-                <i class="fas fa-map-marker-alt"></i>
-                {{ patient.address }}
-              </h5>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="dashboard-widget">
-        <nav class="dashboard-menu sidebar">
-          <ul>
-            <li class="active">
-              <a href="{% url 'patient-dashboard' %}">
-                <i class="fas fa-columns"></i>
-                <span>Dashboard</span>
-              </a>
-            </li>
-
-            <li class="nav-item has-submenu">
-              <a href="{% url 'search' %}">
-                <i class="fas fa-user-md"></i>
-                <span>Search Doctor</span>
-              </a>
-            </li>
-            
-            <li class="has-submenu">
-              <a href="{% url 'pharmacy_shop' %}" class="nav-link">
-                <i class="fas fa-capsules"></i>
-                <span>Medical Shop</span>
-              </a>
-
-            </li>
-            
-            <li>
-                <a href="{% url 'multiple-hospital' %}">
-                  <i class="fas fa-hospital"></i>
-                  <span>Multiple Hospital</span>
-                </a>
-            </li>
-
-            <li>
-              <a href="{% url 'doctor-test-list'%}" target="_blank">
-                <i class="fas fa-hourglass-start"></i>
-                <span>Test Information</span>
-              </a>
-            </li>
-        
-            <li>            
-              <a href="{% url 'profile-settings' %}">
-                <i class="fas fa-user-cog"></i>
-                <span>Profile Settings</span>
-              </a>
-            </li>
-            <li>
-              <a href="{% url 'change-password' pk=user.id%}">
-                <i class="fas fa-lock"></i>
-                <span>Change Password</span>
-              </a>
-            </li>
-            <li>
-              <a href="{% url 'logout' %}">
-                <i class="fas fa-sign-out-alt"></i>
-                <span>Logout</span>
-              </a>
-            </li>
-          </ul>
-
-
-        </nav>
-      </div>
+<div class="hs-sidebar-wrap">
+  <!-- Hero -->
+  <div class="hs-sidebar-hero">
+    <img class="hs-sidebar-avatar" src="{{ patient.featured_image.url }}" alt="Patient Photo"/>
+    <p class="hs-sidebar-name">{{ patient.name }}</p>
+    <div class="hs-sidebar-meta">
+      {% if patient.dob %}<span class="hs-sidebar-pill"><i class="fas fa-birthday-cake me-1"></i>{{ patient.dob }}</span>{% endif %}
+      {% if patient.blood_group %}<span class="hs-sidebar-pill"><i class="fas fa-tint me-1"></i>{{ patient.blood_group }}</span>{% endif %}
+      {% if patient.address %}<span class="hs-sidebar-pill"><i class="fas fa-map-marker-alt me-1"></i>{{ patient.address|truncatechars:18 }}</span>{% endif %}
     </div>
+  </div>
 
+  <!-- Nav -->
+  <div class="hs-sidebar-nav">
+    <ul>
+      <li class="hs-active">
+        <a href="{% url 'patient-dashboard' %}"><i class="fas fa-th-large"></i><span>Dashboard</span></a>
+      </li>
+      <li>
+        <a href="{% url 'search' %}"><i class="fas fa-user-md"></i><span>Find a Doctor</span></a>
+      </li>
+      <li>
+        <a href="{% url 'multiple-hospital' %}"><i class="fas fa-hospital"></i><span>Hospitals</span></a>
+      </li>
+      <li>
+        <a href="{% url 'pharmacy_shop' %}"><i class="fas fa-capsules"></i><span>Medical Shop</span></a>
+      </li>
+      <li>
+        <a href="{% url 'doctor-test-list' %}" target="_blank"><i class="fas fa-vial"></i><span>Lab Tests</span></a>
+      </li>
+      <div class="hs-sidebar-divider"></div>
+      <li>
+        <a href="{% url 'profile-settings' %}"><i class="fas fa-user-cog"></i><span>Profile Settings</span></a>
+      </li>
+      <li>
+        <a href="{% url 'change-password' pk=user.id %}"><i class="fas fa-lock"></i><span>Change Password</span></a>
+      </li>
+      <div class="hs-sidebar-divider"></div>
+      <li class="hs-logout">
+        <a href="{% url 'logout' %}"><i class="fas fa-sign-out-alt"></i><span>Logout</span></a>
+      </li>
+    </ul>
+  </div>
+
+  <!-- AI Symptom Checker Shortcut -->
+  <a href="{% url 'symptom-checker' %}" class="hs-sidebar-ai">
+    <i class="fas fa-robot"></i>
+    <span>AI Symptom Checker</span>
+    <i class="fas fa-arrow-right" style="margin-left:auto;font-size:0.75rem;opacity:0.7;"></i>
+  </a>
+</div>

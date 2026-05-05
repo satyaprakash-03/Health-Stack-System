@@ -1,137 +1,156 @@
 {%load static%}
 <!DOCTYPE html>
 <html lang="en">
-    
-<!-- Mirrored from dreamguys.co.in/demo/doccure/admin/doctor-list.html by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 30 Nov 2019 04:12:51 GMT -->
 <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
-        <title>HealthStack</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
+  <title>Pending Doctors – HealthStack Admin</title>
+  <link rel="shortcut icon" type="image/x-icon" href="{% static 'HealthStack-System/images/Normal/favicon.png' %}"/>
+  <link rel="stylesheet" href="{% static 'HealthStack-System/css/admin/bootstrap.min.css'%}">
+  <link rel="stylesheet" href="{% static 'HealthStack-System/css/admin/font-awesome.min.css'%}">
+  <link rel="stylesheet" href="{% static 'HealthStack-System/admin_assets/css/feathericon.min.css'%}">
+  <link rel="stylesheet" href="{% static 'HealthStack-System/plugins/Normal/fontawesome/css/all.min.css'%}">
+  <link rel="stylesheet" href="{% static 'HealthStack-System/css/admin/style.css'%}">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <style>
+    :root { --primary:#4f46e5;--primary-light:#6366f1;--primary-dark:#3730a3;--success:#10b981;--warning:#f59e0b;--danger:#ef4444;--info:#06b6d4;--bg:#f1f5f9;--card:#ffffff;--text:#1e293b;--muted:#64748b;--border:#e2e8f0;--sidebar-w:260px; }
+    *{box-sizing:border-box;}body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);margin:0;}
+    .header{background:linear-gradient(135deg,var(--primary-dark) 0%,var(--primary) 100%);box-shadow:0 4px 20px rgba(79,70,229,.35);position:fixed;top:0;left:0;right:0;z-index:1040;height:64px;}
+    .nav-link,#toggle_btn,.mobile_btn{color:#fff!important;}
+    .sidebar{background:linear-gradient(180deg,#1e1b4b 0%,#312e81 100%);width:var(--sidebar-w);position:fixed;top:64px;bottom:0;overflow-y:auto;z-index:1030;box-shadow:4px 0 20px rgba(0,0,0,.15);}
+    .sidebar::-webkit-scrollbar{width:4px;}.sidebar::-webkit-scrollbar-thumb{background:rgba(255,255,255,.2);border-radius:4px;}
+    .sidebar-inner{padding:16px 0;}.menu-title span{color:rgba(255,255,255,.4);font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;padding:0 20px;}
+    .sidebar-menu ul{padding:0;margin:0;list-style:none;}
+    .sidebar-menu li a{display:flex;align-items:center;gap:10px;padding:11px 20px;color:rgba(255,255,255,.7);font-size:13.5px;font-weight:500;text-decoration:none;border-radius:0 30px 30px 0;margin:2px 12px 2px 0;transition:all .25s;}
+    .sidebar-menu li a:hover,.sidebar-menu li.active>a{background:rgba(255,255,255,.15);color:#fff;}
+    .sidebar-menu li a i{font-size:16px;width:20px;text-align:center;}
+    .sidebar-menu .submenu>ul{background:rgba(0,0,0,.2);border-radius:8px;margin:4px 12px 4px 20px;padding:4px 0;}
+    .sidebar-menu .submenu>ul li a{margin:0;border-radius:6px;font-size:13px;}
+    .page-wrapper{margin-left:var(--sidebar-w);padding-top:64px;min-height:100vh;}.content{padding:28px;}
 
-    	<!-- Favicon -->
+    /* Hero */
+    .page-hero{background:linear-gradient(135deg,var(--primary-dark) 0%,var(--primary-light) 100%);border-radius:20px;padding:32px 36px 72px;position:relative;overflow:hidden;box-shadow:0 8px 32px rgba(79,70,229,.3);margin-bottom:0;}
+    .page-hero::before{content:'';position:absolute;top:-60px;right:-60px;width:240px;height:240px;border-radius:50%;background:rgba(255,255,255,.07);}
+    .page-hero::after{content:'';position:absolute;bottom:-80px;left:120px;width:180px;height:180px;border-radius:50%;background:rgba(255,255,255,.05);}
+    .hero-breadcrumb{margin-bottom:12px;}.hero-breadcrumb a,.hero-breadcrumb span{color:rgba(255,255,255,.65);font-size:13px;text-decoration:none;}
+    .hero-breadcrumb .sep{margin:0 8px;color:rgba(255,255,255,.3);}.hero-breadcrumb .active{color:rgba(255,255,255,.4);}
+    .hero-title{color:#fff;font-size:22px;font-weight:700;margin:0;}.hero-subtitle{color:rgba(255,255,255,.65);font-size:13px;margin-top:4px;}
 
-    	<link rel="shortcut icon" type="image/x-icon" href="{% static 'HealthStack-System/images/Normal/favicon.png' %}"/>
+    /* Card Grid */
+    .main-card-wrapper{margin-top:-48px;position:relative;z-index:5;}
+    .section-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:10px;}
+    .section-title{font-size:15px;font-weight:700;color:var(--text);display:flex;align-items:center;gap:8px;}
+    .badge-count{background:linear-gradient(135deg,var(--warning),#fbbf24);color:#fff;font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;}
 
-		<!-- Bootstrap CSS -->
-        <link rel="stylesheet" href="{% static 'HealthStack-System/css/Normal/bootstrap.min.css' %}"> 
-		
-		<!-- Fontawesome CSS -->
-        <link rel="stylesheet" href="{% static 'HealthStack-System/plugins/Normal/fontawesome/css/fontawesome.min.css' %}">
-		
-		<!-- Feathericon CSS -->
-        <link rel="stylesheet" href="{% static 'HealthStack-System/admin_assets/css/feathericon.min.css'%}">
-		
-		<!-- Datatables CSS -->
-		<link rel="stylesheet" href="{% static 'HealthStack-System/plugins/Normal/fontawesome/css/all.min.css' %}"> 
-		
-		<!-- Main CSS -->
-        <link rel="stylesheet" href="{% static 'HealthStack-System/css/admin/style.css'%}">
- 
+    /* Doctor Cards */
+    .doctor-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(380px,1fr));gap:20px;}
+    .doctor-card{background:var(--card);border-radius:16px;border:1px solid var(--border);box-shadow:0 2px 16px rgba(0,0,0,.06);overflow:hidden;transition:transform .2s,box-shadow .2s;}
+    .doctor-card:hover{transform:translateY(-3px);box-shadow:0 8px 32px rgba(79,70,229,.12);}
+    .doctor-card-body{padding:20px;display:flex;gap:16px;align-items:flex-start;}
+    .doc-avatar{width:72px;height:72px;border-radius:14px;object-fit:cover;border:3px solid var(--border);flex-shrink:0;}
+    .doc-info{flex:1;}
+    .doc-name{font-size:16px;font-weight:700;color:var(--text);text-decoration:none;margin-bottom:4px;display:block;}
+    .doc-name:hover{color:var(--primary);}
+    .doc-detail{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--muted);margin-bottom:3px;}
+    .doc-detail i{color:var(--primary);font-size:13px;width:16px;text-align:center;}
+    .tag{display:inline-block;padding:3px 12px;border-radius:20px;font-size:11px;font-weight:600;}
+    .tag-warning{background:rgba(245,158,11,.1);color:var(--warning);}
+    .tag-purple{background:rgba(79,70,229,.1);color:var(--primary);}
 
-        <!-- pending doctor-list css -->
-        <link rel="stylesheet" href="{% static 'HealthStack-System/css/admin/pending-doctor-list.css'%}"> 
-		
-		<!--[if lt IE 9]>
-			<script src="assets/js/html5shiv.min.js"></script>
-			<script src="assets/js/respond.min.js"></script>
-		<![endif]-->
-    </head>
-    <body>
-	
-		<!-- Main Wrapper -->
+    /* Card Footer Actions */
+    .doctor-card-footer{border-top:1px solid var(--border);padding:14px 20px;display:flex;gap:10px;flex-wrap:wrap;}
+    .btn-action{display:inline-flex;align-items:center;gap:6px;padding:8px 18px;border-radius:9px;font-size:12px;font-weight:600;text-decoration:none;border:none;cursor:pointer;transition:all .2s;}
+    .btn-action-info{background:rgba(6,182,212,.1);color:var(--info);}
+    .btn-action-info:hover{background:var(--info);color:#fff;}
+    .btn-action-success{background:rgba(16,185,129,.1);color:var(--success);}
+    .btn-action-success:hover{background:var(--success);color:#fff;}
+    .btn-action-danger{background:rgba(239,68,68,.1);color:var(--danger);}
+    .btn-action-danger:hover{background:var(--danger);color:#fff;}
 
-		
-			
-        <div class="main-wrapper">
-            <!-- Header -->
-				<header class="header">
-                    {% include 'hospital_admin/hospital-admin-navbar.html' %}
-                </header>
-			<!-- /Header -->
-			
-			<!-- Sidebar -->
-            <aside class="sidebar" id="sidebar">
-				{% include 'hospital_admin/hospital-admin-sidebar.html' %} 
-            </aside>
-			<!-- /Sidebar -->
-			
-			<!-- Page Wrapper -->
-            <div class="page-wrapper">
-                <div class="content container-fluid">
-				
-					<!-- Page Header -->
-					<div class="page-header">
-						<div class="row">
-							<div class="col-sm-12">
-								<h3 class="page-title">List of Doctors</h3>
-								<ul class="breadcrumb">
-									<li class="breadcrumb-item"><a href="index.html">Dashboard</a></li>
-									<li class="breadcrumb-item"><a href="javascript:(0);">Users</a></li>
-									<li class="breadcrumb-item active">Doctor</li>
-								</ul>
-							</div>
-						</div>
-					</div>
-					<!-- /Page Header -->
-					{%for doctor in all%}
-                    <div class="appointments">
-                        <div class="appointment-list">
-                            <div class="profile-info-widget">
-                                <a href="{%url 'admin-doctor-profile' pk=doctor.doctor_id%}" class="booking-doc-img">
-                                    <img src="{{doctor.featured_image.url}}" alt="User Image">
-                                </a>
-                                <div class="profile-det-info" style="padding-left:8px">
-                                    <h3><a href="{%url 'admin-doctor-profile' pk=doctor.doctor_id%}">{{doctor.name}}</a></h3>
-                                    <div class="patient-details">
-                                        <h5 style="color: #757575;font-size: 18px;font-weight: normal;margin-bottom: 8px;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;"><i class="fas fa-envelope"></i> {{doctor.email}}</h5>
-                                        <h5 style="color: #757575;font-size: 18px;font-weight: normal;margin-bottom: 8px;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;"><i class="fas fa-phone"></i> {{doctor.phone_number}}</h5>
-                                        <h5 style="color: #757575;font-size: 18px;font-weight: normal;margin-bottom: 8px;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;"><i class="fas fa-brain"></i><span style="color:black"><b> Department:</b></span> {{doctor.department_name}}</h5>
-                                        <h5 style="color: #757575;font-size: 18px;font-weight: normal;margin-bottom: 8px;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;"><i class="fas fa-user-md"></i><span style="color:black"><b> Specialization:</b></span> {{doctor.specialization}}</h5>
-                                        
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="appointment-action">
-                                <a href="{% url 'admin-doctor-profile' doctor.doctor_id%}" class="btn btn-sm bg-info-light" >
-                                    <i class="far fa-eye"></i> View
-                                </a>
-                                <a href="{% url 'accept-doctor' pk=doctor.doctor_id%}" onclick="return confirm('Accept Doctor?');" class="btn btn-sm bg-success-light">
-                                    <i class="fas fa-check"></i> Accept
-                                </a>
-                                <a href="{% url 'reject-doctor' pk=doctor.doctor_id%}" onclick="return confirm('Reject Doctor?');" class="btn btn-sm bg-danger-light">
-                                    <i class="fas fa-times"></i> Cancel
-                                </a>
-                            </div>
-                        </div> 
-                        {% endfor %}
-                    </div>
-                </div>
-					
-			<!-- /Page Wrapper -->
-		
-            </div>
+    /* Empty */
+    .empty-card{background:var(--card);border-radius:20px;box-shadow:0 8px 40px rgba(0,0,0,.1);border:1px solid var(--border);text-align:center;padding:60px 20px;}
+    .empty-card i{font-size:48px;color:var(--border);margin-bottom:16px;display:block;}
+    .empty-card p{color:var(--muted);font-size:14px;}
+  </style>
+</head>
+<body>
+  <div class="main-wrapper">
+    <header class="header">{% include 'hospital_admin/hospital-admin-navbar.html' %}</header>
+    <aside class="sidebar" id="sidebar">{% include 'hospital_admin/hospital-admin-sidebar.html' %}</aside>
+
+    <div class="page-wrapper">
+      <div class="content container-fluid">
+
+        <div class="page-hero">
+          <div class="hero-breadcrumb">
+            <a href="{% url 'admin-dashboard' %}">Dashboard</a>
+            <span class="sep">/</span>
+            <span class="active">Pending Approvals</span>
+          </div>
+          <h2 class="hero-title"><i class="fe fe-clock" style="margin-right:8px;"></i>Pending Doctor Approvals</h2>
+          <p class="hero-subtitle">Review and approve or reject doctor registration requests</p>
         </div>
 
-		<!-- /Main Wrapper -->
-		
-		<!-- jQuery -->
-        <script src="{% static 'HealthStack-System/js/admin/jquery-3.2.1.min.js' %}"></script> 
-		
-		<!-- Bootstrap Core JS -->
-        <script src="{% static 'HealthStack-System/js/admin/popper.min.js' %}"></script> 
-        <script src="{% static 'HealthStack-System/js/admin/bootstrap.min.js' %}"></script> 
-		
-		<!-- Slimscroll JS -->
-        <script src="{% static 'HealthStack-System/plugins/admin/slimscroll/jquery.slimscroll.min.js' %}"></script>
-		
-		<!-- Datatables JS -->
-		<script src="{% static 'HealthStack-System/plugins/admin/datatables/jquery.dataTables.min.js'%}"></script> 
-		<script src="{% static 'HealthStack-System/plugins/admin/datatables/datatables.min.js'%}"></script>
-		
-		<!-- Custom JS -->
-		<script src="{% static 'HealthStack-System/js/admin/script.js' %}"></script>
-		
-    </body>
+        <div class="main-card-wrapper" style="padding-top: 8px;">
 
-<!-- Mirrored from dreamguys.co.in/demo/doccure/admin/doctor-list.html by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 30 Nov 2019 04:12:51 GMT -->
+          <div class="section-header">
+            <div class="section-title">
+              <i class="fe fe-clock" style="color:var(--warning);"></i>
+              Awaiting Review
+              <span class="badge-count">{{ all|length }}</span>
+            </div>
+          </div>
+
+          {% if all %}
+          <div class="doctor-grid">
+            {% for doctor in all %}
+            <div class="doctor-card">
+              <div class="doctor-card-body">
+                <a href="{% url 'admin-doctor-profile' pk=doctor.doctor_id %}">
+                  <img class="doc-avatar" src="{{ doctor.featured_image.url }}" alt="{{ doctor.name }}">
+                </a>
+                <div class="doc-info">
+                  <a class="doc-name" href="{% url 'admin-doctor-profile' pk=doctor.doctor_id %}">{{ doctor.name }}</a>
+                  <div class="doc-detail"><i class="fas fa-envelope"></i> {{ doctor.email }}</div>
+                  <div class="doc-detail"><i class="fas fa-phone"></i> {{ doctor.phone_number }}</div>
+                  <div class="doc-detail"><i class="fas fa-brain"></i>
+                    <span class="tag tag-purple">{{ doctor.department_name }}</span>
+                  </div>
+                  <div class="doc-detail" style="margin-top:4px;"><i class="fas fa-user-md"></i>
+                    <span class="tag tag-warning">{{ doctor.specialization }}</span>
+                  </div>
+                </div>
+              </div>
+              <div class="doctor-card-footer">
+                <a href="{% url 'admin-doctor-profile' doctor.doctor_id %}" class="btn-action btn-action-info">
+                  <i class="far fa-eye"></i> View
+                </a>
+                <a href="{% url 'accept-doctor' pk=doctor.doctor_id %}" onclick="return confirm('Accept this doctor?');" class="btn-action btn-action-success">
+                  <i class="fas fa-check"></i> Accept
+                </a>
+                <a href="{% url 'reject-doctor' pk=doctor.doctor_id %}" onclick="return confirm('Reject this doctor?');" class="btn-action btn-action-danger">
+                  <i class="fas fa-times"></i> Reject
+                </a>
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+          {% else %}
+          <div class="empty-card">
+            <i class="fe fe-check-circle" style="color:var(--success);"></i>
+            <p>No pending doctor approvals. All caught up! ✅</p>
+          </div>
+          {% endif %}
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="{% static 'HealthStack-System/js/admin/jquery-3.2.1.min.js' %}"></script>
+  <script src="{% static 'HealthStack-System/js/admin/popper.min.js' %}"></script>
+  <script src="{% static 'HealthStack-System/js/admin/bootstrap.min.js' %}"></script>
+  <script src="{% static 'HealthStack-System/plugins/admin/slimscroll/jquery.slimscroll.min.js' %}"></script>
+  <script src="{% static 'HealthStack-System/js/admin/script.js' %}"></script>
+</body>
 </html>

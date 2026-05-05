@@ -162,15 +162,15 @@ SMTP_PORT = env('SMTP_PORT')
 SMTP_USER = env('SMTP_USER')
 SMTP_PASSWORD = env('SMTP_PASSWORD')
 
-# EMAIL
-
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.mailtrap.io'
-EMAIL_PORT = SMTP_PORT
-EMAIL_HOST_USER = SMTP_USER
-EMAIL_HOST_PASSWORD = SMTP_PASSWORD
-EMAIL_USE_TLS = True
-EMAIL_USE_SSL = False
+# EMAIL — Gmail SMTP
+EMAIL_BACKEND     = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST        = 'smtp.gmail.com'
+EMAIL_PORT        = 587
+EMAIL_HOST_USER   = env('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
+EMAIL_USE_TLS     = True
+EMAIL_USE_SSL     = False
+DEFAULT_FROM_EMAIL = env('EMAIL_HOST_USER')
 
 
 

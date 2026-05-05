@@ -508,11 +508,10 @@ def view_report(request,pk):
         context = {'patient':patient,'report':report,'test':test,'specimen':specimen}
         return render(request, 'view-report.html',context)
     else:
-        redirect('logout') 
+        return redirect('logout') 
 
 
-def test_cart(request):
-    return render(request, 'test-cart.html')
+# removed duplicate stub test_cart — real test_cart with pk arg is defined below
 
 @csrf_exempt
 @login_required(login_url="login")
@@ -520,10 +519,10 @@ def test_single(request,pk):
      if request.user.is_authenticated and request.user.is_patient:
          
         patient = Patient.objects.get(user=request.user)
-        Perscription_test = Perscription_test.objects.get(test_id=pk)
+        prescription_test_obj = Prescription_test.objects.get(test_id=pk)
         carts = testCart.objects.filter(user=request.user, purchased=False)
         
-        context = {'patient': patient, 'carts': carts, 'Perscription_test': Perscription_test}
+        context = {'patient': patient, 'carts': carts, 'prescription_test_obj': prescription_test_obj}
         return render(request, 'test-cart.html',context)
      else:
         logout(request)
@@ -617,8 +616,9 @@ def test_remove_cart(request, pk):
                 return render(request, 'prescription-view.html', context)
         else:
             # messages.info(request, "You don't have an active order")
-            context = {'patient': patient,'test': item,'prescription':prescription,'prescription_medicine':prescription_medicine,'prescription_test':prescription_test}
-            return redirect('prescription-view', pk=prescription.prescription_id)
+            first_prescription = prescription.first()
+            pk_val = first_prescription.prescription_id if first_prescription else 0
+            return redirect('prescription-view', pk=pk_val)
     else:
         logout(request)
         messages.info(request, 'Not Authorized')
@@ -635,7 +635,7 @@ def prescription_view(request,pk):
         context = {'patient':patient,'prescription':prescription,'prescription_test':prescription_test,'prescription_medicine':prescription_medicine}
         return render(request, 'prescription-view.html',context)
       else:
-         redirect('logout') 
+         return redirect('logout') 
 
 @csrf_exempt
 def render_to_pdf(template_src, context_dict={}):
@@ -720,4 +720,401 @@ def got_offline(sender, user, request, **kwargs):
     user.save()
     
 
+
+
+
+def contact_us(request):
+    from .models import ContactMessage
+    from django.contrib import messages
+    from django.core.mail import EmailMessage
+    from django.conf import settings as django_settings
+
+    if request.method == 'POST':
+        name    = request.POST.get('name', '').strip()
+        email   = request.POST.get('email', '').strip()
+        phone   = request.POST.get('phone', '').strip()
+        subject = request.POST.get('subject', 'General Inquiry').strip()
+        city    = request.POST.get('city', '').strip()
+        message = request.POST.get('message', '').strip()
+
+        if name and email and message:
+            # 1. Save to database (always — even if email fails)
+            ContactMessage.objects.create(
+                name=name, email=email, phone=phone,
+                subject=subject, city=city, message=message
+            )
+
+            # 2. Send professional email notification to your Gmail
+            email_subject = f'[HealthStack Contact] {subject} — from {name}'
+            email_body = f"""Namaskar,
+
+Aapko HealthStack website se ek naya contact message mila hai.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  SENDER DETAILS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  Name    : {name}
+  Email   : {email}
+  Phone   : {phone or 'Not provided'}
+  City    : {city or 'Not provided'}
+  Subject : {subject}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  MESSAGE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+{message}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Directly reply kar sakte hain — Reply-To: {email}
+— HealthStack System (Automated Notification)
+""".strip()
+
+            try:
+                # Use EmailMessage so reply_to header is properly set
+                mail = EmailMessage(
+                    subject   = email_subject,
+                    body      = email_body,
+                    from_email= django_settings.EMAIL_HOST_USER,
+                    to        = ['satyaprakash.in33@gmail.com'],
+                    reply_to  = [email],   # ✅ clicking Reply in Gmail goes to the user
+                )
+                mail.send(fail_silently=False)
+                messages.success(
+                    request,
+                    f"Thank you {name}! Your message has been sent successfully. "
+                    "We'll get back to you within 24 hours."
+                )
+            except Exception as e:
+                # Email failed — but DB record is safe, so just warn
+                messages.warning(
+                    request,
+                    "Message saved successfully! However, the email notification "
+                    "could not be sent right now. We'll still review your message."
+                )
+
+    return render(request, 'footer_contact.html')
+
+
+def faqs(request):
+    return render(request, 'footer_faqs.html')
+
+def support(request):
+    return render(request, 'footer_support.html')
+
+def terms(request):
+    return render(request, 'footer_terms.html')
+
+
+# ─────────────────────────────────────────────────────────────
+#  AI SYMPTOM CHECKER
+# ─────────────────────────────────────────────────────────────
+
+import json
+
+# Rule-based symptom knowledge base
+SYMPTOM_DB = {
+    "fever": {
+        "condition": "Fever / Viral Infection",
+        "causes": "Fever is usually caused by a viral or bacterial infection, flu, COVID-19, or inflammation.",
+        "precautions": [
+            "Stay hydrated — drink plenty of water and fluids.",
+            "Rest adequately and avoid strenuous activity.",
+            "Take paracetamol/acetaminophen to manage high temperature.",
+            "Use a cool, damp cloth on forehead and wrists.",
+            "Monitor temperature every 4 hours.",
+        ],
+        "see_doctor": "Consult a General Physician if fever exceeds 103°F (39.4°C), lasts more than 3 days, or is accompanied by a stiff neck or rash.",
+        "specialist": "General Physician / Internal Medicine",
+        "urgency": "⚠️ Moderate — see a doctor within 24–48 hours if fever persists.",
+    },
+    "cough": {
+        "condition": "Cough / Respiratory Infection",
+        "causes": "Cough can be due to the common cold, flu, allergies, asthma, bronchitis, or COVID-19.",
+        "precautions": [
+            "Drink warm liquids (honey-lemon tea, warm water).",
+            "Use a humidifier or steam inhalation to soothe airways.",
+            "Avoid cold drinks, dust, and smoke.",
+            "Gargle with warm salt water to ease throat irritation.",
+            "Cover your mouth while coughing to prevent spread.",
+        ],
+        "see_doctor": "See a doctor if the cough lasts more than 2 weeks, produces blood or green/yellow mucus, or causes breathing difficulty.",
+        "specialist": "Pulmonologist / General Physician",
+        "urgency": "ℹ️ Low — home care usually helps; see a doctor if symptoms persist.",
+    },
+    "headache": {
+        "condition": "Headache / Migraine",
+        "causes": "Headaches can be caused by dehydration, stress, lack of sleep, migraines, high blood pressure, or sinus issues.",
+        "precautions": [
+            "Drink adequate water — dehydration is a common trigger.",
+            "Rest in a quiet, dark room if light is bothersome.",
+            "Apply a cold or warm compress to your forehead.",
+            "Avoid screen time and practice deep breathing.",
+            "Take OTC pain relievers like ibuprofen or paracetamol.",
+        ],
+        "see_doctor": "Seek immediate care for sudden severe 'thunderclap' headache, headache with vision loss, confusion, or neck stiffness.",
+        "specialist": "Neurologist / General Physician",
+        "urgency": "ℹ️ Low — monitor; seek emergency care for sudden severe headache.",
+    },
+    "cold": {
+        "condition": "Common Cold / Upper Respiratory Infection",
+        "causes": "The common cold is caused by rhinoviruses and spreads through droplets and contact.",
+        "precautions": [
+            "Rest and stay warm.",
+            "Drink warm fluids — broth, herbal teas, warm water.",
+            "Use saline nasal spray to relieve congestion.",
+            "Take vitamin C and zinc supplements.",
+            "Wash hands frequently to prevent spreading.",
+        ],
+        "see_doctor": "See a doctor if symptoms worsen after 10 days, or if you develop high fever, ear pain, or shortness of breath.",
+        "specialist": "General Physician / ENT Specialist",
+        "urgency": "ℹ️ Low — usually resolves in 7–10 days with home care.",
+    },
+    "sore throat": {
+        "condition": "Sore Throat / Pharyngitis",
+        "causes": "Sore throat is commonly caused by viral infections (cold, flu), strep bacteria, or allergies.",
+        "precautions": [
+            "Gargle with warm salt water 3–4 times daily.",
+            "Drink warm honey-lemon tea.",
+            "Suck on throat lozenges.",
+            "Avoid cold foods and drinks.",
+            "Stay well-hydrated.",
+        ],
+        "see_doctor": "See a doctor if throat pain is severe, you have difficulty swallowing, high fever, or swollen lymph nodes in the neck.",
+        "specialist": "ENT Specialist / General Physician",
+        "urgency": "ℹ️ Low to Moderate — see doctor if swallowing is difficult.",
+    },
+    "vomiting": {
+        "condition": "Nausea / Vomiting / Gastroenteritis",
+        "causes": "Vomiting may result from food poisoning, viral gastroenteritis, motion sickness, or overeating.",
+        "precautions": [
+            "Sip small amounts of water or oral rehydration solution (ORS).",
+            "Avoid solid food until vomiting stops.",
+            "Try the BRAT diet (Banana, Rice, Applesauce, Toast) once tolerable.",
+            "Avoid dairy, fatty, or spicy foods.",
+            "Rest and lie down with head elevated.",
+        ],
+        "see_doctor": "Seek care if vomiting persists more than 24 hours, there is blood in vomit, signs of severe dehydration (dry mouth, no urination), or vomiting with severe abdominal pain.",
+        "specialist": "Gastroenterologist / General Physician",
+        "urgency": "⚠️ Moderate — see a doctor if it persists or dehydration signs appear.",
+    },
+    "diarrhea": {
+        "condition": "Diarrhea / Gastroenteritis",
+        "causes": "Diarrhea is commonly caused by food poisoning, viral or bacterial infections, or lactose intolerance.",
+        "precautions": [
+            "Drink ORS (Oral Rehydration Solution) to prevent dehydration.",
+            "Eat bland foods — rice, banana, boiled potatoes.",
+            "Avoid dairy, fatty, and high-fiber foods.",
+            "Wash hands thoroughly before meals.",
+            "Avoid contaminated water.",
+        ],
+        "see_doctor": "Seek care if diarrhea contains blood or mucus, lasts more than 2 days, or you develop fever and severe cramps.",
+        "specialist": "Gastroenterologist / General Physician",
+        "urgency": "⚠️ Moderate — seek urgent care if bloody diarrhea or severe dehydration.",
+    },
+    "chest pain": {
+        "condition": "Chest Pain — Possible Cardiac or Musculoskeletal",
+        "causes": "Chest pain can be caused by heart conditions (angina, heart attack), acid reflux, muscle strain, or anxiety.",
+        "precautions": [
+            "Do NOT ignore chest pain — seek medical attention promptly.",
+            "Sit or lie in a comfortable position.",
+            "Avoid any physical exertion.",
+            "If you have prescribed nitroglycerin, use it.",
+            "Call emergency services if pain is crushing, radiates to left arm/jaw, or is accompanied by sweating and breathlessness.",
+        ],
+        "see_doctor": "🚨 EMERGENCY: If chest pain is severe, crushing, or radiates to the left arm, jaw, or back — call emergency services (108) IMMEDIATELY.",
+        "specialist": "Cardiologist / Emergency Medicine",
+        "urgency": "🚨 HIGH URGENCY — Seek emergency care immediately.",
+    },
+    "fatigue": {
+        "condition": "Fatigue / Tiredness",
+        "causes": "Fatigue can result from poor sleep, anemia, thyroid disorders, diabetes, depression, or overexertion.",
+        "precautions": [
+            "Ensure 7–9 hours of quality sleep each night.",
+            "Maintain a balanced diet rich in iron and vitamins.",
+            "Stay hydrated — dehydration worsens fatigue.",
+            "Exercise moderately — even a short walk helps.",
+            "Reduce stress through meditation or yoga.",
+        ],
+        "see_doctor": "See a doctor if fatigue is persistent (more than 2 weeks), accompanied by unexplained weight loss, or disrupts daily activities.",
+        "specialist": "General Physician / Endocrinologist",
+        "urgency": "ℹ️ Low to Moderate — see a doctor if persistent.",
+    },
+    "dizziness": {
+        "condition": "Dizziness / Vertigo",
+        "causes": "Dizziness can be caused by dehydration, low blood pressure, inner ear disorders, anemia, or standing up quickly.",
+        "precautions": [
+            "Sit or lie down immediately when feeling dizzy.",
+            "Drink water — dehydration is a common cause.",
+            "Avoid sudden position changes (stand up slowly).",
+            "Avoid driving or operating machinery.",
+            "Eat regular small meals to maintain blood sugar.",
+        ],
+        "see_doctor": "See a doctor if dizziness is severe, recurrent, or accompanied by hearing loss, ringing in the ear, or fainting.",
+        "specialist": "ENT Specialist / Neurologist",
+        "urgency": "⚠️ Moderate — seek urgent care if accompanied by fainting.",
+    },
+    "rash": {
+        "condition": "Skin Rash / Allergic Reaction",
+        "causes": "Rashes can result from allergies, contact dermatitis, eczema, heat rash, viral infections, or insect bites.",
+        "precautions": [
+            "Avoid scratching — it worsens irritation and risk of infection.",
+            "Apply cool compresses to relieve itching.",
+            "Use calamine lotion or hydrocortisone cream.",
+            "Identify and avoid potential allergens (food, detergent, fabric).",
+            "Wear loose, breathable cotton clothing.",
+        ],
+        "see_doctor": "See a dermatologist if the rash spreads rapidly, is accompanied by fever, blistering, facial swelling, or difficulty breathing.",
+        "specialist": "Dermatologist / Allergist",
+        "urgency": "⚠️ Moderate — seek immediate care for rash with breathing difficulty.",
+    },
+    "stomach pain": {
+        "condition": "Abdominal / Stomach Pain",
+        "causes": "Stomach pain can be caused by gas, indigestion, gastritis, appendicitis, ulcers, or menstrual cramps.",
+        "precautions": [
+            "Apply a warm compress to the abdomen.",
+            "Avoid spicy, oily, and heavy foods.",
+            "Drink peppermint or ginger tea for indigestion.",
+            "Eat smaller, frequent meals.",
+            "Avoid lying down immediately after eating.",
+        ],
+        "see_doctor": "Seek emergency care if pain is severe, sudden, or located in the lower right abdomen (appendicitis). Also see a doctor for pain with fever or vomiting.",
+        "specialist": "Gastroenterologist / General Physician",
+        "urgency": "⚠️ Moderate — emergency care for severe/sudden right-lower pain.",
+    },
+    "back pain": {
+        "condition": "Back Pain / Musculoskeletal",
+        "causes": "Back pain commonly results from muscle strain, poor posture, disc problems, kidney issues, or prolonged sitting.",
+        "precautions": [
+            "Rest, but avoid prolonged bed rest — gentle movement helps.",
+            "Apply ice for the first 48 hours, then switch to heat.",
+            "Practice good posture while sitting and standing.",
+            "Do gentle stretching and core-strengthening exercises.",
+            "Use a supportive mattress.",
+        ],
+        "see_doctor": "See a doctor if pain radiates down the leg (sciatica), is associated with numbness/weakness, or follows an injury.",
+        "specialist": "Orthopedic Specialist / Physiotherapist",
+        "urgency": "ℹ️ Low to Moderate — see a doctor if persists more than a week.",
+    },
+    "shortness of breath": {
+        "condition": "Breathing Difficulty / Dyspnea",
+        "causes": "Shortness of breath can be caused by asthma, COPD, pneumonia, heart conditions, anxiety, or anemia.",
+        "precautions": [
+            "Sit upright — do NOT lie flat.",
+            "Breathe slowly and deeply through pursed lips.",
+            "If you have an inhaler, use it immediately.",
+            "Move to fresh, cool air.",
+            "Do NOT exert yourself — remain calm and still.",
+        ],
+        "see_doctor": "🚨 URGENT: Severe or sudden shortness of breath is a medical emergency. Call emergency services (108) immediately.",
+        "specialist": "Pulmonologist / Cardiologist / Emergency Medicine",
+        "urgency": "🚨 HIGH URGENCY — Seek emergency care immediately.",
+    },
+    "eye pain": {
+        "condition": "Eye Pain / Irritation",
+        "causes": "Eye pain can be caused by conjunctivitis, eye strain, foreign body, dry eyes, glaucoma, or migraine.",
+        "precautions": [
+            "Do NOT rub your eyes.",
+            "If a foreign body is present, rinse with clean water.",
+            "Apply cool compress (not ice directly).",
+            "Reduce screen time and take 20-20-20 breaks.",
+            "Use artificial tears for dryness.",
+        ],
+        "see_doctor": "See an eye doctor immediately if pain is severe, accompanied by vision changes, redness, or sensitivity to light.",
+        "specialist": "Ophthalmologist",
+        "urgency": "⚠️ Moderate — seek urgent care for sudden vision changes.",
+    },
+}
+
+FALLBACK_RESPONSE = """
+I understand you're not feeling well. 🏥
+
+While I couldn't identify a specific match for your symptoms, here are some general tips:
+
+**General Precautions:**
+• Stay well-hydrated — drink plenty of water
+• Rest adequately and avoid overexertion  
+• Monitor your temperature and symptoms
+• Avoid self-medicating with antibiotics
+
+**When to See a Doctor:**
+• If symptoms persist for more than 2–3 days
+• If you experience severe pain, high fever (>103°F), or difficulty breathing
+• If you're unsure about your condition
+
+📋 **Try describing your symptoms more specifically**, for example:
+*"I have a fever and sore throat"* or *"I have chest pain and shortness of breath"*
+
+⚕️ *Remember: I provide general health information only. Always consult a licensed medical professional for proper diagnosis and treatment.*
+"""
+
+
+def _build_reply(matched_data, user_message):
+    """Format a clean, rich reply from matched symptom data."""
+    d = matched_data
+    precautions_list = "\n".join(f"• {p}" for p in d["precautions"])
+    reply = f"""
+🩺 **Possible Condition:** {d["condition"]}
+
+📌 **Likely Causes:**
+{d["causes"]}
+
+✅ **Precautions & Home Care:**
+{precautions_list}
+
+👨‍⚕️ **Doctor's Advice:**
+{d["see_doctor"]}
+
+🏥 **Recommended Specialist:** {d["specialist"]}
+
+{d["urgency"]}
+
+---
+⚕️ *Disclaimer: This is AI-generated health information for educational purposes only. Always consult a qualified medical professional for diagnosis and treatment.*
+"""
+    return reply.strip()
+
+
+def symptom_checker(request):
+    """Dedicated full-page symptom checker view."""
+    return render(request, 'symptom_checker.html')
+
+
+@csrf_exempt
+def ai_chat(request):
+    """AJAX endpoint — receives symptom message, returns AI health advice."""
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            user_message = data.get('message', '').lower().strip()
+        except (json.JSONDecodeError, AttributeError):
+            user_message = request.POST.get('message', '').lower().strip()
+
+        if not user_message:
+            return HttpResponse(
+                json.dumps({'reply': 'Please describe your symptoms so I can help you.'}),
+                content_type='application/json'
+            )
+
+        # Match symptoms from knowledge base
+        best_match = None
+        for keyword, data in SYMPTOM_DB.items():
+            if keyword in user_message:
+                best_match = data
+                break
+
+        if best_match:
+            reply = _build_reply(best_match, user_message)
+        else:
+            reply = FALLBACK_RESPONSE.strip()
+
+        return HttpResponse(
+            json.dumps({'reply': reply}),
+            content_type='application/json'
+        )
+
+    return HttpResponse(
+        json.dumps({'error': 'Only POST requests are accepted.'}),
+        content_type='application/json',
+        status=405
+    )
 

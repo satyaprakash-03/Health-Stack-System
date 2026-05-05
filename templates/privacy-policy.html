@@ -1,394 +1,160 @@
-{% load static %}
-<!DOCTYPE html> 
-<html lang="en">
-	
-<!-- doccure/privacy-policy.html  30 Nov 2019 04:12:34 GMT -->
+<!DOCTYPE html>
+<html>
 <head>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
-	<title>HealthStack</title>
-
-	<!-- Favicons -->
-	<link type="image/x-icon" href="{% static 'HealthStack-System/images/Normal/favicon.png' %}" rel="icon">
-
-	<!-- Bootstrap CSS -->
-	<link rel="stylesheet" href="{% static 'HealthStack-System/css/Normal/bootstrap.min.css' %}">
-
-	<!-- Fontawesome CSS -->
-	<link rel="stylesheet" href="{% static 'HealthStack-System/plugins/Normal/fontawesome/css/fontawesome.min.css' %}">
-	<link rel="stylesheet" href="{% static 'HealthStack-System/plugins/Normal/fontawesome/css/all.min.css' %}">
-
-	<!-- Main CSS -->
-	<link rel="stylesheet" href="{% static 'HealthStack-System/css/Normal/style.css' %}">
-	
-	<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
-	<!--[if lt IE 9]>
-		<script src="assets/js/html5shiv.min.js"></script>
-		<script src="assets/js/respond.min.js"></script>
-	<![endif]-->
-
+  <title>Privacy Policy - Health Stack</title>
 </head>
-	<body>
 
-		<!-- Main Wrapper -->
-		<div class="main-wrapper">
-		
-			<!-- Header -->
-			<header class="header">
-				<nav class="navbar navbar-expand-lg header-nav">
-					<div class="navbar-header">
-						<a id="mobile_btn" href="javascript:void(0);">
-							<span class="bar-icon">
-								<span></span>
-								<span></span>
-								<span></span>
-							</span>
-						</a>
-						<a href="index-2.html" class="navbar-brand logo">
-							
-							<img src="{% static 'HealthStack-System/images/Normal/logo.jpg' %}"  class="img-fluid" alt="Logo">
-						</a>
-					</div>
-					<div class="main-menu-wrapper">
-						<div class="menu-header">
-							<a href="index-2.html" class="menu-logo">
-								<img src="{% static 'HealthStack-System/images/Normal/logo.jpg' %}" class="img-fluid" alt="Logo">
-							</a>
-							<a id="menu_close" class="menu-close" href="javascript:void(0);">
-								<i class="fas fa-times"></i>
-							</a>
-						</div>
-						<ul class="main-nav">
-							<li>
-								<a href="index-2.html">Home</a>
-							</li>
-							<li class="has-submenu active">
-								<a href="#">Doctors <i class="fas fa-chevron-down"></i></a>
-								<ul class="submenu">
-									<li class="active"><a href="doctor-dashboard.html">Doctor Dashboard</a></li>
-									<li><a href="appointments.html">Appointments</a></li>
-									<li><a href="schedule-timings.html">Schedule Timing</a></li>
-									<li><a href="my-patients.html">Patients List</a></li>
-									<li><a href="patient-profile.html">Patients Profile</a></li>
-									<li><a href="chat-doctor.html">Chat</a></li>
-									<li><a href="invoices.html">Invoices</a></li>
-									<li><a href="doctor-profile-settings.html">Profile Settings</a></li>
-									<li><a href="reviews.html">Reviews</a></li>
-									<li><a href="doctor-register.html">Doctor Register</a></li>
-								</ul>
-							</li>	
-							<li class="has-submenu">
-								<a href="#">Patients <i class="fas fa-chevron-down"></i></a>
-								<ul class="submenu">
-									<li><a href="search.html">Search Doctor</a></li>
-									<li><a href="doctor-profile.html">Doctor Profile</a></li>
-									<li><a href="booking.html">Booking</a></li>
-									<li><a href="checkout.html">Checkout</a></li>
-									<li><a href="booking-success.html">Booking Success</a></li>
-									<li><a href="patient-dashboard.html">Patient Dashboard</a></li>
-									<li><a href="favourites.html">Favourites</a></li>
-									<li><a href="chat.html">Chat</a></li>
-									<li><a href="profile-settings.html">Profile Settings</a></li>
-									<li><a href="change-password.html">Change Password</a></li>
-								</ul>
-							</li>	
-							<li class="has-submenu">
-								<a href="#">Pages <i class="fas fa-chevron-down"></i></a>
-								<ul class="submenu">
-									<li><a href="voice-call.html">Voice Call</a></li>
-									<li><a href="video-call.html">Video Call</a></li>
-									<li><a href="search.html">Search Doctors</a></li>
-									<li><a href="calendar.html">Calendar</a></li>
-									<li><a href="components.html">Components</a></li>
-									<li class="has-submenu">
-										<a href="invoices.html">Invoices</a>
-										<ul class="submenu">
-											<li><a href="invoices.html">Invoices</a></li>
-											<li><a href="invoice-view.html">Invoice View</a></li>
-										</ul>
-									</li>
-									<li><a href="blank-page.html">Starter Page</a></li>
-									<li><a href="login.html">Login</a></li>
-									<li><a href="register.html">Register</a></li>
-									<li><a href="forgot-password.html">Forgot Password</a></li>
-								</ul>
-							</li>
-							<li>
-								<a href="admin/index.html" target="_blank">Admin</a>
-							</li>
-							<li class="login-link">
-								<a href="login.html">Login / Signup</a>
-							</li>
-						</ul>	 
-					</div>		 
-					<ul class="nav header-navbar-rht">
-						<li class="nav-item contact-item">
-							<div class="header-contact-img">
-								<i class="far fa-hospital"></i>							
-							</div>
-							<div class="header-contact-detail">
-								<p class="contact-header">Contact</p>
-								<p class="contact-info-header"> +1 315 369 5943</p>
-							</div>
-						</li>
-						
-						<!-- User Menu -->
-						<li class="nav-item dropdown has-arrow logged-item">
-							<a href="#" class="dropdown-toggle nav-link" data-toggle="dropdown">
-								<span class="user-img">
-									
-									<img class="rounded-circle" src="{% static 'HealthStack-System/images/Normal/doctors/doctor-thumb-02.jpg' %}" width="31" alt="Darren Elder">
-								</span>
-							</a>
-							<div class="dropdown-menu dropdown-menu-right">
-								<div class="user-header">
-									<div class="avatar avatar-sm">
-										<img src="{% static 'HealthStack-System/images/Normal/doctors/doctor-thumb-02.jpg' %}" alt="User Image" class="avatar-img rounded-circle">
-									</div>
-									<div class="user-text">
-										<h6>Darren Elder</h6>
-										<p class="text-muted mb-0">Doctor</p>
-									</div>
-								</div>
-								<a class="dropdown-item" href="doctor-dashboard.html">Dashboard</a>
-								<a class="dropdown-item" href="doctor-profile-settings.html">Profile Settings</a>
-								<a class="dropdown-item" href="login.html">Logout</a>
-							</div>
-						</li>
-						<!-- /User Menu -->
-						
-					</ul>
-				</nav>
-			</header>
-			<!-- /Header -->
-			
-			<!-- Breadcrumb -->
-			<div class="breadcrumb-bar">
-				<div class="container-fluid">
-					<div class="row align-items-center">
-						<div class="col-md-12 col-12">
-							<nav aria-label="breadcrumb" class="page-breadcrumb">
-								<ol class="breadcrumb">
-									<li class="breadcrumb-item"><a href="index-2.html">Home</a></li>
-									<li class="breadcrumb-item active" aria-current="page">Privacy Policy</li>
-								</ol>
-							</nav>
-							<h2 class="breadcrumb-title">Privacy Policy</h2>
-						</div>
-					</div>
-				</div>
-			</div>
-			<!-- /Breadcrumb -->
-			
-			<!-- Page Content -->
-			<div class="content">
-				<div class="container">
-					<div class="row">
-						<div class="col-12">
-							<div class="terms-content">
-								<div class="terms-text">
-									<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque vel sodales mauris. Nunc accumsan mi massa, ut maximus magna ultricies et:</p>
-									<ol>
-										<li>Integer quam odio, ullamcorper id diam in, accumsan convallis libero. Duis at lacinia urna.</li>
-										<li>Mauris eget turpis sit amet purus pulvinar facilisis at sed lacus.</li>
-										<li>Quisque malesuada volutpat orci, accumsan scelerisque lorem pulvinar vitae.</li>
-										<li>Vestibulum sit amet sem aliquam, vestibulum nisi sed, sodales libero.</li>
-									</ol>
-								</div>
-								<div class="terms-text">
-									<h4>Aenean accumsan aliquam justo, et rhoncus est ullamcorper at</h4>
-									<p>Donec posuere dictum enim, vel sollicitudin orci tincidunt ac. Maecenas mattis ex eu elit tincidunt egestas. Vivamus posuere nunc vel metus bibendum varius. Vestibulum suscipit lacinia eros a aliquam. Sed dapibus arcu eget egestas hendrerit.</p>
+<body style="font-family:Arial; background:#f5f5f5; margin:0;">
 
-									<p>Vivamus consectetur metus at nulla efficitur mattis. Aenean egestas eu odio vestibulum vestibulum. Duis nulla lectus, lacinia vitae nibh vitae, sagittis interdum lacus. Mauris lacinia leo odio, eget finibus lectus pharetra ut. Nullam in semper enim, id gravida nulla.</p>
+<div style="max-width:1000px; margin:auto; background:white; padding:30px;">
 
-									<p>Fusce gravida auctor justo, vel lobortis sem efficitur id. Cras eu eros vitae justo dictum tempor.</p>
-								</div>
-								<div class="terms-text">
-									<h4>Etiam sed fermentum lectus. Quisque vitae ipsum libero</h4>
-									<p>Phasellus sit amet vehicula arcu. Etiam pulvinar dui libero, vitae fringilla nulla convallis in. Fusce sagittis cursus nisl, at consectetur elit vestibulum vestibulum:</p>
-									<ul>
-										<li>Nunc pulvinar efficitur interdum.</li>
-										<li>Donec feugiat feugiat pulvinar.</li>
-										<li>Suspendisse eu risus feugiat, pellentesque arcu eu, molestie lorem. </li>
-										<li>Duis non leo commodo, euismod ipsum a, feugiat libero.</li>
-									</ul>
-								</div>
-								<div class="terms-text">
-									<h4>pulvinar</h4> 
-									<p>Sed sollicitudin, diam nec tristique tincidunt, nulla ligula facilisis nunc, non condimentum tortor leo id ex.</p>
+<h1 style="color:#1f4c7a;">Privacy Policy</h1>
 
-									<p>Vivamus consectetur metus at nulla efficitur mattis. Aenean egestas eu odio vestibulum vestibulum. Duis nulla lectus, lacinia vitae nibh vitae, sagittis interdum lacus. Mauris lacinia leo odio, eget finibus lectus pharetra ut. Nullam in semper enim, id gravida nulla.</p>
+<p>
+Health Stack System is committed to protecting the privacy and security of users.
+This Privacy Policy explains how we collect, use, store, and protect your personal and medical information
+when you access or use our platform.
+</p>
 
-									<p>Donec posuere dictum enim, vel sollicitudin orci tincidunt ac. Maecenas mattis ex eu elit tincidunt egestas. Vivamus posuere nunc vel metus bibendum varius. Vestibulum suscipit lacinia eros a aliquam. Sed dapibus arcu eget egestas hendrerit.Donec posuere dictum enim, vel sollicitudin orci tincidunt ac. Maecenas mattis ex eu elit tincidunt egestas. Vivamus posuere nunc vel metus bibendum varius. Vestibulum suscipit lacinia eros a aliquam. Sed dapibus arcu eget egestas hendrerit.</p>
-								</div>
-								<div class="terms-text">
-									<h4>efficitur</h4>
+<!-- 1 -->
+<h2>1. Scope of Policy</h2>
+<p>
+This policy applies to all users including patients, doctors, hospitals, and administrators using the Health Stack platform.
+By using our services, you agree to the terms outlined in this Privacy Policy.
+</p>
 
-									<p>Fusce gravida auctor justo, vel lobortis sem efficitur id. Cras eu eros vitae justo dictum tempor.</p>
+<!-- 2 -->
+<h2>2. Information We Collect</h2>
+<p>We may collect different types of information including:</p>
 
-									<p><strong>Vivamus posuere nunc vel metus bibendum varius. Vestibulum suscipit lacinia eros a aliquam. Sed dapibus arcu eget egestas hendrerit.Donec posuere dictum enim, vel sollicitudin orci tincidunt ac.</strong></p>
-								</div>	
-							</div>
-						</div>
-					</div>
-				</div>
+<h3>2.1 Personal Information</h3>
+<ul>
+  <li>Name, age, gender</li>
+  <li>Email address and phone number</li>
+  <li>Address and identification details</li>
+</ul>
 
-			</div>		
-			<!-- /Page Content -->
-   
-			<!-- Footer -->
-			<footer class="footer">
-				
-				<!-- Footer Top -->
-				<div class="footer-top">
-					<div class="container-fluid">
-						<div class="row">
-							<div class="col-lg-3 col-md-6">
-							
-								<!-- Footer Widget -->
-								<div class="footer-widget footer-about">
-									<div class="footer-logo">
-										<img src="{% static 'HealthStack-System/images/Normal/footer_logo.png' %}" alt="logo">
-									</div>
-									<div class="footer-about-content">
-										<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. </p>
-										<div class="social-icon">
-											<ul>
-												<li>
-													<a href="#" target="_blank"><i class="fab fa-facebook-f"></i> </a>
-												</li>
-												<li>
-													<a href="#" target="_blank"><i class="fab fa-twitter"></i> </a>
-												</li>
-												<li>
-													<a href="#" target="_blank"><i class="fab fa-linkedin-in"></i></a>
-												</li>
-												<li>
-													<a href="#" target="_blank"><i class="fab fa-instagram"></i></a>
-												</li>
-												<li>
-													<a href="#" target="_blank"><i class="fab fa-dribbble"></i> </a>
-												</li>
-											</ul>
-										</div>
-									</div>
-								</div>
-								<!-- /Footer Widget -->
-								
-							</div>
-							
-							<div class="col-lg-3 col-md-6">
-							
-								<!-- Footer Widget -->
-								<div class="footer-widget footer-menu">
-									<h2 class="footer-title">For Patients</h2>
-									<ul>
-										<li><a href="search.html"><i class="fas fa-angle-double-right"></i> Search for Doctors</a></li>
-										<li><a href="login.html"><i class="fas fa-angle-double-right"></i> Login</a></li>
-										<li><a href="register.html"><i class="fas fa-angle-double-right"></i> Register</a></li>
-										<li><a href="booking.html"><i class="fas fa-angle-double-right"></i> Booking</a></li>
-										<li><a href="patient-dashboard.html"><i class="fas fa-angle-double-right"></i> Patient Dashboard</a></li>
-									</ul>
-								</div>
-								<!-- /Footer Widget -->
-								
-							</div>
-							
-							<div class="col-lg-3 col-md-6">
-							
-								<!-- Footer Widget -->
-								<div class="footer-widget footer-menu">
-									<h2 class="footer-title">For Doctors</h2>
-									<ul>
-										<li><a href="appointments.html"><i class="fas fa-angle-double-right"></i> Appointments</a></li>
-										<li><a href="chat.html"><i class="fas fa-angle-double-right"></i> Chat</a></li>
-										<li><a href="login.html"><i class="fas fa-angle-double-right"></i> Login</a></li>
-										<li><a href="doctor-register.html"><i class="fas fa-angle-double-right"></i> Register</a></li>
-										<li><a href="doctor-dashboard.html"><i class="fas fa-angle-double-right"></i> Doctor Dashboard</a></li>
-									</ul>
-								</div>
-								<!-- /Footer Widget -->
-								
-							</div>
-							
-							<div class="col-lg-3 col-md-6">
-							
-								<!-- Footer Widget -->
-								<div class="footer-widget footer-contact">
-									<h2 class="footer-title">Contact Us</h2>
-									<div class="footer-contact-info">
-										<div class="footer-address">
-											<span><i class="fas fa-map-marker-alt"></i></span>
-											<p> 3556  Beech Street, San Francisco,<br> California, CA 94108 </p>
-										</div>
-										<p>
-											<i class="fas fa-phone-alt"></i>
-											+1 315 369 5943
-										</p>
-										<p class="mb-0">
-											<i class="fas fa-envelope"></i>
-											doccure@example.com
-										</p>
-									</div>
-								</div>
-								<!-- /Footer Widget -->
-								
-							</div>
-							
-						</div>
-					</div>
-				</div>
-				<!-- /Footer Top -->
-				
-				<!-- Footer Bottom -->
-                <div class="footer-bottom">
-					<div class="container-fluid">
-					
-						<!-- Copyright -->
-						<div class="copyright">
-							<div class="row">
-								<div class="col-md-6 col-lg-6">
-									<div class="copyright-text">
-										<p class="mb-0"><a href="templateshub.net">Templates Hub</a></p>
-									</div>
-								</div>
-								<div class="col-md-6 col-lg-6">
-								
-									<!-- Copyright Menu -->
-									<div class="copyright-menu">
-										<ul class="policy-menu">
-											<li><a href="term-condition.html">Terms and Conditions</a></li>
-											<li><a href="privacy-policy.html">Policy</a></li>
-										</ul>
-									</div>
-									<!-- /Copyright Menu -->
-									
-								</div>
-							</div>
-						</div>
-						<!-- /Copyright -->
-						
-					</div>
-				</div>
-				<!-- /Footer Bottom -->
-				
-			</footer>
-			<!-- /Footer -->
-		   
-		</div>
-		<!-- /Main Wrapper -->
-	  
-		<!-- jQuery -->
-		<script src="{% static 'HealthStack-System/js/Normal/jquery.min.js' %}"></script>
-		
-		<!-- Bootstrap Core JS -->
-		<script src="{% static 'HealthStack-System/js/Normal/popper.min.js' %}"></script>
-		<script src="{% static 'HealthStack-System/js/Normal/bootstrap.min.js' %}"></script>
-		
-		<!-- Custom JS -->
-		<script src="{% static 'HealthStack-System/Outside_assets/js/script.js' %}"></script>
-		
-	</body>
+<h3>2.2 Health Information</h3>
+<ul>
+  <li>Medical history and reports</li>
+  <li>Prescriptions and lab results</li>
+  <li>Appointment records</li>
+</ul>
 
-<!-- doccure/privacy-policy.html  30 Nov 2019 04:12:34 GMT -->
+<h3>2.3 Technical Information</h3>
+<ul>
+  <li>IP address and browser type</li>
+  <li>Device information</li>
+  <li>Usage data and analytics</li>
+</ul>
+
+<!-- 3 -->
+<h2>3. How We Collect Information</h2>
+<p>
+We collect information when users register, book appointments, upload medical records, interact with doctors,
+or use our services. Some data is also collected automatically through cookies and analytics tools.
+</p>
+
+<!-- 4 -->
+<h2>4. Purpose of Data Collection</h2>
+<p>We use your information to:</p>
+<ul>
+  <li>Provide healthcare services</li>
+  <li>Manage appointments and records</li>
+  <li>Improve platform performance</li>
+  <li>Send notifications and updates</li>
+  <li>Ensure security and prevent fraud</li>
+</ul>
+
+<!-- 5 -->
+<h2>5. Data Sharing and Disclosure</h2>
+<p>
+We do not sell your personal data. However, we may share your data with:
+</p>
+<ul>
+  <li>Doctors and healthcare providers</li>
+  <li>Hospitals and diagnostic labs</li>
+  <li>Payment gateway providers</li>
+  <li>Government authorities (if required by law)</li>
+</ul>
+
+<!-- 6 -->
+<h2>6. Data Security</h2>
+<p>
+We implement strong security measures such as encryption, secure servers, and access control to protect your data.
+However, no system is completely secure, and users should also take precautions.
+</p>
+
+<!-- 7 -->
+<h2>7. Data Retention</h2>
+<p>
+We retain your data only as long as necessary to provide services or comply with legal requirements.
+Users may request deletion of their data.
+</p>
+
+<!-- 8 -->
+<h2>8. User Rights</h2>
+<p>Users have the following rights:</p>
+<ul>
+  <li>Access their personal data</li>
+  <li>Update or correct information</li>
+  <li>Request deletion of data</li>
+  <li>Withdraw consent</li>
+</ul>
+
+<!-- 9 -->
+<h2>9. Cookies and Tracking Technologies</h2>
+<p>
+We use cookies to enhance user experience, analyze traffic, and improve services.
+Users can control cookies through browser settings.
+</p>
+
+<!-- 10 -->
+<h2>10. Third-Party Services</h2>
+<p>
+Our platform may integrate third-party services such as payment gateways and analytics tools.
+We are not responsible for their privacy practices.
+</p>
+
+<!-- 11 -->
+<h2>11. Children's Privacy</h2>
+<p>
+Our platform is not intended for users under 18 without parental supervision.
+</p>
+
+<!-- 12 -->
+<h2>12. Confidentiality of Medical Data</h2>
+<p>
+Health Stack ensures that all medical records are handled with strict confidentiality and are accessible only
+to authorized users and healthcare professionals.
+</p>
+
+<!-- 13 -->
+<h2>13. Changes to Privacy Policy</h2>
+<p>
+We may update this policy from time to time. Continued use of the platform indicates acceptance of updated terms.
+</p>
+
+<!-- 14 -->
+<h2>14. Limitation of Liability</h2>
+<p>
+Health Stack is not responsible for any unauthorized access due to user negligence or external attacks.
+</p>
+
+<!-- 15 -->
+<h2>15. Governing Law</h2>
+<p>
+This Privacy Policy is governed by the laws of India.
+</p>
+
+<!-- 16 -->
+<h2>16. Contact Information</h2>
+<p>
+For any queries or concerns regarding this policy, contact us at:<br>
+Email: satyaprakash.in33@gmail.com
+</p>
+
+</div>
+
+</body>
 </html>

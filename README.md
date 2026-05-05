@@ -1,167 +1,288 @@
-# HealthStack-System
+# HealthStack System 
 
-- An online platform that caters to multiple hospitals, enabling efficient tracking, monitoring, and sharing of patient health records between themselves. Patients can access information on various hospitals and doctors, book appointments online, purchase medicines from an online pharmacy, pay for laboratory tests via an integrated payment gateway, and even chat with their appointed doctors.
-- Software Engineering Project - B.Sc. in Computer Science and Engineering (CSE)
+HealthStack System is a Django-based healthcare management platform for connecting patients, doctors, hospitals, hospital administrators, lab workers, and pharmacists in one place. The application supports hospital discovery, doctor registration and approval, appointment booking, prescriptions, lab reports, pharmacy ordering, online payments, email notifications, PDF generation, chat, and an AI symptom checker.
 
-## Tech Stack and Tools used:
-      1) Programming Language and Libraries: Django (Python web framework), Bootstrap, JavaScript, Ajax, Django REST framework.
-      2) Database: SQLite
-      3) APIs used: MailTrap, SSLCommerz Payment Gateway, Django PDF library, Django channels for chat, ngrok HTTP, PyPI packages.
-
-## Contributors
-
-- **Team Members:** [Satyaprakash](www.linkedin.com/in/satyaprakash-prajapati03), [Shivam Dubey](https://www.linkedin.com/in/shivam-dubey-91a314342/), [Swapnil Tripathi](https://www.linkedin.com/in/swapnil-tripathi-aab722342/), 
-- **Project Duration:** September 2025 - March 2026
+This project was built as a Software Engineering project for B.Sc. Computer Science and Engineering.
 
 ## Features
 
-- **Users:** Patient, Doctor, Hospital Admin, Lab Worker, Pharmacist
+- Role-based accounts for patients, doctors, hospital admins, lab workers, and pharmacists.
+- Patient registration, login, dashboard, profile management, and password reset.
+- Hospital search, hospital profiles, departments, services, and doctor listings.
+- Doctor registration with certificate upload and hospital admin approval workflow.
+- Appointment booking, appointment approval/rejection, and email confirmation.
+- Doctor-patient chat.
+- Prescription creation, viewing, deletion, and PDF download.
+- Lab test creation, test cart, report creation, report viewing, and PDF download.
+- Pharmacy shop with medicine search, product pages, cart, checkout, and order tracking.
+- SSLCommerz payment gateway integration for appointments, lab tests, and pharmacy orders.
+- Contact, FAQ, support, privacy policy, and terms pages.
+- AI symptom checker and AI chat endpoint.
+- REST API endpoints for hospitals and JWT authentication.
+
+## Tech Stack
+
+- Python
+- Django 4.1
+- Django REST Framework
+- SQLite
+- Bootstrap, HTML, CSS, JavaScript, Ajax
+- Pillow for image uploads
+- xhtml2pdf and ReportLab for PDF generation
+- django-environ and python-decouple for environment configuration
+- django-widget-tweaks for form rendering
+- django-debug-toolbar for development debugging
+- SSLCommerz payment gateway
+- SMTP email integration
+
+## Project Structure
+
+```text
+Health Stack System/
+|-- api/                # REST API endpoints
+|-- ChatApp/            # Doctor-patient chat
+|-- doctor/             # Doctor, appointment, prescription, report logic
+|-- healthstack/        # Django project settings and root URLs
+|-- hospital/           # Home, patient, hospital, contact, symptom checker logic
+|-- hospital_admin/     # Hospital admin, lab worker, pharmacist admin workflows
+|-- pharmacy/           # Medicine shop, cart, and checkout
+|-- sslcommerz/         # Payment gateway integration
+|-- static/             # CSS, JavaScript, images, uploaded media
+|-- templates/          # Django templates
+|-- manage.py
+|-- requirements.txt
+`-- .env.example
+```
+
+## Requirements
+
+- Python 3.10 or newer recommended
+- pip
+- virtualenv or Python venv
+- SQLite, included with Python
+
+## Environment Variables
+
+Create a `.env` file in the project root using `.env.example` as a starting point:
+
+```env
+DEBUG=True
+SECRET_KEY="your-django-secret-key"
+
+SMTP_HOST=""
+SMTP_PORT=
+SMTP_USER=""
+SMTP_PASSWORD=""
+
+STORE_ID=""
+STORE_PASSWORD=""
+STORE_NAME=""
+
+EMAIL_HOST_USER=""
+EMAIL_HOST_PASSWORD=""
+```
+
+Notes:
+
+- `SECRET_KEY` is required by Django.
+- `STORE_ID`, `STORE_PASSWORD`, and `STORE_NAME` are used for SSLCommerz payments.
+- SMTP and Gmail values are used for email notifications and password reset emails.
+- Do not commit your real `.env` file.
+
+## Installation
+
+1. Clone or open the project folder.
+
+2. Create a virtual environment.
+
+```bash
+python -m venv venv
+```
+
+3. Activate the virtual environment.
+
+On Windows:
+
+```bash
+venv\Scripts\activate
+```
+
+On macOS/Linux:
+
+```bash
+source venv/bin/activate
+```
+
+4. Install dependencies.
+
+```bash
+pip install -r requirements.txt
+```
+
+5. Install Simple JWT if it is not already installed.
+
+```bash
+pip install djangorestframework-simplejwt
+```
+
+6. Create and configure the `.env` file.
+
+```bash
+cp .env.example .env
+```
+
+On Windows PowerShell:
+
+```powershell
+Copy-Item .env.example .env
+```
+
+7. Run database migrations.
+
+```bash
+python manage.py migrate
+```
+
+8. Create a superuser.
+
+```bash
+python manage.py createsuperuser
+```
+
+9. Start the development server.
+
+```bash
+python manage.py runserver
+```
+
+Open the app at:
+
+```text
+http://127.0.0.1:8000/
+```
+
+## Main URLs
+
+| Area | URL |
+| --- | --- |
+| Home | `/` |
+| Django admin | `/admin/` |
+| Login | `/login/` |
+| Patient registration | `/patient-register/` |
+| Patient dashboard | `/patient-dashboard/` |
+| Doctor login | `/doctor/` |
+| Doctor dashboard | `/doctor/doctor-dashboard/` |
+| Hospital admin login | `/hospital_admin/` |
+| Hospital admin dashboard | `/hospital_admin/admin-dashboard/` |
+| Pharmacy shop | `/pharmacy/shop/` |
+| Cart | `/pharmacy/cart/` |
+| Chat | `/chat/` |
+| Symptom checker | `/symptom-checker/` |
+| API routes | `/api/` |
+| JWT token | `/api/users/token/` |
+| JWT refresh | `/api/users/token/refresh/` |
+
+## User Roles
 
 ### Patient
-      1)  Search multiple Hospital → Department List → Search for Doctors
-      2)  Doctor Profile → Book Appointment
-      3)  Pay Appointment + Mail Confirmation 
-      4)  Search all Doctors in all hospitals
-      5)  Chat with appointed Doctor
-      6)  View Prescription, Download Prescription (PDF)
-      7)  Choose which tests to pay (Cart System, payment + mail confirmation)
-      8)  View Report, Download Report (PDF)
-      9)  Give Doctor Review
-      10) Search for Medicines in Medical Shop (Pharmacy)
-      11) Select which medicines to purchase (Cart system), pay total amount for medicines (payment + mail confirmation)
-      
-### Doctor 
-      1)  Doctor Profile Settings (Add More feature)
-      2)  Search multiple Hospital → Doctor register to hospital + upload certificate
-      3)  (Once registered by admin) accept or reject patients appointment (mail confirmation send to patient)
-      4)  Search patient profile → Create and view Prescription, view report
-      5)  Chat with appointed Patient
-      
+
+- Search hospitals, departments, and doctors.
+- Book appointments with doctors.
+- Pay for appointments and lab tests.
+- View prescriptions and download prescription PDFs.
+- View lab reports and download report PDFs.
+- Chat with appointed doctors.
+- Review doctors.
+- Purchase medicines from the pharmacy.
+
+### Doctor
+
+- Register and upload certificate for hospital approval.
+- Manage doctor profile, education, and experience.
+- Accept or reject patient appointments.
+- View patient profiles.
+- Create prescriptions.
+- View prescriptions and reports.
+- Chat with appointed patients.
+
 ### Hospital Admin
-      1)  Admin Dashboard
-      2)  Accept or reject doctor registration (view doctor profile to see details)
-      3)  CRUD Hospitals (Add more)
-      4)  View Hospital List → CRUD Departments within hospital
-      5)  CRUD Lab Worker
-      6)  CRUD Pharmacist
 
-### Lab worker
-      1)  Lab Worker Dashboard
-      2)  Create Report for patient.
-      3)  Create Tests for hospitals, View Tests
-
-### Pharmacist
-      1)  Pharmacist Dashboard
-      2)  CRUD Medicines
-      3)  Search Medicine
-
-
-## APIs and PyPI packages used:
-
-#### [Django Rest Framework](https://www.django-rest-framework.org/#installation) - toolkit for building web APIs
-#### [Django Widget Tweaks](https://pypi.org/project/django-widget-tweaks/) - tweak form field rendering in templates
-#### [Pillow](https://pillow.readthedocs.io/en/stable/index.html) - Python imaging library
-#### [Mailtrap API](https://mailtrap.io/blog/django-send-email/) - smtp fake testing server
-#### [Django Environ](https://django-environ.readthedocs.io/en/latest/) - protecting credentials online (.env file)
-#### [SSLCommerz API](https://github.com/sslcommerz/SSLCommerz-Python) - a payment gateway that provides various payment options in Bangladesh (debit card, credit card, mobile banking, etc.)
-#### [Django Debug Toolbar](https://django-debug-toolbar.readthedocs.io/en/latest/installation.html) - configurable set of panels that display various debug information about the current request/response and when clicked
-#### [xhtml2pdf](https://xhtml2pdf.readthedocs.io/en/latest/usage.html) - to generate and download pdf documents.
-
-## Installation Details
-      1) Create an environment to run django project  
-      2) Migrate to create dbsqlite database 
-      3) Look for .env.example and settings.py files to see what credentials to set up, and then create .env files
-      
-      The credentials that you need to set up are: Mailtrap credentials, SSLCommerz Credentials. 
-
-## Steps to start the app
-      1) Start python virtual env
-            python -m venv venv
-      2) Activate the virtual environment venv
-            source venv/bin/activate
-      3) Install python pip paclages
-            pip install -r requirements
-      4) Create .env from  .env.example and add secret key
-            cp .env.example .env
-      5) Upgrade django framework
-            pip install --upgrade djangorestframework-simplejwt
-      6) Migrate DB 
-            python manage.py migrate
-      7) Start the application
-            python manage.py runserver
-            
-
-# MKDocs Documentation, Youtube Video and Presentation
-- [Youtube](https://youtu.be/TSR00OKBSCY) video link of MKDocs documentation on our Healthstack project.
-- [HeathStack Software - Presentation](https://github.com/Jawwad-Fida/HealthStack-System/files/13839586/HeathStack.Software.-.Presentation.pdf)
-- Checkout out the [MKdocs documentation](https://github.com/satyaprakash-03) to see screenshots of our project.
-
-# Some Screenshots
-
-## Home page
-
-<img src="/HealthStack-System/static/images/Project Image/Home page/1.png" width="50%">
-
-<img src="/HealthStack-System/static/images/Project Image/Home page/2.png" width="50%">
-
-<img src="/HealthStack-System/static/images/Project Image/Home page/3.png" width="50%">
-
-
-## Patient
-
-<img src="/HealthStack-System/static/images/Project Image/Patient/1.png" width="50%">
-
-<img src="/HealthStack-System/static/images/Project Image/Patient/2.png" width="50%">
-
-<img src="/HealthStack-System/static/images/Project Image/Patient/3.png" width="50%">
-
-<img src="/HealthStack-System/static/images/Project Image/Patient/4.png" width="50%">
-
-<img src="/HealthStack-System/static/images/Project Image/Patient/5.png" width="50%">
-
-<img src="/HealthStack-System/static/images/Project Image/Patient/6.png" width="50%">
-
-<img src="/HealthStack-System/static/images/Project Image/Patient/7.png" width="50%">
-
-## Doctor
-
-<img src="/HealthStack-System/static/images/Project Image/Doctor/1.png" width="50%">
-
-<img src="/HealthStack-System/static/images/Project Image/Doctor/2.png" width="50%">
-
-<img src="/HealthStack-System/static/images/Project Image/Doctor/3.png" width="50%">
-
-## Hospital Admin
-
-<img src="/HealthStack-System/static/images/Project Image/Hospital Admin/1.png" width="50%">
-
-<img src="/HealthStack-System/static/images/Project Image/Hospital Admin/2.png" width="50%">
-
-<img src="/HealthStack-System/static/images/Project Image/Hospital Admin/3.png" width="50%">
-
-<img src="/HealthStack-System/static/images/Project Image/Hospital Admin/4.png" width="50%">
-
-<img src="/HealthStack-System/static/images/Project Image/Hospital Admin/5.png" width="50%">
-
-## Pharmacist and Pharmacy
-
-<img src="" width="50%">
-
-<img src="" width="50%">
-
-<img src="" width="50%">
-
-<img src="" width="50%">
+- Manage hospital profile and hospital information.
+- Approve or reject doctor registrations.
+- Manage departments, specializations, and services.
+- Manage lab workers and pharmacists.
+- Manage tests, reports, appointments, invoices, and medicine records.
 
 ### Lab Worker
 
-<img src="" width="50%">
+- Access lab worker dashboard.
+- Create patient reports.
+- Create and manage hospital tests.
+- View report history.
 
-<img src="" width="50%">
+### Pharmacist
 
+- Access pharmacist dashboard.
+- Add, edit, delete, and manage medicines.
+- Handle medicine listings used by the pharmacy shop.
 
+## API Endpoints
 
+| Endpoint | Description |
+| --- | --- |
+| `/api/` | API route overview |
+| `/api/hospital/` | List hospitals |
+| `/api/hospital/<id>/` | Hospital profile detail |
+| `/api/users/token/` | JWT access and refresh token |
+| `/api/users/token/refresh/` | Refresh JWT token |
 
-<img src="https://user-images.githubusercontent.com/64092765/192018455-de998881-ac7e-4082-a8c6-3a36a59aef94.jpg" width="75%">
+## Screenshots
 
-<img src="https://user-images.githubusercontent.com/64092765/191054866-189bb76f-3377-440a-84be-d07578a26c35.jpg" width="50%">
+Project screenshots are stored under:
+
+```text
+static/images/Project Image/
+```
+
+Available screenshot folders include:
+
+- `Home page`
+- `Patient`
+- `Doctor`
+- `Hospital Admin`
+- `Medical Shop`
+- `Pharmacist`
+
+## Development Notes
+
+- The project uses a custom user model: `hospital.User`.
+- Uploaded media is stored under `static/images/` through `MEDIA_ROOT`.
+- The default database is SQLite: `db.sqlite3`.
+- Debug toolbar is enabled for local development at `/__debug__/`.
+- `ALLOWED_HOSTS` is configured in `healthstack/settings.py`; update it for your local or deployment environment.
+- Run migrations after changing models:
+
+```bash
+python manage.py makemigrations
+python manage.py migrate
+```
+
+## Common Commands
+
+```bash
+python manage.py runserver
+python manage.py makemigrations
+python manage.py migrate
+python manage.py createsuperuser
+python manage.py collectstatic
+```
+
+## Contributors
+
+- Satyaprakash Prajapati
+- Shivam Dubey
+- Swapnil Tripathi
+
+## License
+
+No license file is currently included in this working tree. Add a `LICENSE` file before distributing or publishing the project.

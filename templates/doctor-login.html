@@ -1,212 +1,142 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
-  <!-- doccure/login.html  30 Nov 2019 04:12:20 GMT -->
-  <head>
-    <meta charset="utf-8" />
-    <title>HealthStack</title>
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1.0, user-scalable=0"
-    />
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0"/>
+  <title>Doctor Login — HealthStack</title>
+  <link type="image/x-icon" href="{% static 'HealthStack-System/images/Normal/favicon.png' %}" rel="icon"/>
+  <link rel="stylesheet" href="{% static 'HealthStack-System/css/Normal/bootstrap.min.css' %}"/>
+  <link rel="stylesheet" href="{% static 'HealthStack-System/plugins/Normal/fontawesome/css/fontawesome.min.css' %}"/>
+  <link rel="stylesheet" href="{% static 'HealthStack-System/plugins/Normal/fontawesome/css/all.min.css' %}"/>
+  <link rel="stylesheet" href="{% static 'HealthStack-System/css/Normal/style.css' %}"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <style>
+    :root{--p:#0d6e6e;--a:#00c4cc;--dk:#064e4e;--b:#d0f0f0;}
+    *{box-sizing:border-box;}
+    body{background:linear-gradient(135deg,#052e2e 0%,#0d6e6e 55%,#00b8c8 100%) !important;min-height:100vh;font-family:'Inter',sans-serif;}
+    body .header{background:rgba(255,255,255,0.10) !important;backdrop-filter:blur(12px);border-bottom:1px solid rgba(255,255,255,0.15) !important;box-shadow:none !important;}
+    body .header .main-nav>li>a{color:rgba(255,255,255,0.85) !important;}
+    body .header .main-nav>li>a:hover{background:rgba(255,255,255,0.15) !important;color:#fff !important;}
+    .auth-wrap{min-height:calc(100vh - 80px);display:flex;align-items:center;justify-content:center;padding:40px 20px;}
+    .auth-outer{width:100%;max-width:960px;display:flex;border-radius:24px;overflow:hidden;box-shadow:0 24px 64px rgba(0,0,0,0.32);}
+    /* Left */
+    .auth-left{flex:0 0 360px;background:linear-gradient(155deg,#052e2e 0%,#0d6e6e 55%,#0891b2 100%);padding:50px 36px;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;}
+    .auth-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.3);border-radius:30px;padding:6px 18px;font-size:0.73rem;font-weight:600;color:#fff;text-transform:uppercase;letter-spacing:1px;margin-bottom:20px;}
+    .auth-left h2{color:#fff;font-size:1.7rem;font-weight:800;margin-bottom:10px;line-height:1.25;}
+    .auth-left p{color:rgba(255,255,255,0.78);font-size:0.88rem;line-height:1.7;margin-bottom:28px;}
+    .auth-left img{max-width:240px;width:100%;filter:drop-shadow(0 8px 20px rgba(0,0,0,0.25));}
+    .auth-feat{display:flex;align-items:center;gap:9px;background:rgba(255,255,255,0.10);border-radius:10px;padding:9px 14px;color:rgba(255,255,255,0.9);font-size:0.8rem;font-weight:500;margin-bottom:8px;text-align:left;width:100%;}
+    .auth-feat i{color:#4cffb0;width:14px;flex-shrink:0;}
+    /* Right */
+    .auth-right{flex:1;background:#fff;padding:50px 48px;display:flex;flex-direction:column;justify-content:center;}
+    .auth-logo{display:flex;align-items:center;gap:10px;margin-bottom:28px;}
+    .auth-logo img{height:36px;border-radius:6px;}
+    .auth-logo span{font-size:1.15rem;font-weight:800;color:var(--p);}
+    .auth-right h3{font-size:1.55rem;font-weight:800;color:#0a2020;margin-bottom:4px;}
+    .auth-right h3 span{color:var(--a);}
+    .auth-sub{color:#64748b;font-size:0.82rem;margin-bottom:26px;}
+    .auth-sub a{color:var(--a);font-weight:600;text-decoration:none;margin-left:6px;}
+    .fgrp{margin-bottom:16px;}
+    .fgrp label{display:block;font-size:0.75rem;font-weight:600;color:#475569;margin-bottom:5px;text-transform:uppercase;letter-spacing:0.4px;}
+    .fgrp .inp-wrap{position:relative;}
+    .fgrp .inp-wrap i{position:absolute;left:13px;top:50%;transform:translateY(-50%);color:#94a3b8;font-size:0.88rem;pointer-events:none;}
+    .fgrp input{width:100%;padding:11px 13px 11px 38px;border:1.5px solid #d0f0f0;border-radius:10px;font-size:0.875rem;font-family:'Inter',sans-serif;color:#1e293b;background:#f0fafa;transition:all 0.2s;outline:none;}
+    .fgrp input:focus{border-color:var(--p);background:#fff;box-shadow:0 0 0 3px rgba(13,110,110,0.11);}
+    .show-pw-row{display:flex;align-items:center;justify-content:space-between;margin-top:7px;}
+    .show-pw-label{display:flex;align-items:center;gap:6px;font-size:0.78rem;color:#64748b;cursor:pointer;}
+    .show-pw-label input[type=checkbox]{accent-color:var(--p);}
+    .forgot-lnk{font-size:0.78rem;font-weight:600;color:var(--p);text-decoration:none;}
+    .forgot-lnk:hover{color:var(--a);}
+    .btn-auth{width:100%;padding:13px;background:linear-gradient(135deg,var(--dk) 0%,var(--p) 100%);border:none;border-radius:12px;color:#fff;font-size:1rem;font-weight:700;font-family:'Inter',sans-serif;cursor:pointer;transition:all 0.22s;box-shadow:0 5px 18px rgba(13,110,110,0.30);margin-top:18px;}
+    .btn-auth:hover{transform:translateY(-2px);box-shadow:0 9px 26px rgba(13,110,110,0.40);}
+    .auth-divider{display:flex;align-items:center;gap:10px;margin:18px 0;}
+    .auth-divider hr{flex:1;border:none;border-top:1px solid #d0f0f0;}
+    .auth-divider span{font-size:0.75rem;color:#94a3b8;}
+    .auth-bottom{text-align:center;font-size:0.83rem;color:#64748b;}
+    .auth-bottom a{color:var(--p);font-weight:600;text-decoration:none;}
+    .auth-bottom a:hover{color:var(--a);}
+    @media(max-width:767px){.auth-outer{flex-direction:column;}.auth-left{display:none;}.auth-right{padding:30px 22px;}}
+  </style>
+</head>
+<body class="account-page">
+<div class="main-wrapper">
+  <header class="header">{% include 'navbar_home.html' %}</header>
 
-    <!-- Favicons -->
-    <link
-      type="image/x-icon"
-      href="{% static 'HealthStack-System/images/Normal/favicon.png' %}"
-      rel="icon"
-    />
-
-    <!-- Bootstrap CSS -->
-    <link
-      rel="stylesheet"
-      href="{% static 'HealthStack-System/css/Normal/bootstrap.min.css' %}"
-    />
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-
-    <!-- Fontawesome CSS -->
-    <link
-      rel="stylesheet"
-      href="{% static 'HealthStack-System/plugins/Normal/fontawesome/css/fontawesome.min.css' %}"
-    />
-    <link
-      rel="stylesheet"
-      href="{% static 'HealthStack-System/plugins/Normal/fontawesome/css/all.min.css' %}"
-    />
-
-    <!-- Main CSS -->
-    <link
-      rel="stylesheet"
-      href="{% static 'HealthStack-System/css/Normal/style.css' %}"
-    />
-
-    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!--[if lt IE 9]>
-      <script src="assets/js/html5shiv.min.js"></script>
-      <script src="assets/js/respond.min.js"></script>
-    <![endif]-->
-  </head>
-  <body class="account-page">
-    <!-- Main Wrapper -->
-
-    <div class="main-wrapper">
-      <!-- Header -->
-      <header class="header">{% include 'navbar_home.html' %}</header>
-      <!-- /Header -->
-
-      <!-- Page Content -->
-      <div class="content">
-        <div class="container-fluid">
-          <div class="row">
-            <div class="col-md-8 offset-md-2">
-              <!-- Login Tab Content -->
-              <div class="account-content">
-                <div class="row align-items-center justify-content-center">
-                  <div class="col-md-7 col-lg-6 login-left">
-                    <img
-                      src="{% static 'HealthStack-System/images/Normal/login-banner.png' %}"
-                      class="img-fluid"
-                      alt="Doccure Login"
-                    />
-                  </div>
-                  <div class="col-md-12 col-lg-6 login-right">
-                    <div class="login-header">
-                      <h3>
-                        Login <span>Doctor</span>
-                        <a href="{% url 'login' %}"text-decoration: none;>Are you a patient?</a>
-                      </h3>
-                    </div>
-
-                    <form method="POST" action="{% url 'doctor-login' %}">
-                      {% csrf_token %}
-
-                      {% include 'message.html' %}
-                      {% comment %} {% if messages %}
-                          {% for message in messages %}
-                          <div class="alert alert-danger alert-dismissible fade show" id="CredentialCheck" role="alert">
-                            <a href="#" class="alert-link"></a><a{% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}</a>
-                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                              <span aria-hidden="true">&times;</span>
-                            </button>
-                          </div>
-                          {% endfor %}
-                      
-                      {% endif %} {% endcomment %}
-
-                      <div class="form-floating mt-3 mb-3">
-                        <input type="text" class="form-control" name='username' id="floatingInput" placeholder="User Name">
-                        <label for="floatingInput">User Name</label>
-                      </div>
-
-                      <div class="form-floating mt-3 mb-3">
-                        <input type="password" class="form-control" name='password' id="myInput" placeholder="Password"> 
-                        <label for="floatingInput">Password</label>
-                        
-                        <input type="checkbox" class="mt-2" onclick="myFunction11()">Show Password
-                        
-                      </div>
-
-                      <div class="text-right">
-                        <a
-                          class="forgot-link"
-                          href="{% url 'reset-password' %}" style="text-decoration: none;"
-                          >Forgot Password ?</a
-                        >
-                      </div>
-                      <button
-                        class="btn btn-primary btn-block btn-lg login-btn"
-                        type="submit"
-                      >
-                        Login
-                      </button>
-                      <!-- <div class="login-or">
-                        <span class="or-line"></span>
-                        <span class="span-or">or</span>
-                      </div> -->
-                      <!-- <div class="row form-row social-login">
-                        <div class="col-6">
-                          <a href="#" class="btn btn-facebook btn-block"
-                            ><i class="fab fa-facebook-f mr-1"></i> Login</a
-                          >
-                        </div>
-                        <div class="col-6">
-                          <a href="#" class="btn btn-google btn-block"
-                            ><i class="fab fa-google mr-1"></i> Login</a
-                          >
-                        </div>
-                      </div> -->
-                      <div class="text-center dont-have">
-                        Don't have an account?
-                        <a href="{% url 'doctor-register' %}" style="text-decoration: none;">Register</a>
-                        <br>
-                        <b>Want to login as 
-                        <a href="{% url 'admin-login' %}" style="color: skyblue;text-decoration: none;"> Admin? </a></b>
-                      </div>
- 
-                    </form>
-                  </div>
-                </div>
-              </div>
-              <!-- /Login Tab Content -->
-            </div>
-          </div>
+  <div class="auth-wrap">
+    <div class="auth-outer">
+      <!-- Left Panel -->
+      <div class="auth-left">
+        <div class="auth-badge"><i class="fas fa-user-md"></i> Doctor Portal</div>
+        <h2>Welcome Back,<br/>Doctor</h2>
+        <p>Access your patient list, today's appointments, prescriptions, and medical reports all in one place.</p>
+        <img src="{% static 'HealthStack-System/images/Normal/login-banner.png' %}" alt="Doctor Login"/>
+        <div style="width:100%;margin-top:22px;">
+          <div class="auth-feat"><i class="fas fa-calendar-alt"></i> View today's appointments</div>
+          <div class="auth-feat"><i class="fas fa-file-medical"></i> Write prescriptions &amp; reports</div>
+          <div class="auth-feat"><i class="fas fa-users"></i> Manage patient records</div>
         </div>
       </div>
-      <!-- /Page Content -->
+      <!-- Right Panel -->
+      <div class="auth-right">
+        <div class="auth-logo">
+          <img src="{% static 'HealthStack-System/images/Normal/logo.jpg' %}" alt="HealthStack"/>
+          <span>HealthStack</span>
+        </div>
+        <h3>Doctor <span>Sign In</span></h3>
+        <p class="auth-sub">
+          Not a doctor?
+          <a href="{% url 'login' %}">Patient Login</a>
+          &nbsp;·&nbsp;
+          <a href="{% url 'admin-login' %}">Admin Login</a>
+        </p>
 
-      <!-- Footer -->
-      {% include 'footer.html' %}
-      <!-- /Footer -->
+        {% include 'message.html' %}
+
+        <form method="POST" action="{% url 'doctor-login' %}">
+          {% csrf_token %}
+          <div class="fgrp">
+            <label>Username</label>
+            <div class="inp-wrap">
+              <i class="fas fa-user-md"></i>
+              <input type="text" name="username" placeholder="Your username" autocomplete="username"/>
+            </div>
+          </div>
+          <div class="fgrp">
+            <label>Password</label>
+            <div class="inp-wrap">
+              <i class="fas fa-lock"></i>
+              <input type="password" name="password" id="pwInput" placeholder="Your password" autocomplete="current-password"/>
+            </div>
+            <div class="show-pw-row">
+              <label class="show-pw-label">
+                <input type="checkbox" onclick="togglePw()"/> Show password
+              </label>
+              <a href="{% url 'reset-password' %}" class="forgot-lnk">Forgot password?</a>
+            </div>
+          </div>
+          <button type="submit" class="btn-auth">
+            <i class="fas fa-sign-in-alt me-2"></i> Sign In as Doctor
+          </button>
+        </form>
+
+        <div class="auth-divider"><hr/><span>New to HealthStack?</span><hr/></div>
+        <div class="auth-bottom">
+          Don't have an account? <a href="{% url 'doctor-register' %}">Register as Doctor</a>
+        </div>
+      </div>
     </div>
-    <!-- /Main Wrapper -->
+  </div>
 
-    <!-- jQuery -->
-    <!-- jQuery -->
-    <script src="{% static 'HealthStack-System/js/Normal/jquery.min.js' %}"></script>
-
-    <!-- Bootstrap Core JS -->
-    <script src="{% static 'HealthStack-System/js/Normal/popper.min.js' %}"></script>
-    <script src="{% static 'HealthStack-System/js/Normal/bootstrap.min.js' %}"></script>
-
-    <!-- Custom JS -->
-    <!-- <script src="{% static 'HealthStack-System/js/Normal/script.js' %}"></script> -->
-    <script src="{% static 'HealthStack-System/Outside_assets/js/script.js' %}"></script>
-
-    <!-- alert js -->
-    <script>
-			var x = document.getElementById('CredentialCheck');
-			if (x.style.display === "none") {
-				x.style.display = "block";
-			}
-			$('#CredentialCheck').delay(4000).fadeOut('slow');     
-		</script>
-
-    <!-- show password js -->
-    <script>
-      function myFunction11() {
-      var x = document.getElementById('myInput');
-      if (x.type === "password") {
-        x.type = "text";
-      } else {
-        x.type = "password";
-      }
-      }
-    </script>
-
-    {% if messages %}
-    <script>
-        {% for message in messages %}
-            $(document).ready(function () {
-                $('.toast').toast('show');
-            });
-        {% endfor %}
-    </script>
-  {% endif %}
-
-
-
-
-  </body>
-
-  <!-- doccure/login.html  30 Nov 2019 04:12:20 GMT -->
+  {% include 'footer.html' %}
+</div>
+<script src="{% static 'HealthStack-System/js/Normal/jquery.min.js' %}"></script>
+<script src="{% static 'HealthStack-System/js/Normal/popper.min.js' %}"></script>
+<script src="{% static 'HealthStack-System/js/Normal/bootstrap.min.js' %}"></script>
+<script src="{% static 'HealthStack-System/Outside_assets/js/script.js' %}"></script>
+<script>
+  function togglePw(){var x=document.getElementById('pwInput');x.type=x.type==='password'?'text':'password';}
+</script>
+{% if messages %}<script>{% for message in messages %}$(document).ready(function(){$('.toast').toast('show');});{% endfor %}</script>{% endif %}
+</body>
 </html>

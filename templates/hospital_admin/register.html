@@ -1,94 +1,110 @@
-{%load static%}
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
-    
-<!-- Mirrored from dreamguys.co.in/demo/doccure/admin/register.html by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 30 Nov 2019 04:12:53 GMT -->
 <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
-        <title>HealthStack</title>
-		
-		<!-- Favicon -->
-        <link rel="shortcut icon" type="image/x-icon" href="{% static 'HealthStack-System/images/Normal/favicon.png' %}"> 
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0"/>
+  <title>Admin Register — HealthStack</title>
+  <link rel="shortcut icon" type="image/x-icon" href="{% static 'HealthStack-System/images/Normal/favicon.png' %}"/>
+  <link rel="stylesheet" href="{% static 'HealthStack-System/css/admin/bootstrap.min.css' %}"/>
+  <link rel="stylesheet" href="{% static 'HealthStack-System/css/admin/font-awesome.min.css' %}"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="{% static 'HealthStack-System/plugins/Normal/fontawesome/css/all.min.css' %}"/>
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0;}
+    :root{--p:#4f1c7a;--a:#a855f7;--dk:#2d0d50;--b:#e9d5ff;}
+    body{background:linear-gradient(135deg,#1a0535 0%,#4f1c7a 55%,#7c3aed 100%) !important;min-height:100vh;font-family:'Inter',sans-serif;display:flex;align-items:center;justify-content:center;padding:30px 20px;}
+    .reg-outer{width:100%;max-width:960px;display:flex;border-radius:24px;overflow:hidden;box-shadow:0 24px 64px rgba(0,0,0,0.36);}
+    /* Left */
+    .reg-left{flex:0 0 340px;background:linear-gradient(155deg,#1a0535 0%,#4f1c7a 55%,#6d28d9 100%);padding:44px 32px;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;}
+    .reg-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.25);border-radius:30px;padding:6px 18px;font-size:0.73rem;font-weight:600;color:#fff;text-transform:uppercase;letter-spacing:1px;margin-bottom:20px;}
+    .reg-left .icon-ring{width:90px;height:90px;border-radius:50%;background:rgba(255,255,255,0.10);border:2px solid rgba(255,255,255,0.22);display:flex;align-items:center;justify-content:center;font-size:2.2rem;color:rgba(255,255,255,0.88);margin-bottom:20px;}
+    .reg-left h2{color:#fff;font-size:1.5rem;font-weight:800;margin-bottom:10px;line-height:1.25;}
+    .reg-left p{color:rgba(255,255,255,0.75);font-size:0.84rem;line-height:1.7;margin-bottom:22px;}
+    .reg-feat{display:flex;align-items:center;gap:9px;background:rgba(255,255,255,0.08);border-radius:10px;padding:9px 14px;color:rgba(255,255,255,0.88);font-size:0.79rem;font-weight:500;margin-bottom:8px;text-align:left;width:100%;}
+    .reg-feat i{color:#c084fc;width:14px;flex-shrink:0;}
+    /* Right */
+    .reg-right{flex:1;background:#fff;padding:38px 44px;overflow-y:auto;max-height:90vh;}
+    .reg-logo{display:flex;align-items:center;gap:10px;margin-bottom:20px;}
+    .reg-logo img{height:34px;border-radius:6px;}
+    .reg-logo span{font-size:1.1rem;font-weight:800;color:var(--p);}
+    .reg-right h3{font-size:1.4rem;font-weight:800;color:#1a0535;margin-bottom:2px;}
+    .reg-right h3 span{color:var(--a);}
+    .reg-sub{color:#64748b;font-size:0.8rem;margin-bottom:18px;}
+    .reg-sub a{color:var(--a);font-weight:600;text-decoration:none;}
+    /* Form fields */
+    .reg-form-fields .form-group{margin-bottom:12px;}
+    .reg-form-fields label{display:block;font-size:0.72rem;font-weight:600;color:#475569;margin-bottom:4px;text-transform:uppercase;letter-spacing:0.4px;}
+    .reg-form-fields input[type=text],.reg-form-fields input[type=email],.reg-form-fields input[type=password],.reg-form-fields select,.reg-form-fields textarea{width:100%;padding:9px 12px;border:1.5px solid var(--b);border-radius:9px;font-size:0.865rem;font-family:'Inter',sans-serif;color:#1e293b;background:#faf5ff;transition:all 0.2s;outline:none;display:block;}
+    .reg-form-fields input:focus,.reg-form-fields select:focus{border-color:var(--p);background:#fff;box-shadow:0 0 0 3px rgba(79,28,122,0.12);}
+    .reg-form-fields .errorlist{color:#dc2626;font-size:0.72rem;list-style:none;padding:0;margin:3px 0 0;}
+    .btn-reg{width:100%;padding:12px;background:linear-gradient(135deg,var(--dk) 0%,var(--p) 55%,#7c3aed 100%);border:none;border-radius:11px;color:#fff;font-size:0.95rem;font-weight:700;font-family:'Inter',sans-serif;cursor:pointer;transition:all 0.22s;box-shadow:0 5px 18px rgba(79,28,122,0.28);margin-top:14px;}
+    .btn-reg:hover{transform:translateY(-2px);box-shadow:0 9px 26px rgba(79,28,122,0.40);}
+    .reg-bottom{text-align:center;font-size:0.8rem;color:#64748b;margin-top:12px;}
+    .reg-bottom a{color:var(--p);font-weight:600;text-decoration:none;}
+    .admin-note{background:#faf5ff;border:1px solid var(--b);border-radius:10px;padding:11px 14px;font-size:0.77rem;color:#6b21a8;margin-bottom:16px;display:flex;align-items:flex-start;gap:8px;}
+    .admin-note i{color:var(--a);margin-top:1px;flex-shrink:0;}
+    @media(max-width:767px){.reg-outer{flex-direction:column;}.reg-left{display:none;}.reg-right{padding:26px 20px;max-height:none;}}
+  </style>
+</head>
+<body>
+  <div class="reg-outer">
+    <!-- Left Panel -->
+    <div class="reg-left">
+      <div class="reg-badge"><i class="fas fa-shield-alt"></i> Admin Registration</div>
+      <div class="icon-ring"><i class="fas fa-user-shield"></i></div>
+      <h2>Create Admin<br/>Account</h2>
+      <p>Register as a Hospital Administrator to manage all aspects of the HealthStack system.</p>
+      <div style="width:100%;">
+        <div class="reg-feat"><i class="fas fa-hospital-alt"></i> Manage hospitals &amp; branches</div>
+        <div class="reg-feat"><i class="fas fa-user-md"></i> Approve &amp; manage doctors</div>
+        <div class="reg-feat"><i class="fas fa-chart-pie"></i> View system reports</div>
+        <div class="reg-feat"><i class="fas fa-cogs"></i> Full system control</div>
+      </div>
+    </div>
+    <!-- Right Panel -->
+    <div class="reg-right">
+      <div class="reg-logo">
+        <img src="{% static 'HealthStack-System/images/Normal/logo.jpg' %}" alt="HealthStack"/>
+        <span>HealthStack</span>
+      </div>
+      <h3>Admin <span>Registration</span></h3>
+      <p class="reg-sub">
+        Already registered? <a href="{% url 'admin-login' %}">Sign In</a>
+        &nbsp;·&nbsp; <a href="{% url 'hospital_home' %}">Return to Home</a>
+      </p>
 
-		<!-- Bootstrap CSS -->
-        <link rel="stylesheet" href="{% static 'HealthStack-System/css/admin/bootstrap.min.css'%}"> 
-		
-		<!-- Fontawesome CSS -->
-        <link rel="stylesheet" href="{% static 'HealthStack-System/css/admin/font-awesome.min.css'%}"> 
-		
-		<!-- Main CSS -->
-        <link rel="stylesheet" href="{% static 'HealthStack-System/css/admin/style.css'%}"> 
-		
-		<!--[if lt IE 9]>
-			<script src="assets/js/html5shiv.min.js"></script>
-			<script src="assets/js/respond.min.js"></script>
-		<![endif]-->
-    </head>
-    <body>
-	
-		<!-- Main Wrapper -->
-        <div class="main-wrapper login-body">
-            <div class="login-wrapper">
-            	<div class="container">
-                	<div class="loginbox">
-                    	<div class="login-left">
-							<img class="img-fluid" src="{% static 'HealthStack-System/images/Normal/footer_logo.png' %}" alt="Logo"> 
-                        </div>
-                        <div class="login-right">
-							<div class="login-right-wrap">
-								<h1>Register</h1>
-								<p class="account-subtitle">Access to our dashboard</p>
-								
-								<!-- Form -->
-								<form action="{%url 'admin_register'%}" method="POST">
-									{%	csrf_token %} {% for field in form %}
+      <div class="admin-note">
+        <i class="fas fa-info-circle"></i>
+        <span>Admin accounts require authorization. Please ensure you have the correct access credentials before registering.</span>
+      </div>
 
-									<div class="form-group">
-										<label class="focus-label">{{ field.label }}</label>
-										{{field}}
-									
-									</div>
-
-									{% endfor %}
-									<div class="form-group mb-0">
-										<button class="btn btn-primary btn-block" type="submit">Register</button>
-									</div>
-								</form>
-								<!-- /Form -->
-								
-								<div class="login-or">
-									<span class="or-line"></span>
-									<span class="span-or">or</span>
-								</div>
-								
-								<!-- Social Login -->
-								<div class="social-login">
-									<span>Return to <a href="{% url 'hospital_home'%}">Homepage</a></span>
-									
-								</div>
-								<!-- /Social Login -->
-								
-								<div class="text-center dont-have">Already have an account? <a href="{% url 'admin_login' %}">Login</a></div>
-							</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+      <form action="{% url 'admin_register' %}" method="POST">
+        {% csrf_token %}
+        <div class="reg-form-fields">
+          {% for field in form %}
+          <div class="form-group">
+            <label>{{ field.label }}</label>
+            {{ field }}
+            {{ field.errors }}
+          </div>
+          {% endfor %}
         </div>
-		<!-- /Main Wrapper -->
-		
-		<!-- jQuery -->
-        <script src="{% static 'HealthStack-System/js/admin/jquery-3.2.1.min.js' %}"></script> 
-		
-		<!-- Bootstrap Core JS -->
-        <script src="{% static 'HealthStack-System/js/admin/popper.min.js' %}"></script> 
-        <script src="{% static 'HealthStack-System/js/admin/bootstrap.min.js' %}"></script> 
-		
-		<!-- Custom JS -->
-		<script src="{% static 'HealthStack-System/js/admin/script.js' %}"></script>
-		
-    </body>
+        <button type="submit" class="btn-reg">
+          <i class="fas fa-user-shield me-2"></i> Create Admin Account
+        </button>
+      </form>
 
-<!-- Mirrored from dreamguys.co.in/demo/doccure/admin/register.html by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 30 Nov 2019 04:12:53 GMT -->
+      <div class="reg-bottom">
+        <a href="{% url 'admin-login' %}">Already have an account? Sign In</a>
+      </div>
+    </div>
+  </div>
+
+  <script src="{% static 'HealthStack-System/js/admin/jquery-3.2.1.min.js' %}"></script>
+  <script src="{% static 'HealthStack-System/js/admin/popper.min.js' %}"></script>
+  <script src="{% static 'HealthStack-System/js/admin/bootstrap.min.js' %}"></script>
+  <script src="{% static 'HealthStack-System/js/admin/script.js' %}"></script>
+  {% if messages %}<script>{% for message in messages %}$(document).ready(function(){$('.toast').toast('show');});{% endfor %}</script>{% endif %}
+</body>
 </html>

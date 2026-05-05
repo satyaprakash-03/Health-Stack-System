@@ -12,6 +12,11 @@ from .pres_pdf import prescription_pdf
 
 
 urlpatterns = [
+    path('contact-us/', views.contact_us, name='contact_us'),
+    path('faqs/', views.faqs, name='faqs'),
+    path('support/', views.support, name='support'),
+    path('terms/', views.terms, name='terms'),
+
     path('', views.hospital_home, name='hospital_home'),
     path('search/', views.search, name='search'),
     path('change-password/<int:pk>', views.change_password, name='change-password'),
@@ -46,6 +51,10 @@ urlpatterns = [
     path('test-add-to-cart/<int:pk>/<int:pk2>/', views.test_add_to_cart, name='test-add-to-cart'),
     path('delete-prescription/<int:pk>/', views.delete_prescription, name='delete-prescription'),
     path('delete-report/<int:pk>/', views.delete_report, name='delete-report'),
+
+    # AI Symptom Checker
+    path('symptom-checker/', views.symptom_checker, name='symptom-checker'),
+    path('ai-chat/', views.ai_chat, name='ai-chat'),
 
 ]
 

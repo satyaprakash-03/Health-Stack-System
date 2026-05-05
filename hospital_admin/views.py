@@ -26,6 +26,7 @@ import datetime
 from django.views.decorators.csrf import csrf_exempt
 
 from django.core.mail import BadHeaderError, send_mail
+import smtplib
 from django.template.loader import render_to_string
 from django.http import HttpResponse
 from django.utils.html import strip_tags
@@ -548,7 +549,10 @@ def create_report(request, pk):
             try:
                 send_mail(subject, plain_message, 'hospital_admin@gmail.com',  [patient_email], html_message=html_message, fail_silently=False)
             except BadHeaderError:
-                return HttpResponse('Invalid header found') 
+                return HttpResponse('Invalid header found')
+            except (smtplib.SMTPException, Exception) as e:
+                # Email failed but don't block the main action
+                messages.warning(request, f'Report saved but email notification failed: {e}')
 
             return redirect('mypatient-list')
 
@@ -886,6 +890,9 @@ def accept_doctor(request,pk):
         send_mail(subject, plain_message, 'hospital_admin@gmail.com',  [doctor_email], html_message=html_message, fail_silently=False)
     except BadHeaderError:
         return HttpResponse('Invalid header found')
+    except (smtplib.SMTPException, Exception) as e:
+        # Email failed but don't block the accept action
+        messages.warning(request, f'Doctor accepted but email notification failed: {e}')
 
     messages.success(request, 'Doctor Accepted!')
     return redirect('register-doctor-list')
@@ -922,7 +929,10 @@ def reject_doctor(request,pk):
         send_mail(subject, plain_message, 'hospital_admin@gmail.com',  [doctor_email], html_message=html_message, fail_silently=False)
     except BadHeaderError:
         return HttpResponse('Invalid header found')
-    
+    except (smtplib.SMTPException, Exception) as e:
+        # Email failed but don't block the reject action
+        messages.warning(request, f'Doctor rejected but email notification failed: {e}')
+
     messages.success(request, 'Doctor Rejected!')
     return redirect('register-doctor-list')
 

@@ -72,7 +72,7 @@ class Doctor_Information(models.Model):
     hospital_name = models.ForeignKey(Hospital_Information, on_delete=models.SET_NULL, null=True, blank=True)
 
     def __str__(self):
-        return str(self.user.username)
+        return str(self.user.username) if self.user else f'Doctor #{self.doctor_id}'
 
 
 class Appointment(models.Model):
@@ -101,7 +101,7 @@ class Appointment(models.Model):
     
 
     def __str__(self):
-        return str(self.patient.username)
+        return str(self.patient.username) if self.patient else f'Appointment #{self.id}'
 
 class Education(models.Model):
     education_id = models.AutoField(primary_key=True)
@@ -111,7 +111,7 @@ class Education(models.Model):
     year_of_completion = models.CharField(max_length=200, null=True, blank=True)
     
     def __str__(self):
-        return str(self.doctor.name)
+        return str(self.doctor.name) if self.doctor else f'Education #{self.education_id}'
     
 class Experience(models.Model):
     experience_id = models.AutoField(primary_key=True)
@@ -122,7 +122,7 @@ class Experience(models.Model):
     designation = models.CharField(max_length=200, null=True, blank=True)
     
     def __str__(self):
-        return str(self.doctor.name)
+        return str(self.doctor.name) if self.doctor else f'Experience #{self.experience_id}'
 
 
 class Report(models.Model):
@@ -141,7 +141,7 @@ class Report(models.Model):
     other_information = models.CharField(max_length=200, null=True, blank=True)
 
     def __str__(self):
-        return str(self.patient.username)
+        return str(self.patient.username) if self.patient else f'Report #{self.report_id}'
 
 class Specimen(models.Model):
     report = models.ForeignKey(Report, on_delete=models.CASCADE, null=True, blank=True)
@@ -182,7 +182,7 @@ class Prescription(models.Model):
     extra_information = models.TextField(null=True, blank=True)
 
     def __str__(self):
-        return str(self.patient.username)
+        return str(self.patient.username) if self.patient else f'Prescription #{self.prescription_id}'
 
 class Prescription_medicine(models.Model):
     prescription = models.ForeignKey(Prescription, on_delete=models.CASCADE, null=True, blank=True)
@@ -265,4 +265,4 @@ class Doctor_review(models.Model):
     message = models.CharField(max_length=1000, null=True, blank=True)
 
     def __str__(self):
-        return str(self.patient.username)
+        return str(self.patient.username) if self.patient else f'Review #{self.review_id}'

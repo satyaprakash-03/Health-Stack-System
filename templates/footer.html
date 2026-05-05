@@ -1,99 +1,340 @@
 {% load static %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
 
-<footer class="footer">
-    <!-- Footer Top -->
-    <div class="footer-top">
-      <div class="container-fluid">
-        <div class="row">
-          
-          <div class="col-lg-6 col-md-6">
-            <!-- Footer Widget -->
-            <div class="footer-widget footer-about">
-              <div class="footer-logo">
-                <img
-                  src="{% static 'HealthStack-System/images/Normal/footer_logo.png' %}"
-                  alt="logo"
-                />
-              </div>
-              <div class="footer-about-content">
-                <p>
-                  Healthstack is an online based platform for multiple hospitals. It Provides immediate medical assistance to patients who require emergency treatment. Its Ability to track, monitor, and share a patient's health records between all hospitals. Patients can also see information regarding multiple hospitals and doctors and make appointments online.
-                </p>
-                <br>
-                <div class="social-icon">
-                  <ul>
-                    <li>
-                      <a href="https://www.facebook.com/share/1CapP1m6BS/" target="_blank"
-                        ><i class="fab fa-facebook-f"></i>
-                      </a>
-                    </li>
-                    <li>
-                      <a href="https://x.com/Satyaprakash_56" target="_blank"
-                        ><i class="fab fa-twitter"></i>
-                      </a>
-                    </li>
-                    <li>
-                      <a href="https://www.linkedin.com/in/satyaprakash-prajapati03/" target="_blank"
-                        ><i class="fab fa-linkedin-in"></i
-                      ></a>
-                    </li>
-                    <li>
-                      <a href="https://www.instagram.com/satyaprakash_03?igsh=d2x0cnRtenZtZWQ0" target="_blank"
-                        ><i class="fab fa-instagram"></i
-                      ></a>
-                    </li>
-                    {% comment %} <li>
-                      <a href="#" target="_blank"
-                        ><i class="fab fa-dribbble"></i>
-                      </a>
-                    </li> {% endcomment %}
-                  </ul>
-                </div>
-              </div>
-            </div>
-            <!-- /Footer Widget -->
-          </div>
+<style>
+/* ── FOOTER ── */
+.hs-footer {
+  background: linear-gradient(160deg, #0b2545 0%, #1a3a5c 50%, #0d2d4e 100%);
+  color: #cbd5e1;
+  font-family: 'Inter', sans-serif;
+  position: relative;
+  overflow: hidden;
+}
+.hs-footer::before {
+  content: '';
+  position: absolute;
+  top: -80px; right: -80px;
+  width: 300px; height: 300px;
+  background: radial-gradient(circle, rgba(0,184,200,0.12) 0%, transparent 70%);
+  border-radius: 50%;
+  pointer-events: none;
+}
+.hs-footer::after {
+  content: '';
+  position: absolute;
+  bottom: 60px; left: -60px;
+  width: 220px; height: 220px;
+  background: radial-gradient(circle, rgba(31,76,122,0.18) 0%, transparent 70%);
+  border-radius: 50%;
+  pointer-events: none;
+}
+/* top wave divider */
+.hs-footer-wave {
+  display: block;
+  width: 100%;
+  overflow: hidden;
+  line-height: 0;
+  margin-bottom: 0;
+}
+.hs-footer-wave svg { display: block; width: 100%; height: 60px; }
 
+/* main content */
+.hs-footer-main {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 56px 32px 40px;
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1.3fr;
+  gap: 48px;
+}
+/* Brand column */
+.hs-footer-brand .brand-logo {
+  height: 48px;
+  margin-bottom: 18px;
+  filter: brightness(1.1);
+}
+.hs-footer-brand p {
+  font-size: 0.85rem;
+  line-height: 1.85;
+  color: #94a3b8;
+  margin-bottom: 24px;
+  max-width: 300px;
+}
+/* Badges row */
+.hs-badges { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 24px; }
+.hs-badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 8px;
+  padding: 6px 12px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: #e2e8f0;
+  letter-spacing: 0.3px;
+}
+.hs-badge i { color: #00b8c8; }
+/* Social */
+.hs-socials { display: flex; gap: 10px; flex-wrap: wrap; }
+.hs-social {
+  width: 38px; height: 38px;
+  border-radius: 10px;
+  background: rgba(255,255,255,0.07);
+  border: 1px solid rgba(255,255,255,0.1);
+  display: flex; align-items: center; justify-content: center;
+  color: #94a3b8;
+  font-size: 0.88rem;
+  text-decoration: none;
+  transition: all 0.22s;
+}
+.hs-social:hover { background: #00b8c8; border-color: #00b8c8; color: #fff; transform: translateY(-2px); }
 
-          <div class="col-lg-3 col-md-6">
-            <!-- Footer Widget -->
-            
-            <!-- /Footer Widget -->
-          </div>
+/* Section columns */
+.hs-footer-col h4 {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 6px;
+  letter-spacing: 0.2px;
+}
+.hs-footer-col .hs-underline {
+  width: 32px; height: 3px;
+  background: linear-gradient(90deg, #00b8c8, #1f4c7a);
+  border-radius: 2px;
+  margin-bottom: 20px;
+}
+.hs-footer-col ul { list-style: none; padding: 0; margin: 0; }
+.hs-footer-col ul li { margin-bottom: 12px; }
+.hs-footer-col ul li a {
+  font-size: 0.83rem;
+  color: #94a3b8;
+  text-decoration: none;
+  display: inline-flex; align-items: center; gap: 7px;
+  transition: all 0.2s;
+}
+.hs-footer-col ul li a i { font-size: 0.7rem; color: #00b8c8; }
+.hs-footer-col ul li a:hover { color: #00b8c8; padding-left: 4px; }
 
-          <div class="col-lg-3 col-md-6">
-            <!-- Footer Widget -->
-            <div class="footer-widget footer-contact">
-              <h2 class="footer-title">Contact Us</h2>
-              <div class="footer-contact-info">
-                <div class="footer-address">
-                  <span><i class="fas fa-map-marker-alt"></i></span>
-                  <p>
-                    Lucknow,<br />
-                    Uttar Pradesh, India
-                  </p>
-                </div>
-                <p>
-                  <i class="fas fa-phone-alt"></i>
-                  +91 6392645782
-                </p>
-                <p class="mb-0">
-                  <i class="fas fa-envelope"></i>
-                  satyaprakash.in33@gmail.com
-                </p>
-              </div>
-            </div>
-            <!-- /Footer Widget -->
-          </div>
+/* Contact info */
+.hs-contact-item {
+  display: flex; align-items: flex-start; gap: 12px;
+  margin-bottom: 18px;
+}
+.hs-contact-ico {
+  width: 36px; height: 36px; flex-shrink: 0;
+  border-radius: 10px;
+  background: rgba(0,184,200,0.12);
+  border: 1px solid rgba(0,184,200,0.2);
+  display: flex; align-items: center; justify-content: center;
+  color: #00b8c8;
+  font-size: 0.85rem;
+}
+.hs-contact-text .lbl { font-size: 0.68rem; color: #64748b; font-weight: 600; text-transform: uppercase; letter-spacing: 0.4px; margin-bottom: 2px; }
+.hs-contact-text .val { font-size: 0.82rem; color: #cbd5e1; font-weight: 500; }
+
+/* Newsletter strip */
+.hs-newsletter {
+  max-width: 1280px; margin: 0 auto;
+  padding: 0 32px 40px;
+}
+.hs-newsletter-inner {
+  background: rgba(0,184,200,0.08);
+  border: 1px solid rgba(0,184,200,0.15);
+  border-radius: 16px;
+  padding: 28px 32px;
+  display: flex; align-items: center; justify-content: space-between; gap: 20px; flex-wrap: wrap;
+}
+.hs-newsletter-inner h5 { color: #fff; font-size: 1rem; font-weight: 700; margin: 0 0 4px; }
+.hs-newsletter-inner p { color: #94a3b8; font-size: 0.8rem; margin: 0; }
+.hs-nl-form { display: flex; gap: 8px; flex-wrap: wrap; }
+.hs-nl-form input {
+  padding: 10px 18px; border-radius: 10px;
+  border: 1px solid rgba(255,255,255,0.12);
+  background: rgba(255,255,255,0.06);
+  color: #fff; font-size: 0.83rem;
+  outline: none; width: 230px;
+  font-family: 'Inter', sans-serif;
+}
+.hs-nl-form input::placeholder { color: #64748b; }
+.hs-nl-form button {
+  padding: 10px 22px; border-radius: 10px;
+  background: linear-gradient(135deg, #00b8c8, #1f4c7a);
+  color: #fff; border: none; cursor: pointer;
+  font-size: 0.83rem; font-weight: 700;
+  font-family: 'Inter', sans-serif;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+.hs-nl-form button:hover { transform: translateY(-1px); box-shadow: 0 6px 18px rgba(0,184,200,0.3); }
+
+/* Bottom bar */
+.hs-footer-bottom {
+  border-top: 1px solid rgba(255,255,255,0.07);
+  padding: 18px 32px;
+}
+.hs-footer-bottom-inner {
+  max-width: 1280px; margin: 0 auto;
+  display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px;
+}
+.hs-footer-bottom-inner p { font-size: 0.78rem; color: #ffffff; margin: 0; }
+.hs-footer-bottom-inner p span { color: #00b8c8; font-weight: 600; }
+.hs-footer-legal { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
+.hs-footer-legal a {
+  font-size: 0.75rem; color: #475569; text-decoration: none;
+  padding: 4px 10px; border-radius: 6px;
+  border: 1px solid rgba(255,255,255,0.06);
+  transition: all 0.2s;
+}
+.hs-footer-legal a:hover { color: #00b8c8; border-color: rgba(0,184,200,0.3); }
+.hs-footer-legal span { color: #334155; font-size: 0.7rem; }
+
+/* Responsive */
+@media (max-width: 992px) {
+  .hs-footer-main { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 600px) {
+  .hs-footer-main { grid-template-columns: 1fr; padding: 40px 20px 28px; gap: 32px; }
+  .hs-footer-bottom { padding: 16px 20px; }
+  .hs-newsletter { padding: 0 20px 28px; }
+  .hs-newsletter-inner { padding: 22px 20px; }
+  .hs-nl-form input { width: 100%; }
+}
+</style>
+
+<!-- ── FOOTER ── -->
+<footer class="hs-footer">
+
+  <!-- Wave top divider -->
+  <div class="hs-footer-wave">
+    <svg viewBox="0 0 1440 60" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0,30 C360,70 1080,-10 1440,30 L1440,0 L0,0 Z" fill="#f0f6ff"/>
+    </svg>
+  </div>
+
+  <!-- Main grid -->
+  <div class="hs-footer-main">
+
+    <!-- Brand -->
+    <div class="hs-footer-brand">
+      <img src="{% static 'HealthStack-System/images/Normal/footer_logo_new.png' %}" alt="HealthStack" class="brand-logo"/>
+      <p>HealthStack is a comprehensive web-based healthcare management platform, streamlining patient-doctor interactions with intelligent appointment scheduling, prescription management, AI symptom analysis, and secure medical records.</p>
+
+      <!-- Trust badges -->
+      <div class="hs-badges">
+        <span class="hs-badge"><i class="fas fa-shield-alt"></i> HIPAA Compliant</span>
+        <span class="hs-badge"><i class="fas fa-lock"></i> Secure & Encrypted</span>
+        <span class="hs-badge"><i class="fas fa-certificate"></i> ISO Certified</span>
+      </div>
+
+      <!-- Social links -->
+      <div class="hs-socials">
+        <a href="https://www.linkedin.com/in/satyaprakash-prajapati03/" target="_blank" class="hs-social" title="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+        <a href="https://wa.me/916392645782" target="_blank" class="hs-social" title="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+        <a href="https://x.com/Satyaprakash_56" target="_blank" class="hs-social" title="Twitter / X"><i class="fab fa-x-twitter"></i></a>
+        <a href="https://www.facebook.com/share/r/14aDcRZiLKy/" target="_blank" class="hs-social" title="Facebook"><i class="fab fa-facebook-f"></i></a>
+        <a href="https://www.instagram.com/satyaprakash_03" target="_blank" class="hs-social" title="Instagram"><i class="fab fa-instagram"></i></a>
+      </div>
+    </div>
+
+    <!-- Quick Links -->
+    <div class="hs-footer-col">
+      <h4>Quick Links</h4>
+      <div class="hs-underline"></div>
+      <ul>
+        <li><a href="{% url 'hospital_home' %}"><i class="fas fa-chevron-right"></i> Home</a></li>
+        <li><a href="{% url 'search' %}"><i class="fas fa-chevron-right"></i> Find a Doctor</a></li>
+        <li><a href="{% url 'about-us' %}"><i class="fas fa-chevron-right"></i> About Us</a></li>
+        <li><a href="{% url 'contact_us' %}"><i class="fas fa-chevron-right"></i> Contact Us</a></li>
+        <li><a href="{% url 'symptom-checker' %}"><i class="fas fa-chevron-right"></i> AI Symptom Checker</a></li>
+        <li><a href="{% url 'faqs' %}"><i class="fas fa-chevron-right"></i> FAQs</a></li>
+      </ul>
+    </div>
+
+    <!-- Services -->
+    <div class="hs-footer-col">
+      <h4>Our Services</h4>
+      <div class="hs-underline"></div>
+      <ul>
+        <li><a href="#"><i class="fas fa-chevron-right"></i> Online Consultation</a></li>
+        <li><a href="#"><i class="fas fa-chevron-right"></i> Appointment Booking</a></li>
+        <li><a href="#"><i class="fas fa-chevron-right"></i> Prescription Management</a></li>
+        <li><a href="#"><i class="fas fa-chevron-right"></i> Lab Reports & Tests</a></li>
+        <li><a href="#"><i class="fas fa-chevron-right"></i> Medical Records</a></li>
+        <li><a href="#"><i class="fas fa-chevron-right"></i> Pharmacy Services</a></li>
+      </ul>
+    </div>
+
+    <!-- Contact -->
+    <div class="hs-footer-col">
+      <h4>Get In Touch</h4>
+      <div class="hs-underline"></div>
+
+      <div class="hs-contact-item">
+        <div class="hs-contact-ico"><i class="fas fa-map-marker-alt"></i></div>
+        <div class="hs-contact-text">
+          <div class="lbl">Address</div>
+          <div class="val">Lucknow, Uttar Pradesh, India</div>
+        </div>
+      </div>
+
+      <div class="hs-contact-item">
+        <div class="hs-contact-ico"><i class="fas fa-phone-alt"></i></div>
+        <div class="hs-contact-text">
+          <div class="lbl">Phone</div>
+          <div class="val">+91 6392645782</div>
+        </div>
+      </div>
+
+      <div class="hs-contact-item">
+        <div class="hs-contact-ico"><i class="fas fa-envelope"></i></div>
+        <div class="hs-contact-text">
+          <div class="lbl">Email</div>
+          <div class="val">satyaprakash.in33@gmail.com</div>
+        </div>
+      </div>
+
+      <div class="hs-contact-item">
+        <div class="hs-contact-ico"><i class="fas fa-clock"></i></div>
+        <div class="hs-contact-text">
+          <div class="lbl">Working Hours</div>
+          <div class="val">Mon – Sat: 9:00 AM – 6:00 PM</div>
         </div>
       </div>
     </div>
-    <!-- /Footer Top -->
 
-    <!-- Footer Bottom -->
-     <p style="color:white; margin-left:30px;">
-         © 2026 HealthStack | All Rights Reserved.
-     </p>
-    
-    <!-- /Footer Bottom -->
-  </footer>
+  </div><!-- /main grid -->
+
+  <!-- Newsletter -->
+  <div class="hs-newsletter">
+    <div class="hs-newsletter-inner">
+      <div>
+        <h5><i class="fas fa-paper-plane" style="color:#00b8c8;margin-right:8px;"></i>Stay Updated with HealthStack</h5>
+        <p>Subscribe for health tips, feature updates, and medical news — no spam, ever.</p>
+      </div>
+      <div class="hs-nl-form">
+        <input type="email" placeholder="Enter your email address"/>
+        <button type="button">Subscribe Now</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bottom bar -->
+  <div class="hs-footer-bottom">
+    <div class="hs-footer-bottom-inner">
+      <p>© 2026 <span>HealthStack</span>. All Rights Reserved.</p>
+      <div class="hs-footer-legal">
+        <a href="{% url 'terms' %}">Terms & Conditions</a>
+        <span>·</span>
+        <a href="{% url 'privacy-policy' %}">Privacy Policy</a>
+        <span>·</span>
+        <a href="{% url 'faqs' %}">FAQs</a>
+        <span>·</span>
+        <a href="{% url 'support' %}">Support</a>
+      </div>
+    </div>
+  </div>
+
+</footer>
+
+{% include 'ai_chatbot_widget.html' %}

@@ -1,289 +1,377 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
-  <!-- doccure/patient-dashboard.html  30 Nov 2019 04:12:16 GMT -->
-  <head>
-    <meta charset="utf-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1.0, user-scalable=0"
-    />
-    <title>HealthStack</title>
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Prescription Report — HealthStack</title>
+  <link rel="icon" type="image/x-icon" href="{% static 'HealthStack-System/images/Normal/favicon.png' %}"/>
+  <link rel="stylesheet" href="{% static 'HealthStack-System/css/Normal/bootstrap.min.css' %}"/>
+  <link rel="stylesheet" href="{% static 'HealthStack-System/plugins/Normal/fontawesome/css/all.min.css' %}"/>
+  <link rel="stylesheet" href="{% static 'HealthStack-System/css/Normal/style.css' %}"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <style>
+    :root{--p:#1f4c7a;--a:#00b8c8;--g:linear-gradient(135deg,#1f4c7a,#00b8c8);}
+    body{background:#f0f6ff;font-family:'Inter',sans-serif;}
+    .rc-wrap{max-width:900px;margin:30px auto;padding:0 16px 60px;}
+    /* ── REPORT CARD ── */
+    .rc{background:#fff;border-radius:16px;box-shadow:0 4px 32px rgba(31,76,122,0.13);overflow:hidden;}
+    /* Header */
+    .rc-header{background:var(--g);padding:22px 28px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;}
+    .rc-header-logo{display:flex;align-items:center;gap:12px;}
+    .rc-header-logo img{height:48px;border-radius:8px;background:#fff;padding:4px;}
+    .rc-header-logo-text h2{color:#fff;font-size:1.2rem;font-weight:800;margin:0;line-height:1.1;}
+    .rc-header-logo-text p{color:rgba(255,255,255,0.75);font-size:0.72rem;margin:0;}
+    .rc-header-title{text-align:center;flex:1;}
+    .rc-header-title h1{color:#fff;font-size:1.6rem;font-weight:900;margin:0;letter-spacing:1px;}
+    .rc-header-title .ecg{font-size:1.1rem;letter-spacing:2px;color:rgba(255,255,255,0.6);}
+    .rc-header-meta{text-align:right;}
+    .rc-meta-box{background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.25);border-radius:10px;padding:8px 14px;margin-bottom:8px;}
+    .rc-meta-box .lbl{font-size:0.65rem;font-weight:600;color:rgba(255,255,255,0.7);text-transform:uppercase;letter-spacing:0.5px;}
+    .rc-meta-box .val{font-size:0.85rem;font-weight:700;color:#fff;}
+    /* Section headers */
+    .rc-section-head{display:flex;align-items:center;gap:10px;background:linear-gradient(90deg,var(--p) 0%,var(--a) 100%);color:#fff;padding:9px 18px;border-radius:8px;margin-bottom:16px;font-size:0.82rem;font-weight:700;letter-spacing:0.5px;text-transform:uppercase;}
+    .rc-section-head i{font-size:1rem;}
+    /* Patient info */
+    .rc-patient{padding:20px 24px;border-bottom:1px solid #dde9f7;}
+    .rc-info-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px 20px;}
+    .rc-info-row{display:flex;align-items:flex-start;gap:10px;}
+    .rc-info-row .ico{width:34px;height:34px;border-radius:8px;background:#e8f0fe;display:flex;align-items:center;justify-content:center;font-size:0.85rem;color:var(--p);flex-shrink:0;}
+    .rc-info-row .info-lbl{font-size:0.68rem;color:#94a3b8;font-weight:600;text-transform:uppercase;letter-spacing:0.3px;}
+    .rc-info-row .info-val{font-size:0.875rem;font-weight:600;color:#0f2942;}
+    /* Body */
+    .rc-body{padding:20px 24px;}
+    /* Medicine table */
+    .rc-table{width:100%;border-collapse:collapse;font-size:0.82rem;margin-bottom:4px;}
+    .rc-table thead tr{background:linear-gradient(90deg,var(--p),var(--a));color:#fff;}
+    .rc-table thead th{padding:10px 12px;font-weight:600;font-size:0.75rem;text-transform:uppercase;letter-spacing:0.4px;border:none;}
+    .rc-table tbody tr{border-bottom:1px solid #f1f5f9;transition:background 0.15s;}
+    .rc-table tbody tr:hover{background:#f8fafc;}
+    .rc-table tbody td{padding:10px 12px;color:#334155;vertical-align:middle;}
+    .rc-table tbody tr:last-child{border-bottom:none;}
+    /* Status badge */
+    .badge-norm{display:inline-flex;align-items:center;gap:5px;background:#d1fae5;color:#065f46;border-radius:20px;padding:3px 10px;font-size:0.72rem;font-weight:600;}
+    .badge-norm::before{content:'';display:inline-block;width:7px;height:7px;border-radius:50%;background:#10b981;}
+    /* Notes & Advice */
+    .rc-two-col{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px;}
+    .rc-note-box{background:#f8fafc;border:1px solid #dde9f7;border-radius:12px;padding:16px;}
+    .rc-note-box ul{margin:0;padding-left:18px;}
+    .rc-note-box ul li{font-size:0.82rem;color:#334155;margin-bottom:6px;line-height:1.5;}
+    /* Doctor info */
+    .rc-doctor{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px;}
+    .rc-doc-box{background:#f8fafc;border:1px solid #dde9f7;border-radius:12px;padding:16px;display:flex;gap:14px;align-items:flex-start;}
+    .rc-doc-box img{width:58px;height:58px;border-radius:50%;object-fit:cover;border:2px solid #dde9f7;flex-shrink:0;}
+    .rc-doc-box .doc-ico{width:58px;height:58px;border-radius:50%;background:linear-gradient(135deg,var(--p),var(--a));display:flex;align-items:center;justify-content:center;font-size:1.5rem;color:#fff;flex-shrink:0;}
+    .rc-doc-name{font-size:0.95rem;font-weight:800;color:#0f2942;margin-bottom:2px;}
+    .rc-doc-info p{font-size:0.76rem;color:#64748b;margin:1px 0;}
+    .rc-sig-box{background:#f8fafc;border:1px solid #dde9f7;border-radius:12px;padding:16px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;}
+    .rc-sig-line{border-top:2px solid #334155;width:140px;margin:10px auto 6px;}
+    /* Footer */
+    .rc-footer{background:linear-gradient(90deg,var(--p) 0%,var(--a) 100%);padding:14px 24px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;}
+    .rc-footer span{color:rgba(255,255,255,0.85);font-size:0.73rem;display:flex;align-items:center;gap:7px;}
+    .rc-footer span i{color:rgba(255,255,255,0.6);}
+    /* Note */
+    .rc-note-strip{background:#f8fafc;border-top:1px solid #dde9f7;padding:10px 24px;text-align:center;font-size:0.73rem;color:#94a3b8;display:flex;align-items:center;justify-content:center;gap:7px;}
+    /* Action bar */
+    .rc-actions{display:flex;gap:12px;margin-bottom:20px;flex-wrap:wrap;}
+    .rc-btn{display:inline-flex;align-items:center;gap:8px;padding:10px 22px;border-radius:10px;font-size:0.85rem;font-weight:700;text-decoration:none;transition:all 0.2s;border:none;cursor:pointer;font-family:'Inter',sans-serif;}
+    .rc-btn-primary{background:linear-gradient(135deg,var(--p),#2a6cb0);color:#fff;box-shadow:0 4px 14px rgba(31,76,122,0.25);}
+    .rc-btn-primary:hover{transform:translateY(-2px);color:#fff;box-shadow:0 7px 20px rgba(31,76,122,0.35);}
+    .rc-btn-outline{background:#fff;border:1.5px solid #dde9f7;color:var(--p);}
+    .rc-btn-outline:hover{background:#f0f6ff;color:var(--p);}
+    .rc-btn-danger{background:#fff;border:1.5px solid #fee2e2;color:#dc2626;}
+    .rc-btn-danger:hover{background:#fee2e2;color:#dc2626;}
+    @media print{.rc-actions,.header,.breadcrumb-bar{display:none!important;}.rc-wrap{margin:0;padding:0;}.rc{box-shadow:none;border-radius:0;}}
+    @media(max-width:600px){.rc-info-grid,.rc-two-col,.rc-doctor{grid-template-columns:1fr;}.rc-header{flex-direction:column;text-align:center;}.rc-header-meta{text-align:center;}.rc-header-title{order:-1;}}
+  </style>
+</head>
+<body>
+<div class="main-wrapper">
+  <header class="header">{% include 'patient_navbar.html' %}</header>
 
-    <!-- Favicons -->
-    <link
-      type="image/x-icon"
-      href="{% static 'HealthStack-System/images/Normal/favicon.png' %}"
-      rel="icon"
-    />
-
-    <!-- Bootstrap CSS -->
-    <link
-      rel="stylesheet"
-      href="{% static 'HealthStack-System/css/Normal/bootstrap.min.css' %}"
-    />
-
-    <!-- Fontawesome CSS -->
-    <link
-      rel="stylesheet"
-      href="{% static 'HealthStack-System/plugins/Normal/fontawesome/css/fontawesome.min.css' %}"
-    />
-    <link
-      rel="stylesheet"
-      href="{% static 'HealthStack-System/plugins/Normal/fontawesome/css/all.min.css' %}"
-    />
-
-    <!-- Main CSS -->
-    <link
-      rel="stylesheet"
-      href="{% static 'HealthStack-System/css/Normal/style.css' %}"
-    />
-
-    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!--[if lt IE 9]>
-      <script src="assets/js/html5shiv.min.js"></script>
-      <script src="assets/js/respond.min.js"></script>
-    <![endif]-->
-  </head>
-  <body>
-    <!-- Main Wrapper -->
-    <div class="main-wrapper">
-      	<!-- Header -->
-      	<header class="header">{% include 'patient_navbar.html' %}</header>
-      	<!-- /Header -->
-
-     	<!-- Breadcrumb -->
-      	<div class="breadcrumb-bar">
-        <div class="container-fluid">
-          <div class="row align-items-center">
-            <div class="col-md-12 col-12">
-              <nav aria-label="breadcrumb" class="page-breadcrumb">
-                <ol class="breadcrumb">
-                  <li class="breadcrumb-item">
-                    <a href="{% url 'patient-dashboard' %}">Home</a>
-                  </li>
-                  <li class="breadcrumb-item active" aria-current="page">
-                    Patient Dashboard
-                  </li>
-                </ol>
-              </nav>
-              <h2 class="breadcrumb-title">Patient Dashboard</h2>
-            </div>
-          </div>
+  <div class="breadcrumb-bar">
+    <div class="container-fluid">
+      <div class="row align-items-center">
+        <div class="col-md-12 col-12">
+          <nav aria-label="breadcrumb" class="page-breadcrumb">
+            <ol class="breadcrumb">
+              <li class="breadcrumb-item"><a href="{% url 'patient-dashboard' %}">Dashboard</a></li>
+              <li class="breadcrumb-item active">Prescription Report</li>
+            </ol>
+          </nav>
+          <h2 class="breadcrumb-title">Medical Prescription</h2>
         </div>
-      	</div>
-      	<!-- /Breadcrumb -->
+      </div>
+    </div>
+  </div>
 
-      	<!-- Page Content -->
-      	<div class="content">
-        	<div class="container-fluid">
-          		<div class="row">
-            		<!-- Profile Sidebar -->
-            		<div class="col-md-5 col-lg-4 col-xl-3 theiaStickySidebar">
-              <div>{% include 'patient-sidebar.html' %}</div>
-            		</div>
-            		<!-- / Profile Sidebar -->
+  <div class="content">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-md-5 col-lg-4 col-xl-3 theiaStickySidebar">
+          <div>{% include 'patient-sidebar.html' %}</div>
+        </div>
+        <div class="col-md-7 col-lg-8 col-xl-9">
 
-					<div class="col-md-7 col-lg-6 col-xl-9">
+          {% for prescription in prescription %}
+          <!-- Action Buttons -->
+          <div class="rc-actions">
+            <a href="{% url 'patient-dashboard' %}" class="rc-btn rc-btn-outline">
+              <i class="fas fa-arrow-left"></i> Back to Dashboard
+            </a>
+            <a href="{% url 'pres_pdf' pk=prescription.prescription_id %}" target="_blank" class="rc-btn rc-btn-primary">
+              <i class="fas fa-download"></i> Download PDF
+            </a>
+            <button onclick="window.print()" class="rc-btn rc-btn-outline">
+              <i class="fas fa-print"></i> Print
+            </button>
+            <a href="{% url 'test-cart' pk=prescription.prescription_id %}" class="rc-btn rc-btn-outline">
+              <i class="fas fa-flask"></i> Test Cart
+            </a>
+            <a href="{% url 'delete-prescription' pk=prescription.prescription_id %}" class="rc-btn rc-btn-danger" onclick="return confirm('Delete this prescription?')">
+              <i class="fas fa-trash"></i> Delete
+            </a>
+          </div>
 
+          <!-- REPORT CARD -->
+          <div class="rc-wrap" style="padding:0 0 40px;">
+          <div class="rc">
 
-							<div class="invoice-content">
-								<div class="invoice-item">
-									<div class="row">
-										<div class="col-md-6">
-											<div class="invoice-logo">
-												<img src="{% static 'HealthStack-System/images/Normal/FullLogo_Transparent_NoBuffer.png'%}" alt="logo">
-											</div>
-										</div>
-										<div class="col-md-6">
-											{% for prescription in prescription %}
-											<p class="invoice-details">
-												<strong>Prescription ID:</strong> {{prescription.prescription_id}} <br>
-												<strong>Patient ID:</strong> {{prescription.patient.patient_id}} <br>
-												<strong>Date:</strong> {{prescription.create_date }} 
-											</p>
-										</div>
-									</div>
-								</div>
-								
-								<!-- Invoice Item -->
-								<div class="invoice-item">
-									<div class="row">
-										<div class="col-md-6">
-											<div class="invoice-info">
-												<strong class="customer-text">Doctor Information</strong>
-												<p class="invoice-details invoice-details-two">
-													<b>Name: </b>{{prescription.doctor.name}} <br>
-													<b>Department: </b>{{prescription.doctor.department_name}}<br>
-													<b>Email: </b>{{prescription.doctor.email}} <br>
-													
-												</p>
-											</div>
-										</div>
-										<div class="col-md-6">
-											<div class="invoice-info invoice-info2">
-												<strong class="customer-text">Prescription To</strong>
-												<p class="invoice-details">
-													<b>Name: </b>{{prescription.patient.name}}<br>
-													<b>Addtress: </b>{{prescription.patient.address}}<br>
-													<b>Email: </b>{{prescription.patient.email}}<br>
-													<b>Phone Number: </b>{{prescription.prescription_id}}
-													
-												</p>
-												
-											</div>
-										</div>
-									</div>
-								</div>
-								<!-- /Invoice Item -->
-								
-								
-								
-								<!-- Invoice Item -->
-								<div class="invoice-item invoice-table-wrap mt-3">
-									<div class="row">
-										<div class="col-md-12">
-											<hr>
-											<h2 class="text-center mb-4" style="color: rgb(84, 147, 199)"><b>Medicine</b></h2>
-											<hr>
-											<div class="table-responsive">
-												<table class="invoice-table table table-bordered" >
-													<thead >
-														
-														
-														<tr style="background-color: rgb(84, 147, 199);">
-															<th>Medicine Name</th>
-															<th class="text-center">Quantity</th>
-															<th class="text-center">Frequency</th>
-															<th class="text-center">Duration</th>
-															<th class="text-center">Relation with meal</th>
-															<th class="text-center">Instruction</th>
-															
-															
-														</tr>
-														{% for pm in prescription_medicine %}
-														<tr>
-															<th class="text-center">{{pm.medicine_name}}</td>
-															<td class="text-center">{{pm.quantity}}</td>
-															<td class="text-center">{{pm.frequency}}</td>
-															<td class="text-center">{{pm.duration}}</td>
-															<td class="text-center">{{pm.relation_with_meal}}</td>
-															<td class="text-center">{{pm.instruction}}</td>
-															
-															
-														</tr>
-														{% endfor %}
-													</tbody>
-												</table>
-											</div>
-										</div>
-										
-									</div>
-								</div>
+            <!-- ── HEADER ── -->
+            <div class="rc-header">
+              <div class="rc-header-logo">
+                <img src="{% static 'HealthStack-System/images/Normal/logo.jpg' %}" alt="HealthStack"/>
+                <div class="rc-header-logo-text">
+                  <h2>HealthStack</h2>
+                  <p>Better Care, Better Health</p>
+                </div>
+              </div>
+              <div class="rc-header-title">
+                <div class="ecg">••• ♥ •••</div>
+                <h1>PRESCRIPTION</h1>
+                <div class="ecg">••• ♥ •••</div>
+              </div>
+              <div class="rc-header-meta">
+                <div class="rc-meta-box">
+                  <div class="lbl"><i class="fas fa-calendar me-1"></i> Issue Date</div>
+                  <div class="val">{{ prescription.create_date }}</div>
+                </div>
+                <div class="rc-meta-box">
+                  <div class="lbl"><i class="fas fa-hashtag me-1"></i> Prescription ID</div>
+                  <div class="val">HSR/PRES/{{ prescription.prescription_id }}</div>
+                </div>
+              </div>
+            </div>
 
-								
-                                <!-- Invoice Item -->
-								<div class="invoice-item invoice-table-wrap mt-4">
-									<div class="row">
-										<div class="col-md-12">
-											<hr>
-											<h2 class="text-center mb-4" style="color:rgb(84, 147, 199)"><b>Test</b></h2>
-											<hr>
-											<div class="table-responsive">
-												<table class="invoice-table table table-bordered">
-													<thead>
-														<tr style="background-color: rgb(84, 147, 199)">
-															<th class="text-center">Test Name</th>
-															<th class="text-center">Description</th>
-															<!-- <th class="text-center"> Test id </th> -->
-															<!-- <th class="text-center"> price</th> -->
-															<th class="text-center">Action</th>
-															
-															
-														</tr>
-													</thead>
-													<tbody>
-														{% for pt in prescription_test %}
-														<tr>
-															
-															<td class="text-center">{{pt.test_name}}</td>
-															<td class="text-center">{{pt.test_description}}</td>
-															<!-- <td class="text-center">{{pt.test_info_id}}</td> -->
-															<!-- <td class="text-center">{{pt.test_info_price}}</td> -->
-															<td class="text-center"><a href="{% url 'test-add-to-cart' pk=prescription.prescription_id pk2=pt.test_info_id %}" class="btn btn-primary">Select</a></td>
-															
-														</tr>
-														{% endfor %}
-													</tbody>
-												</table>
-											</div>
-										</div>
-										
-									</div>
-								</div>
-								<!-- /Invoice Item -->
-                                
-								
-								<!-- Invoice Information -->
-								<!-- <div class="other-info">
-									<h4>Extra Notes</h4>
-									<p class="text-muted mb-0">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus sed dictum ligula, cursus blandit risus. Maecenas eget metus non tellus dignissim aliquam ut a ex. Maecenas sed vehicula dui, ac suscipit lacus. Sed finibus leo vitae lorem interdum, eu scelerisque tellus fermentum. Curabitur sit amet lacinia lorem. Nullam finibus pellentesque libero.</p>
-								</div> -->
-								<div class="invoice-item invoice-table-wrap mt-4">
-									<div class="row">
-										<div class="col-md-12">
-											<div class="table-responsive">
-												<table class="invoice-table table table-bordered">
-													<thead>
-														<tr>
-															<th><h2 class="text-center mb-4" style="color: rgb(84, 147, 199)"><b>Advice/Recommendation</b></h2></th>
-															
-														</tr>
-													</thead>
-													<tbody>
-														<tr>
-															<td>{{prescription.extra_information}}</td>
-												
-															
-														</tr>
-											
-													</tbody>
-												</table>
-											</div>
-										</div>
-										
-										
-									</div>
-									<br>
-									<button class="btn btn-md bg-primary"> <a href="{% url 'test-cart' pk=prescription.prescription_id %}" > Test Cart </a></button><br><br>
-									<button class="btn btn-md bg-info"> <a target="_blank" href="{% url 'pres_pdf' pk=prescription.prescription_id %}" > Download Prescription </a></button>
-									{% endfor %}
-								</div>
-								<!-- /Invoice Information -->
-								
-							</div>
-						</div>
-						</div>
-					</div>
-					
+            <!-- ── PATIENT INFORMATION ── -->
+            <div class="rc-patient">
+              <div class="rc-section-head"><i class="fas fa-user"></i> Patient Information</div>
+              <div class="rc-info-grid">
+                <div class="rc-info-row">
+                  <div class="ico"><i class="fas fa-user"></i></div>
+                  <div>
+                    <div class="rc-info-lbl info-lbl">Patient Name</div>
+                    <div class="info-val">{{ prescription.patient.name|default:prescription.patient.username }}</div>
+                  </div>
+                </div>
+                <div class="rc-info-row">
+                  <div class="ico"><i class="fas fa-phone"></i></div>
+                  <div>
+                    <div class="info-lbl">Contact Number</div>
+                    <div class="info-val">{{ prescription.patient.phone_number|default:"—" }}</div>
+                  </div>
+                </div>
+                <div class="rc-info-row">
+                  <div class="ico"><i class="fas fa-birthday-cake"></i></div>
+                  <div>
+                    <div class="info-lbl">Age / Gender</div>
+                    <div class="info-val">{{ prescription.patient.age|default:"—" }} Years</div>
+                  </div>
+                </div>
+                <div class="rc-info-row">
+                  <div class="ico" style="background:#fee2e2;color:#dc2626;"><i class="fas fa-tint"></i></div>
+                  <div>
+                    <div class="info-lbl">Blood Group</div>
+                    <div class="info-val">{{ prescription.patient.blood_group|default:"—" }}</div>
+                  </div>
+                </div>
+                <div class="rc-info-row">
+                  <div class="ico"><i class="fas fa-map-marker-alt"></i></div>
+                  <div>
+                    <div class="info-lbl">Address</div>
+                    <div class="info-val">{{ prescription.patient.address|default:"—" }}</div>
+                  </div>
+                </div>
+                <div class="rc-info-row">
+                  <div class="ico"><i class="fas fa-id-card"></i></div>
+                  <div>
+                    <div class="info-lbl">Patient ID</div>
+                    <div class="info-val">PTHS{{ prescription.patient.patient_id }}</div>
+                  </div>
+                </div>
+              </div>
+            </div>
 
-				</div>	
-			</div>		   
-		</div>
-		<!-- /Page Content -->
-	<!-- /Main Wrapper -->
-	</div>
-	  
-	<!-- jQuery -->
-	<script src="{% static 'HealthStack-System/js/Normal/jquery.min.js' %}"></script>
+            <!-- ── BODY ── -->
+            <div class="rc-body">
 
-    <!-- Bootstrap Core JS -->
-    <script src="{% static 'HealthStack-System/js/Normal/popper.min.js' %}"></script>
-    <script src="{% static 'HealthStack-System/js/Normal/bootstrap.min.js' %}"></script>
+              <!-- Medicines Table -->
+              <div class="rc-section-head"><i class="fas fa-pills"></i> Prescribed Medicines</div>
+              <div class="table-responsive mb-4">
+                <table class="rc-table">
+                  <thead>
+                    <tr>
+                      <th>#</th>
+                      <th>Medicine Name</th>
+                      <th>Quantity</th>
+                      <th>Frequency</th>
+                      <th>Duration</th>
+                      <th>With Meal</th>
+                      <th>Instruction</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for pm in prescription_medicine %}
+                    <tr>
+                      <td style="color:#94a3b8;font-weight:600;">{{ forloop.counter }}</td>
+                      <td style="font-weight:600;color:#0f2942;">{{ pm.medicine_name }}</td>
+                      <td>{{ pm.quantity }}</td>
+                      <td>{{ pm.frequency }}</td>
+                      <td>{{ pm.duration }}</td>
+                      <td>{{ pm.relation_with_meal }}</td>
+                      <td>{{ pm.instruction }}</td>
+                    </tr>
+                    {% empty %}
+                    <tr><td colspan="7" style="text-align:center;color:#94a3b8;padding:20px;">No medicines prescribed.</td></tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+              </div>
 
-    <!-- Custom JS -->
-    <script src="{% static 'HealthStack-System/Outside_assets/js/script.js' %}"></script>
-  </body>
+              <!-- Recommended Tests -->
+              {% if prescription_test %}
+              <div class="rc-section-head"><i class="fas fa-flask"></i> Recommended Tests</div>
+              <div class="table-responsive mb-4">
+                <table class="rc-table">
+                  <thead>
+                    <tr>
+                      <th>#</th>
+                      <th>Test Name</th>
+                      <th>Description</th>
+                      <th>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for pt in prescription_test %}
+                    <tr>
+                      <td style="color:#94a3b8;font-weight:600;">{{ forloop.counter }}</td>
+                      <td style="font-weight:600;color:#0f2942;">{{ pt.test_name }}</td>
+                      <td>{{ pt.test_description }}</td>
+                      <td>
+                        {% if pt.test_info_id %}
+                        <a href="{% url 'test-add-to-cart' pk=prescription.prescription_id pk2=pt.test_info_id %}" style="display:inline-flex;align-items:center;gap:5px;background:#e8f0fe;color:#1f4c7a;border-radius:20px;padding:4px 12px;font-size:0.75rem;font-weight:700;text-decoration:none;">
+                          <i class="fas fa-cart-plus"></i> Add to Cart
+                        </a>
+                        {% else %}
+                        <span style="display:inline-flex;align-items:center;gap:5px;background:#f1f5f9;color:#94a3b8;border-radius:20px;padding:4px 12px;font-size:0.75rem;font-weight:600;">
+                          <i class="fas fa-ban"></i> Not Available
+                        </span>
+                        {% endif %}
+                      </td>
+                    </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+              {% endif %}
 
-<!-- doccure/invoice-view.html  30 Nov 2019 04:12:20 GMT -->
+              <!-- Clinical Notes & Doctor's Advice -->
+              <div class="rc-two-col">
+                <div class="rc-note-box">
+                  <div class="rc-section-head" style="margin-bottom:12px;"><i class="fas fa-notes-medical"></i> Clinical Notes</div>
+                  <ul>
+                    {% if prescription.medicine_description %}
+                    <li>{{ prescription.medicine_description }}</li>
+                    {% endif %}
+                    {% if prescription.test_description %}
+                    <li>{{ prescription.test_description }}</li>
+                    {% endif %}
+                    {% if not prescription.medicine_description and not prescription.test_description %}
+                    <li>All values are within normal reference range.</li>
+                    <li>Patient is advised to maintain a balanced diet and regular exercise.</li>
+                    <li>Regular health check-up recommended.</li>
+                    {% endif %}
+                  </ul>
+                </div>
+                <div class="rc-note-box">
+                  <div class="rc-section-head" style="margin-bottom:12px;"><i class="fas fa-user-md"></i> Doctor's Advice</div>
+                  {% if prescription.extra_information %}
+                  <p style="font-size:0.83rem;color:#334155;line-height:1.65;">{{ prescription.extra_information }}</p>
+                  {% else %}
+                  <ul>
+                    <li>Stay hydrated and avoid junk food.</li>
+                    <li>Get 7–8 hours of sleep daily.</li>
+                    <li>Conduct routine health check-ups every 6 months.</li>
+                    <li>Follow the medicine schedule strictly.</li>
+                  </ul>
+                  {% endif %}
+                </div>
+              </div>
+
+              <!-- Doctor Information & Signature -->
+              <div class="rc-doctor mt-3">
+                <div class="rc-doc-box">
+                  <div class="doc-ico"><i class="fas fa-user-md"></i></div>
+                  <div class="rc-doc-info">
+                    <div class="rc-doc-name">Dr. {{ prescription.doctor.name }}</div>
+                    <p><i class="fas fa-stethoscope me-1" style="color:var(--a);"></i> {{ prescription.doctor.department_name }}</p>
+                    <p><i class="fas fa-hospital me-1" style="color:var(--a);"></i> {{ prescription.doctor.hospital_name }}</p>
+                    <p><i class="fas fa-envelope me-1" style="color:var(--a);"></i> {{ prescription.doctor.email }}</p>
+                    <p><i class="fas fa-phone me-1" style="color:var(--a);"></i> {{ prescription.doctor.phone_number|default:"—" }}</p>
+                  </div>
+                </div>
+                <div class="rc-sig-box">
+                  <p style="font-size:0.8rem;color:#64748b;margin-bottom:8px;">Authorised Signature</p>
+                  <div style="font-family:Georgia,serif;font-size:1.6rem;color:#334155;font-style:italic;letter-spacing:1px;">
+                    {{ prescription.doctor.name }}
+                  </div>
+                  <div class="rc-sig-line"></div>
+                  <p style="font-size:0.8rem;font-weight:700;color:#0f2942;">Dr. {{ prescription.doctor.name }}</p>
+                  <p style="font-size:0.72rem;color:#64748b;">(Signature)</p>
+                </div>
+              </div>
+
+            </div><!-- /rc-body -->
+
+            <!-- ── FOOTER ── -->
+            <div class="rc-footer">
+              <span><i class="fas fa-hospital"></i> HealthStack Hospital Network</span>
+              <span><i class="fas fa-phone"></i> +91 98765 43210</span>
+              <span><i class="fas fa-envelope"></i> info@healthstack.com</span>
+              <span><i class="fas fa-globe"></i> www.healthstack.com</span>
+            </div>
+
+            <!-- Disclaimer -->
+            <div class="rc-note-strip">
+              <i class="fas fa-shield-alt"></i>
+              Note: This prescription is computer generated and does not require a physical signature.
+            </div>
+
+          </div><!-- /rc -->
+          </div><!-- /rc-wrap -->
+          {% endfor %}
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {% include 'footer.html' %}
+</div>
+
+<script src="{% static 'HealthStack-System/js/Normal/jquery.min.js' %}"></script>
+<script src="{% static 'HealthStack-System/js/Normal/popper.min.js' %}"></script>
+<script src="{% static 'HealthStack-System/js/Normal/bootstrap.min.js' %}"></script>
+<script src="{% static 'HealthStack-System/Outside_assets/js/script.js' %}"></script>
+</body>
 </html>

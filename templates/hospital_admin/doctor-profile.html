@@ -121,7 +121,11 @@
 								<div class="doctor-widget">
 									<div class="doc-info-left">
 										<div class="doctor-img">
+											{% if doctor.featured_image %}
 											<img src="{{doctor.featured_image.url}}" class="img-fluid" alt="User Image">
+											{% else %}
+											<img src="{% static 'HealthStack-System/images/Normal/doctors/doctor-thumb-01.jpg' %}" class="img-fluid" alt="User Image">
+											{% endif %}
 										</div>
 										<div class="doc-info-cont">
 											<h4 class="doc-name">Dr. {{doctor.name}}</h4>
@@ -527,8 +531,14 @@
 									<div class="row">
 
 										<div class="col-md-6 offset-md-3 zoom">
-											<img src="{{doctor.certificate_image.url}}" alt="logo" class="img-fluid">
-													
+											{% if doctor.certificate_image %}
+												<img src="{{doctor.certificate_image.url}}" alt="Certificate" class="img-fluid">
+											{% else %}
+												<div class="text-center py-5">
+													<i class="fas fa-file-medical fa-4x text-muted mb-3"></i>
+													<p class="text-muted">No certificate uploaded yet.</p>
+												</div>
+											{% endif %}
 										</div>
 										
 									</div>

@@ -1,518 +1,488 @@
 {% load static %}
-
 <!DOCTYPE html>
 <html lang="en">
-  <!-- Mirrored from dreamguys.co.in/demo/doccure/admin/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 30 Nov 2019 04:12:20 GMT -->
-  <head>
-    <meta charset="utf-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1.0, user-scalable=0"
-    />
-    <title>HealthStack</title>
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0"/>
+  <title>Admin Dashboard – HealthStack</title>
+  <link rel="shortcut icon" type="image/x-icon" href="{% static 'HealthStack-System/images/Normal/favicon.png' %}"/>
+  <link rel="stylesheet" href="{% static 'HealthStack-System/css/admin/bootstrap.min.css'%}"/>
+  <link rel="stylesheet" href="{% static 'HealthStack-System/css/admin/font-awesome.min.css'%}"/>
+  <link rel="stylesheet" href="{% static 'HealthStack-System/admin_assets/css/feathericon.min.css'%}"/>
+  <link rel="stylesheet" href="{% static 'HealthStack-System/css/admin/style.css'%}"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --primary: #4f46e5;
+      --primary-light: #6366f1;
+      --primary-dark: #3730a3;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --info: #06b6d4;
+      --purple: #8b5cf6;
+      --bg: #f1f5f9;
+      --card: #ffffff;
+      --text: #1e293b;
+      --muted: #64748b;
+      --border: #e2e8f0;
+      --sidebar-w: 260px;
+    }
+    * { box-sizing: border-box; }
+    body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); margin: 0; }
 
-    	<!-- Favicon -->
+    /* ── HEADER ── */
+    .header {
+      background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%);
+      box-shadow: 0 4px 20px rgba(79,70,229,.35);
+      position: fixed; top: 0; left: 0; right: 0; z-index: 1040; height: 64px;
+    }
+    .header-left .logo img { height: 38px; border-radius: 8px; }
+    .user-menu .user-img img { border: 2px solid rgba(255,255,255,.5); }
+    .nav-link, #toggle_btn, .mobile_btn { color: #fff !important; }
 
-    	<link rel="shortcut icon" type="image/x-icon" href="{% static 'HealthStack-System/images/Normal/favicon.png' %}"/>
+    /* ── SIDEBAR ── */
+    .sidebar {
+      background: linear-gradient(180deg, #1e1b4b 0%, #312e81 100%);
+      width: var(--sidebar-w); position: fixed; top: 64px; bottom: 0;
+      overflow-y: auto; z-index: 1030; box-shadow: 4px 0 20px rgba(0,0,0,.15);
+    }
+    .sidebar-inner { padding: 16px 0; }
+    .menu-title span {
+      color: rgba(255,255,255,.4); font-size: 10px; font-weight: 700;
+      letter-spacing: 1.5px; text-transform: uppercase; padding: 0 20px;
+    }
+    .sidebar-menu ul { padding: 0; margin: 0; list-style: none; }
+    .sidebar-menu li a {
+      display: flex; align-items: center; gap: 10px; padding: 11px 20px;
+      color: rgba(255,255,255,.7); font-size: 13.5px; font-weight: 500;
+      text-decoration: none; border-radius: 0 30px 30px 0;
+      margin: 2px 12px 2px 0; transition: all .25s;
+    }
+    .sidebar-menu li a:hover, .sidebar-menu li.active > a {
+      background: rgba(255,255,255,.15); color: #fff;
+    }
+    .sidebar-menu li a i { font-size: 16px; width: 20px; text-align: center; }
+    .sidebar-menu .submenu > ul { background: rgba(0,0,0,.2); border-radius: 8px; margin: 4px 12px 4px 20px; padding: 4px 0; }
+    .sidebar-menu .submenu > ul li a { margin: 0; border-radius: 6px; font-size: 13px; }
 
+    /* ── PAGE WRAPPER ── */
+    .page-wrapper { margin-left: var(--sidebar-w); padding-top: 64px; min-height: 100vh; }
+    .content { padding: 28px; }
 
-		
-		<!--[if lt IE 9]>
-			<script src="assets/js/html5shiv.min.js"></script>
-			<script src="assets/js/respond.min.js"></script>
-		<![endif]-->
-    </head>
-    <body>
-	
-	
+    /* ── PAGE HEADER ── */
+    .page-header {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+      border-radius: 16px; padding: 28px 32px; margin-bottom: 28px;
+      box-shadow: 0 8px 32px rgba(79,70,229,.25); position: relative; overflow: hidden;
+    }
+    .page-header::before {
+      content: ''; position: absolute; top: -40px; right: -40px;
+      width: 180px; height: 180px; border-radius: 50%;
+      background: rgba(255,255,255,.08);
+    }
+    .page-header::after {
+      content: ''; position: absolute; bottom: -60px; right: 80px;
+      width: 120px; height: 120px; border-radius: 50%;
+      background: rgba(255,255,255,.05);
+    }
+    .page-header h3 { color: #fff; font-size: 22px; font-weight: 700; margin: 0 0 4px; }
+    .page-header .breadcrumb { background: transparent; padding: 0; margin: 0; }
+    .page-header .breadcrumb-item, .page-header .breadcrumb-item a { color: rgba(255,255,255,.7); font-size: 13px; }
+    .page-header .breadcrumb-item.active { color: rgba(255,255,255,.5); }
+    .page-header .breadcrumb-item + .breadcrumb-item::before { color: rgba(255,255,255,.4); }
+    .welcome-meta { font-size: 13px; color: rgba(255,255,255,.65); margin-top: 6px; }
 
-    <!-- Bootstrap CSS -->
-    <link
-      rel="stylesheet"
-      href="{% static 'HealthStack-System/css/admin/bootstrap.min.css'%}"
-    />
+    /* ── STAT CARDS ── */
+    .stat-card {
+      background: var(--card); border-radius: 16px; padding: 24px;
+      box-shadow: 0 2px 12px rgba(0,0,0,.06); border: 1px solid var(--border);
+      transition: transform .25s, box-shadow .25s; position: relative; overflow: hidden;
+    }
+    .stat-card:hover { transform: translateY(-4px); box-shadow: 0 8px 28px rgba(0,0,0,.12); }
+    .stat-card .stat-icon {
+      width: 56px; height: 56px; border-radius: 14px;
+      display: flex; align-items: center; justify-content: center; font-size: 22px;
+    }
+    .stat-card .stat-value { font-size: 34px; font-weight: 800; line-height: 1.1; margin: 12px 0 4px; }
+    .stat-card .stat-label { font-size: 13px; color: var(--muted); font-weight: 500; }
+    .stat-card .stat-trend {
+      font-size: 12px; font-weight: 600; margin-top: 10px; display: flex; align-items: center; gap: 4px;
+    }
+    .stat-card .stat-bg {
+      position: absolute; right: -16px; top: -16px; width: 100px; height: 100px;
+      border-radius: 50%; opacity: .06;
+    }
+    .stat-primary .stat-icon { background: rgba(79,70,229,.12); color: var(--primary); }
+    .stat-primary .stat-value { color: var(--primary); }
+    .stat-primary .stat-bg { background: var(--primary); }
+    .stat-success .stat-icon { background: rgba(16,185,129,.12); color: var(--success); }
+    .stat-success .stat-value { color: var(--success); }
+    .stat-success .stat-bg { background: var(--success); }
+    .stat-danger .stat-icon { background: rgba(239,68,68,.12); color: var(--danger); }
+    .stat-danger .stat-value { color: var(--danger); }
+    .stat-danger .stat-bg { background: var(--danger); }
+    .stat-warning .stat-icon { background: rgba(245,158,11,.12); color: var(--warning); }
+    .stat-warning .stat-value { color: var(--warning); }
+    .stat-warning .stat-bg { background: var(--warning); }
+    .stat-purple .stat-icon { background: rgba(139,92,246,.12); color: var(--purple); }
+    .stat-purple .stat-value { color: var(--purple); }
+    .stat-purple .stat-bg { background: var(--purple); }
+    .stat-info .stat-icon { background: rgba(6,182,212,.12); color: var(--info); }
+    .stat-info .stat-value { color: var(--info); }
+    .stat-info .stat-bg { background: var(--info); }
 
-    <!-- Fontawesome CSS -->
-    <link
-      rel="stylesheet"
-      href="{% static 'HealthStack-System/css/admin/font-awesome.min.css'%}"
-    />
-<!-- Fontawesome CSS -->
-<link rel="stylesheet" href="{% static 'HealthStack-System/plugins/Normal/fontawesome/css/fontawesome.min.css' %}">
-   
-<!-- Feathericon CSS -->
-    <link
-      rel="stylesheet"
-      href="{% static 'HealthStack-System/admin_assets/css/feathericon.min.css'%}"
-    />
+    /* ── DATA TABLES ── */
+    .dash-card {
+      background: var(--card); border-radius: 16px;
+      box-shadow: 0 2px 12px rgba(0,0,0,.06); border: 1px solid var(--border); overflow: hidden;
+    }
+    .dash-card .card-header {
+      padding: 18px 24px; border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between;
+      background: transparent;
+    }
+    .dash-card .card-header h5 {
+      font-size: 15px; font-weight: 700; color: var(--text); margin: 0; display: flex; align-items: center; gap: 8px;
+    }
+    .dash-card .card-header h5 .icon-badge {
+      width: 30px; height: 30px; border-radius: 8px;
+      display: flex; align-items: center; justify-content: center; font-size: 13px;
+    }
+    .dash-card .card-header .view-all {
+      font-size: 12px; font-weight: 600; color: var(--primary);
+      text-decoration: none; background: rgba(79,70,229,.08);
+      padding: 5px 12px; border-radius: 20px; transition: all .2s;
+    }
+    .dash-card .card-header .view-all:hover { background: var(--primary); color: #fff; }
+    .dash-card .card-body { padding: 0; }
+    .dash-card table { margin: 0; }
+    .dash-card table thead th {
+      background: #f8fafc; padding: 12px 16px; font-size: 11px;
+      font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: .8px;
+      border-bottom: 1px solid var(--border); white-space: nowrap;
+    }
+    .dash-card table tbody tr { transition: background .15s; }
+    .dash-card table tbody tr:hover { background: #f8fafc; }
+    .dash-card table tbody td { padding: 13px 16px; vertical-align: middle; font-size: 13.5px; border-bottom: 1px solid #f1f5f9; }
+    .dash-card table tbody tr:last-child td { border-bottom: none; }
+    .table-avatar { display: flex; align-items: center; gap: 10px; }
+    .table-avatar .av {
+      width: 36px; height: 36px; border-radius: 50%; object-fit: cover;
+      border: 2px solid var(--border);
+    }
+    .table-avatar .av-name { font-weight: 600; font-size: 13.5px; color: var(--text); }
+    .table-avatar .av-sub { font-size: 11px; color: var(--muted); }
+    .badge-pill-sm {
+      padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 600;
+    }
 
-    <link
-      rel="stylesheet"
-      href="{% static 'HealthStack-System/plugins/admin/morris/morris.css'%}"
-    />
+    /* ── CHART CARD ── */
+    .chart-card { background: var(--card); border-radius: 16px; box-shadow: 0 2px 12px rgba(0,0,0,.06); border: 1px solid var(--border); padding: 24px; }
+    .chart-card h5 { font-size: 15px; font-weight: 700; margin: 0 0 20px; display: flex; align-items: center; gap: 8px; }
 
-    <!-- Main CSS -->
-    <link
-      rel="stylesheet"
-      href="{% static 'HealthStack-System/css/admin/style.css'%}"
-    />
+    /* ── ACTIVITY FEED ── */
+    .activity-item { display: flex; gap: 12px; padding: 14px 20px; border-bottom: 1px solid #f1f5f9; }
+    .activity-item:last-child { border-bottom: none; }
+    .activity-dot { width: 10px; height: 10px; border-radius: 50%; margin-top: 5px; flex-shrink: 0; }
+    .activity-text { font-size: 13px; color: var(--text); }
+    .activity-time { font-size: 11px; color: var(--muted); margin-top: 2px; }
 
-    <!--[if lt IE 9]>
-      <script src="assets/js/html5shiv.min.js"></script>
-      <script src="assets/js/respond.min.js"></script>
-    <![endif]-->
-  </head>
-  <body>
-    <!-- Main Wrapper -->
-        <div class="main-wrapper">
-      <!-- Header -->
-			<header class="header">{% include 'hospital_admin/hospital-admin-navbar.html' %}</header>            
-			<!-- /Header -->
-			
-			<!-- Sidebar -->
-			<aside class="sidebar" id="sidebar">
-				{% include 'hospital_admin/hospital-admin-sidebar.html' %} </aside>
-			<!-- /Sidebar -->
-			
-			<!-- Page Wrapper -->
-            <div class="page-wrapper">
-			
-                <div class="content container-fluid">
-					
-					<!-- Page Header -->
-					<div class="page-header">
-						<div class="row">
-							<div class="col-sm-12">
-								<h3 class="page-title">Welcome Admin!</h3>
-								<ul class="breadcrumb">
-									<li class="breadcrumb-item active">Dashboard</li>
-								</ul>
-                {% include 'message.html' %}
-							</div>
-						</div>
-					</div>
-					<!-- /Page Header -->
+    /* ── SECTION DIVIDER ── */
+    .section-title { font-size: 13px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin: 28px 0 14px; }
 
-          <div class="row">
-            <div class="col-xl-3 col-sm-6 col-12">
-              <div class="card">
-                <div class="card-body">
-                  <div class="dash-widget-header">
-                    <span class="dash-widget-icon text-primary border-primary">
-                      <i class="fe fe-users"></i>
-                    </span>
-                    <div class="dash-count">
-                      <h3>{{total_doctor_count.count}}</h3>
-                    </div>
-                  </div>
-                  <div class="dash-widget-info">
-                    <h6 class="text-muted">Total Doctors</h6>
-                    <div class="progress progress-sm">
-                      <div class="progress-bar bg-primary w-50"></div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="col-xl-3 col-sm-6 col-12">
-              <div class="card">
-                <div class="card-body">
-                  <div class="dash-widget-header">
-                    <span class="dash-widget-icon text-success">
-                      <i class="fe fe-users"></i>
-                    </span>
-                    <div class="dash-count">
-                      <h3>{{total_patient_count.count}}</h3>
-                    </div>
-                  </div>
-                  <div class="dash-widget-info">
-                    <h6 class="text-muted">Total Patients</h6>
-                    <div class="progress progress-sm">
-                      <div class="progress-bar bg-success w-50"></div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="col-xl-3 col-sm-6 col-12">
-              <div class="card">
-                <div class="card-body">
-                  <div class="dash-widget-header">
-                    <span class="dash-widget-icon text-danger border-danger">
-                      <i class="fe fe-users"></i>
-                    </span>
-                    <div class="dash-count">
-                      <h3>{{total_hospital_count.count}}</h3>
-                    </div>
-                  </div>
-                  <div class="dash-widget-info">
-                    <h6 class="text-muted">Total Hospital</h6>
-                    <div class="progress progress-sm">
-                      <div class="progress-bar bg-danger w-50"></div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="col-xl-3 col-sm-6 col-12">
-              <div class="card">
-                <div class="card-body">
-                  <div class="dash-widget-header">
-                    <span class="dash-widget-icon text-warning border-warning">
-                      <i class="fe fe-users"></i>
-                    </span>
-                    <div class="dash-count">
-                      <h3>{{total_labworker_count.count}}</h3>
-                    </div>
-                  </div>
-                  <div class="dash-widget-info">
-                    <h6 class="text-muted">Total Lab Worker</h6>
-                    <div class="progress progress-sm">
-                      <div class="progress-bar bg-warning w-50"></div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            
-          </div>
-          
-          <div class="row">
-            <div class="col-md-6 d-flex">
-              <!-- Recent Orders -->
-              <div class="card card-table flex-fill">
-                <div class="card-header">
-                  <h4 class="card-title"> Hospital List</h4>
-                </div>
-                <div class="card-body">
-                  <div class="table-responsive">
-                    <table class="table table-hover table-center mb-0">
-                      <thead>
-                        <tr>
-                          <th>Hospital Name</th>
-                          <th>Address</th>
-                          <th>Email</th>
-                          <th>Phone Number</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {% for hospital in hospitals%}
-                        <tr>
-                          <td>
-                            <h2 class="table-avatar">
-                              <a
-                                href="#"
-                                class="avatar avatar-sm mr-2"
-                                ><img
-                                  class="avatar-img rounded-circle"
-                                  src="{{hospital.featured_image.url}}"
-                                  alt="User Image"
-                              /></a>
-                              <a href="#">{{hospital.name}}</a>
-                            </h2>
-                          </td>
-                          <td>{{hospital.address}}</td>
-                          <td>{{hospital.email}}</td>
-                          <td>{{hospital.phone_number}}</td>
+    /* scrollbar */
+    .sidebar::-webkit-scrollbar { width: 4px; }
+    .sidebar::-webkit-scrollbar-thumb { background: rgba(255,255,255,.2); border-radius: 4px; }
+  </style>
+</head>
+<body>
+  <div class="main-wrapper">
 
-                        </tr>
-                        {% endfor %}
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-              </div>
-              <!-- /Recent Orders -->
-            </div>
+    <!-- Header -->
+    <header class="header">
+      {% include 'hospital_admin/hospital-admin-navbar.html' %}
+    </header>
 
-            <div class="col-lg-6 col-sm-6">
-              <div class="card">
-                  <div class="card-header">
-                      <h4 class="card-title">Appointment Bar Chart</h4>
-                  </div>
-                  <div class="card-body">
-                      <canvas id="barChart_2"></canvas>
-                  </div>
-              </div>
-            </div>
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+      {% include 'hospital_admin/hospital-admin-sidebar.html' %}
+    </aside>
 
-            
-            
-          </div>
+    <!-- Page Wrapper -->
+    <div class="page-wrapper">
+      <div class="content container-fluid">
 
-          <div class="row">
-            <div class="col-md-6 d-flex">
-              <!-- Recent Orders -->
-              <div class="card card-table flex-fill">
-                <div class="card-header">
-                  <h4 class="card-title">Doctors List</h4>
-                </div>
-                <div class="card-body">
-                  <div class="table-responsive">
-                    <table class="table table-hover table-center mb-0">
-                      <thead>
-                        <tr>
-                          <th>Doctor Name</th>
-                          <th>Department</th>
-                          <th>Speciality</th>
-                          <th>Hospital</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {% for doctor in doctors%}
-                        <tr>
-                          <td>
-                            <h2 class="table-avatar">
-                              <a
-                                href="#"
-                                class="avatar avatar-sm mr-2"
-                                ><img
-                                  class="avatar-img rounded-circle"
-                                  src="{{doctor.featured_image.url}}"
-                                  alt="User Image"
-                              /></a>
-                              <a href="{%url 'admin-doctor-profile' pk=doctor.doctor_id%}">{{doctor.name}}</a>
-                            </h2>
-                          </td>
-                          <td>{{doctor.department}}</td>
-                          <td>{{doctor.speciality}}</td>
-                          <td>{{doctor.hospital}}</td>
-
-                        </tr>
-                        {% endfor %}
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-              </div>
-              <!-- /Recent Orders -->
-            </div>
-
-            <div class="col-md-6 d-flex">
-						
-							<!-- Feed Activity -->
-							<div class="card  card-table flex-fill">
-								<div class="card-header">
-									<h4 class="card-title">Patients List</h4>
-								</div>
-								<div class="card-body">
-									<div class="table-responsive">
-										<table class="table table-hover table-center mb-0">
-											<thead>
-												<tr>													
-													<th>Patient Name</th>
-													<th>Phone</th>
-													<th>Email</th>
-													<th>Address</th>													
-												</tr>
-											</thead>
-											<tbody>
-                        {% for patient in patients%}
-												<tr>
-													<td>
-														<h2 class="table-avatar">
-															<a href="#" class="avatar avatar-sm mr-2"><img class="avatar-img rounded-circle" src="{{patient.featured_image.url}}" alt="User Image"></a>
-															<a href="#">{{patient.name}}</a>
-														</h2>
-													</td>
-													<td>{{patient.phone_number}}</td>
-													<td>{{patient.email}}</td>
-													<td>{{patient.address}}</td>
-												</tr>
-                        {% endfor %}
-												
-												
-											</tbody>
-										</table>
-									</div>
-								</div>
-							</div>
-							<!-- /Feed Activity -->
-							
-						</div>
-            
-          </div>
-
-          <div class="row">
-            <div class="col-md-6 d-flex">
-              <!-- Recent Orders -->
-              <div class="card card-table flex-fill">
-                <div class="card-header">
-                  <h4 class="card-title">Pharmacist List</h4>
-                </div>
-                <div class="card-body">
-                  <div class="table-responsive">
-                    <table class="table table-hover table-center mb-0">
-                      <thead>
-                        <tr>
-                          <th>Pharmacist Name</th>
-                          <th>Email</th>
-                          <th>Phone Number</th>
-                          
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {% for p in pharmacists %}
-                        <tr>
-                          <td>
-                            <h2 class="table-avatar">
-                              <a
-                                href="#"
-                                class="avatar avatar-sm mr-2"
-                                ><img
-                                  class="avatar-img rounded-circle"
-                                  src="{{p.featured_image.url}}"
-                                  alt="User Image"
-                              /></a>
-                              <a href="#">{{p.username}}</a>
-                            </h2>
-                          </td>
-                          <td>{{p.email}}</td>
-                          <td>{{p.phone_number}}</td>
-                          
-
-                        </tr>
-                        {% endfor %}
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-              </div>
-              <!-- /Recent Orders -->
-            </div>
-            
-
-            <div class="col-md-6 d-flex">
-						
-							<!-- Feed Activity -->
-							<div class="card  card-table flex-fill">
-								<div class="card-header">
-									<h4 class="card-title">Lab-Worker List</h4>
-								</div>
-								<div class="card-body">
-									<div class="table-responsive">
-										<table class="table table-hover table-center mb-0">
-											<thead>
-												<tr>													
-													<th>Lab-Worker Name</th>
-													<th>Phone</th>
-													<th>Email</th>
-													<th>Age</th>													
-												</tr>
-											</thead>
-											<tbody>
-                        {% for lab_worker in lab_workers%}
-												<tr>
-													<td>
-														<h2 class="table-avatar">
-															<a href="#" class="avatar avatar-sm mr-2"><img class="avatar-img rounded-circle" src="{{lab_worker.featured_image.url}}" alt="User Image"></a>
-															<a href="#">{{lab_worker.name}}</a>
-														</h2>
-													</td>
-													<td>{{lab_worker.phone_number}}</td>
-													<td>{{lab_worker.email}}</td>
-													<td>{{lab_worker.age}}</td>
-												</tr>
-                        {% endfor %}
-												
-												
-											</tbody>
-										</table>
-									</div>
-								</div>
-							</div>
-							<!-- /Feed Activity -->
-							
-						</div>
-          </div>
-
-          <div class="row">
-            
-
-          
-          </div>
-          
+        <!-- Page Header -->
+        <div class="page-header">
+          <h3>👋 Welcome back, Admin!</h3>
+          <p class="welcome-meta">Here's what's happening with HealthStack today.</p>
+          <ul class="breadcrumb">
+            <li class="breadcrumb-item active">Dashboard</li>
+          </ul>
+          {% include 'message.html' %}
         </div>
+
+        <!-- Stat Cards Row 1 -->
+        <div class="row g-3 mb-4">
+          <div class="col-xl-2 col-md-4 col-sm-6">
+            <div class="stat-card stat-primary">
+              <div class="stat-bg"></div>
+              <div class="stat-icon"><i class="fe fe-user-check"></i></div>
+              <div class="stat-value">{{total_doctor_count.count}}</div>
+              <div class="stat-label">Total Doctors</div>
+              <div class="stat-trend" style="color:var(--primary)"><i class="fe fe-trending-up"></i> Active</div>
+            </div>
+          </div>
+          <div class="col-xl-2 col-md-4 col-sm-6">
+            <div class="stat-card stat-success">
+              <div class="stat-bg"></div>
+              <div class="stat-icon"><i class="fe fe-users"></i></div>
+              <div class="stat-value">{{total_patient_count.count}}</div>
+              <div class="stat-label">Total Patients</div>
+              <div class="stat-trend" style="color:var(--success)"><i class="fe fe-trending-up"></i> Growing</div>
+            </div>
+          </div>
+          <div class="col-xl-2 col-md-4 col-sm-6">
+            <div class="stat-card stat-danger">
+              <div class="stat-bg"></div>
+              <div class="stat-icon"><i class="fe fe-home"></i></div>
+              <div class="stat-value">{{total_hospital_count.count}}</div>
+              <div class="stat-label">Total Hospitals</div>
+              <div class="stat-trend" style="color:var(--danger)"><i class="fe fe-map-pin"></i> Locations</div>
+            </div>
+          </div>
+          <div class="col-xl-2 col-md-4 col-sm-6">
+            <div class="stat-card stat-warning">
+              <div class="stat-bg"></div>
+              <div class="stat-icon"><i class="fe fe-activity"></i></div>
+              <div class="stat-value">{{total_labworker_count.count}}</div>
+              <div class="stat-label">Lab Workers</div>
+              <div class="stat-trend" style="color:var(--warning)"><i class="fe fe-cpu"></i> On duty</div>
+            </div>
+          </div>
+          <div class="col-xl-2 col-md-4 col-sm-6">
+            <div class="stat-card stat-purple">
+              <div class="stat-bg"></div>
+              <div class="stat-icon"><i class="fe fe-package"></i></div>
+              <div class="stat-value">{{total_pharmacist_count.count}}</div>
+              <div class="stat-label">Pharmacists</div>
+              <div class="stat-trend" style="color:var(--purple)"><i class="fe fe-shield"></i> Verified</div>
+            </div>
+          </div>
+          <div class="col-xl-2 col-md-4 col-sm-6">
+            <div class="stat-card stat-info">
+              <div class="stat-bg"></div>
+              <div class="stat-icon"><i class="fe fe-calendar"></i></div>
+              <div class="stat-value">{{sat_count|add:sun_count|add:mon_count|add:tues_count|add:wed_count|add:thurs_count|add:fri_count}}</div>
+              <div class="stat-label">This Week Appts</div>
+              <div class="stat-trend" style="color:var(--info)"><i class="fe fe-clock"></i> Scheduled</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Chart + Hospital List -->
+        <div class="row g-3 mb-4">
+          <div class="col-lg-7">
+            <div class="chart-card h-100">
+              <h5><span style="background:rgba(79,70,229,.1);color:var(--primary);padding:6px 10px;border-radius:8px;font-size:13px;"><i class="fe fe-bar-chart-2"></i></span> Appointment Overview (This Week)</h5>
+              <canvas id="barChart_2" style="max-height:260px;"></canvas>
+            </div>
+          </div>
+          <div class="col-lg-5">
+            <div class="dash-card h-100">
+              <div class="card-header">
+                <h5><span class="icon-badge" style="background:rgba(239,68,68,.1);color:var(--danger);"><i class="fe fe-home"></i></span> Hospitals</h5>
+                <a href="#" class="view-all">View All</a>
+              </div>
+              <div class="card-body">
+                <table class="table">
+                  <thead><tr><th>Hospital</th><th>Email</th><th>Phone</th></tr></thead>
+                  <tbody>
+                    {% for hospital in hospitals %}
+                    <tr>
+                      <td>
+                        <div class="table-avatar">
+                          <img class="av" src="{{hospital.featured_image.url}}" alt="{{hospital.name}}">
+                          <div>
+                            <div class="av-name">{{hospital.name}}</div>
+                            <div class="av-sub">{{hospital.address|truncatechars:22}}</div>
+                          </div>
+                        </div>
+                      </td>
+                      <td style="font-size:12px;color:var(--muted);">{{hospital.email}}</td>
+                      <td style="font-size:12px;">{{hospital.phone_number}}</td>
+                    </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Doctors + Patients -->
+        <div class="row g-3 mb-4">
+          <div class="col-lg-6">
+            <div class="dash-card">
+              <div class="card-header">
+                <h5><span class="icon-badge" style="background:rgba(79,70,229,.1);color:var(--primary);"><i class="fe fe-user-check"></i></span> Doctors</h5>
+                <a href="{% url 'register-doctor-list' %}" class="view-all">View All</a>
+              </div>
+              <div class="card-body">
+                <table class="table">
+                  <thead><tr><th>Doctor</th><th>Department</th><th>Speciality</th></tr></thead>
+                  <tbody>
+                    {% for doctor in doctors %}
+                    <tr>
+                      <td>
+                        <div class="table-avatar">
+                          <img class="av" src="{{doctor.featured_image.url}}" alt="{{doctor.name}}">
+                          <div>
+                            <div class="av-name"><a href="{% url 'admin-doctor-profile' pk=doctor.doctor_id %}" style="color:var(--text);text-decoration:none;">{{doctor.name}}</a></div>
+                            <div class="av-sub">{{doctor.hospital}}</div>
+                          </div>
+                        </div>
+                      </td>
+                      <td><span class="badge-pill-sm" style="background:rgba(79,70,229,.1);color:var(--primary);">{{doctor.department}}</span></td>
+                      <td style="font-size:12px;color:var(--muted);">{{doctor.speciality}}</td>
+                    </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-lg-6">
+            <div class="dash-card">
+              <div class="card-header">
+                <h5><span class="icon-badge" style="background:rgba(16,185,129,.1);color:var(--success);"><i class="fe fe-users"></i></span> Patients</h5>
+                <a href="#" class="view-all">View All</a>
+              </div>
+              <div class="card-body">
+                <table class="table">
+                  <thead><tr><th>Patient</th><th>Phone</th><th>Address</th></tr></thead>
+                  <tbody>
+                    {% for patient in patients %}
+                    <tr>
+                      <td>
+                        <div class="table-avatar">
+                          <img class="av" src="{{patient.featured_image.url}}" alt="{{patient.name}}">
+                          <div>
+                            <div class="av-name">{{patient.name}}</div>
+                            <div class="av-sub">{{patient.email}}</div>
+                          </div>
+                        </div>
+                      </td>
+                      <td style="font-size:12px;">{{patient.phone_number}}</td>
+                      <td style="font-size:12px;color:var(--muted);">{{patient.address|truncatechars:20}}</td>
+                    </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Pharmacists + Lab Workers -->
+        <div class="row g-3 mb-4">
+          <div class="col-lg-6">
+            <div class="dash-card">
+              <div class="card-header">
+                <h5><span class="icon-badge" style="background:rgba(139,92,246,.1);color:var(--purple);"><i class="fe fe-package"></i></span> Pharmacists</h5>
+                <a href="{% url 'pharmacist-list' %}" class="view-all">View All</a>
+              </div>
+              <div class="card-body">
+                <table class="table">
+                  <thead><tr><th>Name</th><th>Email</th><th>Phone</th></tr></thead>
+                  <tbody>
+                    {% for p in pharmacists %}
+                    <tr>
+                      <td>
+                        <div class="table-avatar">
+                          <img class="av" src="{{p.featured_image.url}}" alt="{{p.username}}">
+                          <div class="av-name">{{p.username}}</div>
+                        </div>
+                      </td>
+                      <td style="font-size:12px;color:var(--muted);">{{p.email}}</td>
+                      <td style="font-size:12px;">{{p.phone_number}}</td>
+                    </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-lg-6">
+            <div class="dash-card">
+              <div class="card-header">
+                <h5><span class="icon-badge" style="background:rgba(245,158,11,.1);color:var(--warning);"><i class="fe fe-activity"></i></span> Lab Workers</h5>
+                <a href="{% url 'lab-worker-list' %}" class="view-all">View All</a>
+              </div>
+              <div class="card-body">
+                <table class="table">
+                  <thead><tr><th>Name</th><th>Phone</th><th>Age</th></tr></thead>
+                  <tbody>
+                    {% for lab_worker in lab_workers %}
+                    <tr>
+                      <td>
+                        <div class="table-avatar">
+                          <img class="av" src="{{lab_worker.featured_image.url}}" alt="{{lab_worker.name}}">
+                          <div>
+                            <div class="av-name">{{lab_worker.name}}</div>
+                            <div class="av-sub">{{lab_worker.email}}</div>
+                          </div>
+                        </div>
+                      </td>
+                      <td style="font-size:12px;">{{lab_worker.phone_number}}</td>
+                      <td><span class="badge-pill-sm" style="background:rgba(245,158,11,.1);color:var(--warning);">{{lab_worker.age}} yrs</span></td>
+                    </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+
       </div>
-      <!-- /Page Wrapper -->
     </div>
-    <!-- /Main Wrapper -->
+    <!-- /Page Wrapper -->
+  </div>
 
-    <!-- jQuery -->
-    <script src="{% static 'HealthStack-System/js/admin/jquery-3.2.1.min.js'%}"></script>
+  <script src="{% static 'HealthStack-System/js/admin/jquery-3.2.1.min.js'%}"></script>
+  <script src="{% static 'HealthStack-System/js/admin/popper.min.js'%}"></script>
+  <script src="{% static 'HealthStack-System/js/admin/bootstrap.min.js'%}"></script>
+  <script src="{% static 'HealthStack-System/plugins/admin/slimscroll/jquery.slimscroll.min.js'%}"></script>
+  <script src="{% static 'HealthStack-System/js/admin/script.js'%}"></script>
+  <script src="{% static 'HealthStack-System/js/admin/Chart.bundle.min.js'%}"></script>
+  <script src="{% static 'HealthStack-System/js/admin/raphael.min.js'%}"></script>
+  <script src="{% static 'HealthStack-System/js/admin/morris.min.js'%}"></script>
+  <script src="{% static 'HealthStack-System/js/admin/morris-init.js'%}"></script>
 
+  <script>
+    var total_patient_count   = "{{total_patient_count.count}}";
+    var total_labworker_count  = "{{total_labworker_count.count}}";
+    var total_hospital_count   = "{{total_hospital_count.count}}";
+    var total_pharmacist_count = "{{total_pharmacist_count.count}}";
+    var sat="{{sat}}"; var sat_count="{{sat_count}}";
+    var sun="{{sun}}"; var sun_count="{{sun_count}}";
+    var mon="{{mon}}"; var mon_count="{{mon_count}}";
+    var tues="{{tues}}"; var tues_count="{{tues_count}}";
+    var wed="{{wed}}"; var wed_count="{{wed_count}}";
+    var thurs="{{thurs}}"; var thurs_count="{{thurs_count}}";
+    var fri="{{fri}}"; var fri_count="{{fri_count}}";
+  </script>
 
-    </body>
-
-    <!-- Bootstrap Core JS -->
-    <script src="{% static 'HealthStack-System/js/admin/popper.min.js'%}"></script>
-    <script src="{% static 'HealthStack-System/js/admin/bootstrap.min.js'%}"></script>
-
-    <!-- Slimscroll JS -->
-
-    <script src="{% static 'HealthStack-System/plugins/admin/slimscroll/jquery.slimscroll.min.js'%}"></script>
-
-    <!-- <script src="{% static 'HealthStack-System/plugins/admin/raphael/raphael.min.js'%}"></script> -->
-
-    <!-- <script src=" {% static 'HealthStack-System/plugins/admin/morris/morris.min.js'%}"></script> -->
-    <!-- <script src="{% static 'HealthStack-System/js/admin/chart.morris.js'%}"></script> -->
-
-    <!-- Custom JS -->
-    <script src="{% static 'HealthStack-System/js/admin/script.js'%}"></script>
-
-    <!-- Chart JS -->
-
-    <script>
-      var total_patient_count = "{{total_patient_count.count}}";
-      var total_labworker_count= "{{total_labworker_count.count}}";
-      var total_hospital_count= "{{total_hospital_count.count}}";
-      var total_pharmacist_count= "{{total_pharmacist_count.count}}";
-
-      var sat= "{{sat}}";
-      var sat_count= "{{sat_count}}";
-
-      var sun= "{{sun}}";
-      var sun_count= "{{sun_count}}";
-
-      var mon= "{{mon}}";
-      var mon_count= "{{mon_count}}";
-
-      var tues= "{{tues}}";
-      var tues_count= "{{tues_count}}";
-
-      var wed= "{{wed}}";
-      var wed_count= "{{wed_count}}";
-
-      var thurs= "{{thurs}}";
-      var thurs_count= "{{thurs_count}}";
-
-      var fri= "{{fri}}";
-      var fri_count= "{{fri_count}}";
-    </script>
-
-    <script src="{% static 'HealthStack-System/js/admin/Chart.bundle.min.js'%}"></script>
-
-    <script src="{% static 'HealthStack-System/js/admin/raphael.min.js'%}"></script>
-
-    <script src="{% static 'HealthStack-System/js/admin/morris.min.js'%}"></script>
-
-    <script src="{% static 'HealthStack-System/js/admin/morris-init.js'%}"></script>
-
-
-    {% if messages %}
-    <script>
-        {% for message in messages %}
-            $(document).ready(function () {
-                $('.toast').toast('show');
-            });
-        {% endfor %}
-    </script>
+  {% if messages %}
+  <script>
+    {% for message in messages %}
+    $(document).ready(function(){ $('.toast').toast('show'); });
+    {% endfor %}
+  </script>
   {% endif %}
-
-    
-
-  </body>
-
-
-  <!-- Mirrored from dreamguys.co.in/demo/doccure/admin/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 30 Nov 2019 04:12:34 GMT -->
+</body>
 </html>

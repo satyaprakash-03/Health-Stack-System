@@ -1,155 +1,113 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
-  <!-- doccure/doctor-register.html  30 Nov 2019 04:12:15 GMT -->
-  <head>
-    <meta charset="utf-8" />
-    <title>HealthStack</title>
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1.0, user-scalable=0"
-    />
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0"/>
+  <title>Doctor Register — HealthStack</title>
+  <link type="image/x-icon" href="{% static 'HealthStack-System/images/Normal/favicon.png' %}" rel="icon"/>
+  <link rel="stylesheet" href="{% static 'HealthStack-System/css/Normal/bootstrap.min.css' %}"/>
+  <link rel="stylesheet" href="{% static 'HealthStack-System/plugins/Normal/fontawesome/css/fontawesome.min.css' %}"/>
+  <link rel="stylesheet" href="{% static 'HealthStack-System/plugins/Normal/fontawesome/css/all.min.css' %}"/>
+  <link rel="stylesheet" href="{% static 'HealthStack-System/css/Normal/style.css' %}"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <style>
+    :root{--p:#0d6e6e;--a:#00c4cc;--dk:#064e4e;--b:#d0f0f0;}
+    *{box-sizing:border-box;}
+    body{background:linear-gradient(135deg,#052e2e 0%,#0d6e6e 55%,#00b8c8 100%) !important;min-height:100vh;font-family:'Inter',sans-serif;}
+    body .header{background:rgba(255,255,255,0.10) !important;backdrop-filter:blur(12px);border-bottom:1px solid rgba(255,255,255,0.15) !important;box-shadow:none !important;}
+    body .header .main-nav>li>a{color:rgba(255,255,255,0.85) !important;}
+    .reg-wrap{min-height:calc(100vh - 80px);display:flex;align-items:center;justify-content:center;padding:30px 20px;}
+    .reg-outer{width:100%;max-width:980px;display:flex;border-radius:24px;overflow:hidden;box-shadow:0 24px 64px rgba(0,0,0,0.30);}
+    /* Left */
+    .reg-left{flex:0 0 340px;background:linear-gradient(155deg,#052e2e 0%,#0d6e6e 55%,#0891b2 100%);padding:44px 32px;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;}
+    .badge-hs{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.3);border-radius:30px;padding:6px 18px;font-size:0.73rem;font-weight:600;color:#fff;text-transform:uppercase;letter-spacing:1px;margin-bottom:20px;}
+    .reg-left h2{color:#fff;font-size:1.55rem;font-weight:800;margin-bottom:10px;line-height:1.25;}
+    .reg-left p{color:rgba(255,255,255,0.78);font-size:0.85rem;line-height:1.7;margin-bottom:24px;}
+    .reg-left img{max-width:200px;width:100%;filter:drop-shadow(0 8px 20px rgba(0,0,0,0.25));}
+    .reg-feat{display:flex;align-items:center;gap:9px;background:rgba(255,255,255,0.10);border-radius:10px;padding:9px 14px;color:rgba(255,255,255,0.9);font-size:0.8rem;font-weight:500;margin-bottom:8px;text-align:left;width:100%;}
+    .reg-feat i{color:#4cffb0;width:14px;flex-shrink:0;}
+    /* Right */
+    .reg-right{flex:1;background:#fff;padding:36px 44px;overflow-y:auto;max-height:90vh;}
+    .reg-logo{display:flex;align-items:center;gap:10px;margin-bottom:20px;}
+    .reg-logo img{height:34px;border-radius:6px;}
+    .reg-logo span{font-size:1.1rem;font-weight:800;color:var(--p);}
+    .reg-right h3{font-size:1.4rem;font-weight:800;color:#0a2020;margin-bottom:2px;}
+    .reg-right h3 span{color:var(--a);}
+    .reg-sub{color:#64748b;font-size:0.8rem;margin-bottom:18px;}
+    .reg-sub a{color:var(--a);font-weight:600;text-decoration:none;margin-left:5px;}
+    .reg-form-fields .form-group{margin-bottom:12px;}
+    .reg-form-fields label{display:block;font-size:0.72rem;font-weight:600;color:#475569;margin-bottom:4px;text-transform:uppercase;letter-spacing:0.4px;}
+    .reg-form-fields input[type=text],.reg-form-fields input[type=email],.reg-form-fields input[type=password],.reg-form-fields select,.reg-form-fields textarea{width:100%;padding:9px 12px;border:1.5px solid var(--b);border-radius:9px;font-size:0.865rem;font-family:'Inter',sans-serif;color:#1e293b;background:#f0fafa;transition:all 0.2s;outline:none;display:block;}
+    .reg-form-fields input:focus,.reg-form-fields select:focus{border-color:var(--p);background:#fff;box-shadow:0 0 0 3px rgba(13,110,110,0.11);}
+    .reg-form-fields .errorlist{color:#dc2626;font-size:0.72rem;list-style:none;padding:0;margin:3px 0 0;}
+    .btn-reg{width:100%;padding:12px;background:linear-gradient(135deg,var(--dk) 0%,var(--p) 100%);border:none;border-radius:11px;color:#fff;font-size:0.95rem;font-weight:700;font-family:'Inter',sans-serif;cursor:pointer;transition:all 0.22s;box-shadow:0 5px 18px rgba(13,110,110,0.28);margin-top:14px;}
+    .btn-reg:hover{transform:translateY(-2px);box-shadow:0 9px 26px rgba(13,110,110,0.38);}
+    .reg-bottom{text-align:center;font-size:0.8rem;color:#64748b;margin-top:12px;}
+    .reg-bottom a{color:var(--p);font-weight:600;text-decoration:none;}
+    @media(max-width:767px){.reg-outer{flex-direction:column;}.reg-left{display:none;}.reg-right{padding:26px 20px;max-height:none;}}
+  </style>
+</head>
+<body class="account-page">
+<div class="main-wrapper">
+  <header class="header">{% include 'navbar_home.html' %}</header>
 
-    <!-- Favicons -->
-    <link
-      type="image/x-icon"
-      href=" {% static 'HealthStack-System/images/Normal/favicon.png' %}"
-      rel="icon"
-    />
-
-    <!-- Bootstrap CSS -->
-    <link
-      rel="stylesheet"
-      href="{% static 'HealthStack-System/css/Normal/bootstrap.min.css' %}"
-    />
-
-    <!-- Fontawesome CSS -->
-    <link
-      rel="stylesheet"
-      href="{% static 'HealthStack-System/plugins/Normal/fontawesome/css/fontawesome.min.css' %}"
-    />
-    <link
-      rel="stylesheet"
-      href="{% static 'HealthStack-System/plugins/Normal/fontawesome/css/all.min.css' %}"
-    />
-
-    <!-- Main CSS -->
-    <link
-      rel="stylesheet"
-      href="{% static 'HealthStack-System/css/Normal/style.css' %}"
-    />
-
-    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!--[if lt IE 9]>
-      <script src="assets/js/html5shiv.min.js"></script>
-      <script src="assets/js/respond.min.js"></script>
-    <![endif]-->
-  </head>
-  <body class="account-page">
-    <!-- Main Wrapper -->
-    <div class="main-wrapper">
-      <!-- Header -->
-      <header class="header">{% include 'navbar_home.html' %}
-
-      </header>
-      <!-- /Header -->
-
-      <!-- Page Content -->
-      <div class="content">
-        <div class="container-fluid">
-          <div class="row">
-            <div class="col-md-8 offset-md-2">
-              <!-- Account Content -->
-              <div class="account-content">
-                <div class="row align-items-center justify-content-center">
-                  <div class="col-md-7 col-lg-6 login-left">
-                    <img
-                      src="{% static 'HealthStack-System/images/Normal/login-banner.png' %}"
-                      class="img-fluid"
-                      alt="Login Banner"
-                    />
-                  </div>
-                  <div class="col-md-12 col-lg-6 login-right">
-                    <div class="login-header">
-                      <h3>
-                        Doctor Register
-                        <a href="{% url 'patient-register' %}">Not a Doctor?</a>
-                      </h3>
-                    </div>
-
-                    <!-- Register Form -->
-                    <form action="{% url 'doctor-register' %}" method="POST">
-                      {% csrf_token %} 
-                      
-                      {% include 'message.html' %}
-                      {% comment %} {% if messages %}
-                      <ul class="messages">
-                          {% for message in messages %}
-                          <li{% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}</li>
-                              {% endfor %}
-                      </ul>
-                      {% endif %} {% endcomment %}
-                      
-                      
-                      {% for field in form %}
-                      <div class="form-group form-focus">
-                        {{field}}{{ field.errors }}
-                        <label class="focus-label">{{ field.label }}</label>
-                      </div>
-                      {% endfor %}
-
-                      <div class="text-right">
-                        <a class="forgot-link" href="{% url 'doctor-login'%}"
-                          >Already have an account?</a
-                        >
-                      </div>
-                      <button
-                        class="btn btn-primary btn-block btn-lg login-btn"
-                        type="submit"
-                      >
-                        Signup
-                      </button>
-                     
-                      
-                    </form>
-                    <!-- /Register Form -->
-                  </div>
-                </div>
-              </div>
-              <!-- /Account Content -->
-            </div>
-          </div>
+  <div class="reg-wrap">
+    <div class="reg-outer">
+      <!-- Left Panel -->
+      <div class="reg-left">
+        <div class="badge-hs"><i class="fas fa-user-md"></i> Join as Doctor</div>
+        <h2>Register Your<br/>Doctor Profile</h2>
+        <p>Join HealthStack as a doctor to manage appointments, write prescriptions, and help thousands of patients.</p>
+        <img src="{% static 'HealthStack-System/images/Normal/login-banner.png' %}" alt="Doctor Register"/>
+        <div style="width:100%;margin-top:20px;">
+          <div class="reg-feat"><i class="fas fa-calendar-check"></i> Manage appointments easily</div>
+          <div class="reg-feat"><i class="fas fa-file-prescription"></i> Issue digital prescriptions</div>
+          <div class="reg-feat"><i class="fas fa-chart-line"></i> Track patient history</div>
         </div>
       </div>
-      <!-- /Page Content -->
+      <!-- Right Panel -->
+      <div class="reg-right">
+        <div class="reg-logo">
+          <img src="{% static 'HealthStack-System/images/Normal/logo.jpg' %}" alt="HealthStack"/>
+          <span>HealthStack</span>
+        </div>
+        <h3>Create <span>Doctor</span> Account</h3>
+        <p class="reg-sub">
+          Already registered? <a href="{% url 'doctor-login' %}">Sign In</a>
+          &nbsp;·&nbsp; <a href="{% url 'patient-register' %}">Register as Patient</a>
+        </p>
 
-      <!-- Footer -->
-      {% include 'footer.html' %}
-      <!-- /Footer -->
+        {% include 'message.html' %}
+
+        <form action="{% url 'doctor-register' %}" method="POST">
+          {% csrf_token %}
+          <div class="reg-form-fields">
+            {% for field in form %}
+            <div class="form-group">
+              <label>{{ field.label }}</label>
+              {{ field }}
+              {{ field.errors }}
+            </div>
+            {% endfor %}
+          </div>
+          <button type="submit" class="btn-reg">
+            <i class="fas fa-user-md me-2"></i> Register as Doctor
+          </button>
+        </form>
+        <div class="reg-bottom">
+          By registering you agree to our <a href="#">Terms of Service</a>
+        </div>
+      </div>
     </div>
-    <!-- /Main Wrapper -->
+  </div>
 
-    <!-- jQuery -->
-    <script src="{% static 'HealthStack-System/js/Normal/jquery.min.js' %}"></script>
-
-    <!-- Bootstrap Core JS -->
-    <script src="{% static 'HealthStack-System/js/Normal/popper.min.js' %}"></script>
-    <script src="{% static 'HealthStack-System/js/Normal/bootstrap.min.js' %}"></script>
-
-    <!-- Custom JS -->
-    <script src="{% static 'HealthStack-System/Outside_assets/js/script.js' %}"></script>
-
-    {% if messages %}
-    <script>
-        {% for message in messages %}
-            $(document).ready(function () {
-                $('.toast').toast('show');
-            });
-        {% endfor %}
-    </script>
-  {% endif %}
-  
-  </body>
-
-  <!-- doccure/doctor-register.html  30 Nov 2019 04:12:16 GMT -->
+  {% include 'footer.html' %}
+</div>
+<script src="{% static 'HealthStack-System/js/Normal/jquery.min.js' %}"></script>
+<script src="{% static 'HealthStack-System/js/Normal/popper.min.js' %}"></script>
+<script src="{% static 'HealthStack-System/js/Normal/bootstrap.min.js' %}"></script>
+<script src="{% static 'HealthStack-System/Outside_assets/js/script.js' %}"></script>
+{% if messages %}<script>{% for message in messages %}$(document).ready(function(){$('.toast').toast('show');});{% endfor %}</script>{% endif %}
+</body>
 </html>

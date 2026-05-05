@@ -1,103 +1,175 @@
 {% load static %}
-<!DOCTYPE html> 
+<!DOCTYPE html>
 <html lang="en">
-	
-<!-- doccure/blank-page.html  30 Nov 2019 04:12:20 GMT -->
 <head>
-
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
-    <title>Health Stack</title>
-    
-    <!-- Favicons -->
-    <link type="image/x-icon" href="{% static 'HealthStack-System/images/Normal/favicon.png' %}" rel="icon">
-    
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="{% static 'HealthStack-System/css/Normal/bootstrap.min.css' %}">
-    
-    <!-- Fontawesome CSS -->
-    <link rel="stylesheet" href="{% static 'HealthStack-System/plugins/Normal/fontawesome/css/fontawesome.min.css' %}">
-    <link rel="stylesheet" href="{% static 'HealthStack-System/plugins/Normal/fontawesome/css/all.min.css' %}">
-
-    <!-- Main CSS -->
-    <link rel="stylesheet" href="{% static 'HealthStack-System/css/Normal/style.css' %}">
-    
-    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!--[if lt IE 9]>
-        <script src="assets/js/html5shiv.min.js"></script>
-        <script src="assets/js/respond.min.js"></script>
-    <![endif]-->
-
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0"/>
+  <title>About Us — HealthStack</title>
+  <meta name="description" content="HealthStack is a modern web-based healthcare management platform connecting patients, doctors, and hospitals."/>
+  <link type="image/x-icon" href="{% static 'HealthStack-System/images/Normal/favicon.png' %}" rel="icon"/>
+  <link rel="stylesheet" href="{% static 'HealthStack-System/css/Normal/bootstrap.min.css' %}"/>
+  <link rel="stylesheet" href="{% static 'HealthStack-System/plugins/Normal/fontawesome/css/fontawesome.min.css' %}"/>
+  <link rel="stylesheet" href="{% static 'HealthStack-System/plugins/Normal/fontawesome/css/all.min.css' %}"/>
+  <link rel="stylesheet" href="{% static 'HealthStack-System/css/Normal/style.css' %}"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <style>
+    :root{--p:#1f4c7a;--a:#00c4cc;--b:#dde9f7;}
+    body{font-family:'Inter',sans-serif !important;background:#f0f6ff !important;}
+    /* Hero */
+    .about-hero{background:linear-gradient(135deg,#0d2d50 0%,#1f4c7a 55%,#00b8c8 100%);padding:72px 20px;text-align:center;position:relative;overflow:hidden;}
+    .about-hero::before{content:'';position:absolute;top:-80px;right:-80px;width:340px;height:340px;background:rgba(0,196,204,0.12);border-radius:50%;pointer-events:none;}
+    .about-hero::after{content:'';position:absolute;bottom:-60px;left:-60px;width:260px;height:260px;background:rgba(255,255,255,0.05);border-radius:50%;pointer-events:none;}
+    .about-hero .badge-pill-hero{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.3);border-radius:30px;padding:7px 20px;font-size:0.78rem;font-weight:600;color:#fff;letter-spacing:1px;text-transform:uppercase;margin-bottom:18px;}
+    .about-hero h1{color:#fff;font-size:2.5rem;font-weight:800;margin-bottom:14px;}
+    .about-hero p{color:rgba(255,255,255,0.85);font-size:1.05rem;max-width:600px;margin:0 auto;line-height:1.7;}
+    /* Stats row */
+    .about-stats{background:#fff;padding:40px 20px;border-bottom:1px solid var(--b);}
+    .stat-card{text-align:center;padding:24px 16px;border-radius:16px;border:1px solid var(--b);transition:all 0.2s;background:#fff;}
+    .stat-card:hover{transform:translateY(-4px);box-shadow:0 8px 28px rgba(31,76,122,0.12);}
+    .stat-card .stat-icon{width:56px;height:56px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:1.4rem;margin:0 auto 14px;}
+    .stat-card .stat-num{font-size:2rem;font-weight:800;color:var(--p);line-height:1;}
+    .stat-card .stat-label{font-size:0.82rem;color:#64748b;font-weight:500;margin-top:6px;}
+    /* Mission */
+    .about-content{padding:64px 20px;}
+    .mission-card{background:#fff;border-radius:16px;border:1px solid var(--b);padding:32px;box-shadow:0 4px 20px rgba(31,76,122,0.08);height:100%;transition:all 0.2s;}
+    .mission-card:hover{transform:translateY(-4px);box-shadow:0 8px 32px rgba(31,76,122,0.14);}
+    .mission-icon{width:54px;height:54px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:1.4rem;margin-bottom:18px;}
+    .mission-card h4{font-size:1.1rem;font-weight:700;color:#0f2942;margin-bottom:10px;}
+    .mission-card p{color:#64748b;font-size:0.875rem;line-height:1.7;margin:0;}
+    /* Features grid */
+    .feature-chip{display:flex;align-items:center;gap:10px;background:#fff;border-radius:12px;border:1px solid var(--b);padding:14px 18px;box-shadow:0 2px 10px rgba(31,76,122,0.06);transition:all 0.2s;}
+    .feature-chip:hover{transform:translateY(-2px);box-shadow:0 6px 18px rgba(31,76,122,0.12);}
+    .feature-chip .fc-icon{width:36px;height:36px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0;}
+    .feature-chip .fc-text{font-size:0.85rem;font-weight:600;color:#1e293b;}
+    /* CTA */
+    .about-cta{background:linear-gradient(135deg,#0d2d50,#1f4c7a 50%,#0891b2 100%);padding:60px 20px;text-align:center;}
+    .about-cta h2{color:#fff;font-size:1.8rem;font-weight:800;margin-bottom:12px;}
+    .about-cta p{color:rgba(255,255,255,0.8);margin-bottom:28px;font-size:0.95rem;}
+    .about-cta .btn-cta{display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,#4cffb0,#00c4cc);color:#0d2d50;font-weight:800;font-size:0.95rem;padding:14px 36px;border-radius:50px;text-decoration:none;transition:all 0.22s;box-shadow:0 6px 22px rgba(0,196,204,0.4);}
+    .about-cta .btn-cta:hover{transform:translateY(-3px);box-shadow:0 10px 30px rgba(0,196,204,0.5);}
+    @media(max-width:767px){.about-hero h1{font-size:1.7rem;}.stat-card .stat-num{font-size:1.5rem;}}
+  </style>
 </head>
-	<body>
+<body>
+<div class="main-wrapper">
+  <header class="header">{% include 'navbar_home.html' %}</header>
 
-		<!-- Main Wrapper -->
-		<div class="main-wrapper">
-		
-			<!-- Header -->
-			<header class="header">{% include 'navbar_home.html' %}</header>
-			<!-- /Header -->
-			
-			<!-- Breadcrumb -->
-			<div class="breadcrumb-bar">
-				<div class="container-fluid">
-					<div class="row align-items-center">
-						<div class="col-md-12 col-12">
-							<nav aria-label="breadcrumb" class="page-breadcrumb">
-								<ol class="breadcrumb">
-									<li class="breadcrumb-item"><a href="index-2.html">Home</a></li>
-									<li class="breadcrumb-item active" aria-current="page">About Us</li>
-								</ol>
-							</nav>
-							<h2 class="breadcrumb-title">About Us</h2>
-						</div>
-					</div>
-				</div>
-			</div>
-			<!-- /Breadcrumb -->
-			
-			<!-- Page Content -->
-			<div class="content">
-				<div class="container-fluid">
-					<div class="row">
-						<div class="col-12">
-							<h5>About Us</h5>
-							<p>
-								Healthstack is an internet platform that supports numerous hospitals. It offers urgent medical aid to those in need of emergency care. Its capability of tracking, monitoring, and sharing a patient's health records across all hospitals. Patients can also view information about various hospitals and providers and schedule appointments online.
-							</p>
-						</div>
-					</div>
-				</div>
+  <!-- Hero -->
+  <section class="about-hero">
+    <div style="position:relative;z-index:1;">
+      <div class="badge-pill-hero"><i class="fas fa-heart-pulse"></i> About HealthStack</div>
+      <h1>Healthcare. Simplified.<br/>For Everyone.</h1>
+      <p>HealthStack is a modern web-based healthcare management platform that bridges patients, doctors, and hospitals in one seamless experience.</p>
+    </div>
+  </section>
 
-			</div>		
-			<!-- /Page Content -->
-   
-			
-			<!-- Footer -->
-			{% include 'footer.html' %}
-			<!-- /Footer -->
-			
-		   
-		</div>
-		<!-- /Main Wrapper -->
-	  
-		<!-- jQuery -->
-		<script src="{% static 'HealthStack-System/js/Normal/jquery.min.js' %}"></script>
-		
-		<!-- Bootstrap Core JS -->
-		<script src="{% static 'HealthStack-System/js/Normal/popper.min.js' %}"></script>
-		<script src="{% static 'HealthStack-System/js/Normal/bootstrap.min.js' %}"></script>
+  <!-- Stats -->
+  <section class="about-stats">
+    <div class="container-fluid">
+      <div class="row justify-content-center" style="max-width:900px;margin:0 auto;">
+        <div class="col-6 col-md-3 mb-3 mb-md-0">
+          <div class="stat-card">
+            <div class="stat-icon" style="background:#e0f7f8;color:#00a0a8;"><i class="fas fa-hospital"></i></div>
+            <div class="stat-num">50+</div>
+            <div class="stat-label">Partner Hospitals</div>
+          </div>
+        </div>
+        <div class="col-6 col-md-3 mb-3 mb-md-0">
+          <div class="stat-card">
+            <div class="stat-icon" style="background:#e8f0fe;color:#1f4c7a;"><i class="fas fa-user-md"></i></div>
+            <div class="stat-num">200+</div>
+            <div class="stat-label">Specialist Doctors</div>
+          </div>
+        </div>
+        <div class="col-6 col-md-3 mb-3 mb-md-0">
+          <div class="stat-card">
+            <div class="stat-icon" style="background:#e6f9ee;color:#16a34a;"><i class="fas fa-users"></i></div>
+            <div class="stat-num">10K+</div>
+            <div class="stat-label">Patients Served</div>
+          </div>
+        </div>
+        <div class="col-6 col-md-3">
+          <div class="stat-card">
+            <div class="stat-icon" style="background:#fff8e6;color:#c8680a;"><i class="fas fa-star"></i></div>
+            <div class="stat-num">4.9★</div>
+            <div class="stat-label">Patient Rating</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
 
-		<link rel="stylesheet" href="{% static 'HealthStack-System/plugins/Normal/fontawesome/css/fontawesome.min.css' %}">
-		<link rel="stylesheet" href="{% static 'HealthStack-System/plugins/Normal/fontawesome/css/all.min.css' %}">
-		
-		<!-- Slick JS -->
-		<script src="{% static 'HealthStack-System/js/Normal/slick.js' %}"></script>
-		
-		<!-- Custom JS -->
-		<script src="{% static 'HealthStack-System/Outside_assets/js/script.js' %}"></script>
-		
-	</body>
+  <!-- Mission/Vision/Values -->
+  <section class="about-content">
+    <div class="container-fluid" style="max-width:1100px;margin:0 auto;">
+      <div class="text-center mb-5">
+        <div style="display:inline-flex;align-items:center;gap:8px;background:#e0f7f8;border-radius:30px;padding:6px 18px;font-size:0.78rem;font-weight:600;color:#1f4c7a;text-transform:uppercase;letter-spacing:1px;margin-bottom:14px;">
+          <i class="fas fa-bullseye"></i> Our Purpose
+        </div>
+        <h2 style="font-size:2rem;font-weight:800;color:#0f2942;margin-bottom:10px;">What Drives Us</h2>
+        <p style="color:#64748b;max-width:520px;margin:0 auto;font-size:0.95rem;">We believe everyone deserves fast, reliable, and compassionate healthcare access.</p>
+      </div>
+      <div class="row g-4">
+        <div class="col-md-4">
+          <div class="mission-card">
+            <div class="mission-icon" style="background:#e8f0fe;color:#1f4c7a;"><i class="fas fa-bullseye"></i></div>
+            <h4>Our Mission</h4>
+            <p>To simplify healthcare delivery by connecting patients with the right doctors and hospitals through a smart, intuitive digital platform — making quality care accessible to all.</p>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="mission-card">
+            <div class="mission-icon" style="background:#e0f7f8;color:#00a0a8;"><i class="fas fa-eye"></i></div>
+            <h4>Our Vision</h4>
+            <p>A world where every patient can book an appointment, view their prescription, and access their medical records in seconds — from anywhere, anytime, on any device.</p>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="mission-card">
+            <div class="mission-icon" style="background:#e6f9ee;color:#16a34a;"><i class="fas fa-heart"></i></div>
+            <h4>Our Values</h4>
+            <p>Patient-first thinking, transparency, innovation, and compassion guide everything we build. We partner with healthcare institutions that share our commitment to excellence.</p>
+          </div>
+        </div>
+      </div>
 
-<!-- doccure/blank-page.html  30 Nov 2019 04:12:20 GMT -->
+      <!-- Features grid -->
+      <div class="text-center mt-5 mb-4">
+        <h2 style="font-size:1.6rem;font-weight:800;color:#0f2942;">Platform Features</h2>
+      </div>
+      <div class="row g-3">
+        <div class="col-6 col-md-4 col-lg-3"><div class="feature-chip"><div class="fc-icon" style="background:#e0f7f8;color:#00a0a8;"><i class="fas fa-check"></i></div><span class="fc-text">Appointment Booking</span></div></div>
+        <div class="col-6 col-md-4 col-lg-3"><div class="feature-chip"><div class="fc-icon" style="background:#e8f0fe;color:#1f4c7a;"><i class="fas fa-check"></i></div><span class="fc-text">Prescription Management</span></div></div>
+        <div class="col-6 col-md-4 col-lg-3"><div class="feature-chip"><div class="fc-icon" style="background:#e6f9ee;color:#16a34a;"><i class="fas fa-check"></i></div><span class="fc-text">Medical Records</span></div></div>
+        <div class="col-6 col-md-4 col-lg-3"><div class="feature-chip"><div class="fc-icon" style="background:#fff8e6;color:#c8680a;"><i class="fas fa-check"></i></div><span class="fc-text">Multiple Hospitals</span></div></div>
+        <div class="col-6 col-md-4 col-lg-3"><div class="feature-chip"><div class="fc-icon" style="background:#e0f7f8;color:#00a0a8;"><i class="fas fa-check"></i></div><span class="fc-text">Doctor Search</span></div></div>
+        <div class="col-6 col-md-4 col-lg-3"><div class="feature-chip"><div class="fc-icon" style="background:#e8f0fe;color:#1f4c7a;"><i class="fas fa-check"></i></div><span class="fc-text">Secure Payments</span></div></div>
+        <div class="col-6 col-md-4 col-lg-3"><div class="feature-chip"><div class="fc-icon" style="background:#e6f9ee;color:#16a34a;"><i class="fas fa-check"></i></div><span class="fc-text">Lab Test Orders</span></div></div>
+        <div class="col-6 col-md-4 col-lg-3"><div class="feature-chip"><div class="fc-icon" style="background:#fff8e6;color:#c8680a;"><i class="fas fa-check"></i></div><span class="fc-text">Patient Chat</span></div></div>
+        <div class="col-6 col-md-4 col-lg-3"><div class="feature-chip"><div class="fc-icon" style="background:#e0f7f8;color:#00a0a8;"><i class="fas fa-check"></i></div><span class="fc-text">AI Symptom Checker</span></div></div>
+        <div class="col-6 col-md-4 col-lg-3"><div class="feature-chip"><div class="fc-icon" style="background:#e8f0fe;color:#1f4c7a;"><i class="fas fa-check"></i></div><span class="fc-text">Profile Management</span></div></div>
+        <div class="col-6 col-md-4 col-lg-3"><div class="feature-chip"><div class="fc-icon" style="background:#e6f9ee;color:#16a34a;"><i class="fas fa-check"></i></div><span class="fc-text">Email Notifications</span></div></div>
+        <div class="col-6 col-md-4 col-lg-3"><div class="feature-chip"><div class="fc-icon" style="background:#fff8e6;color:#c8680a;"><i class="fas fa-check"></i></div><span class="fc-text">Mobile Responsive</span></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="about-cta">
+    <div class="container-fluid">
+      <h2>Ready to experience better healthcare?</h2>
+      <p>Join thousands of patients who trust HealthStack for their medical needs.</p>
+      <a href="{% url 'patient-register' %}" class="btn-cta">
+        <i class="fas fa-user-plus"></i> Get Started Free
+      </a>
+    </div>
+  </section>
+
+  {% include 'footer.html' %}
+</div>
+<script src="{% static 'HealthStack-System/js/Normal/jquery.min.js' %}"></script>
+<script src="{% static 'HealthStack-System/js/Normal/popper.min.js' %}"></script>
+<script src="{% static 'HealthStack-System/js/Normal/bootstrap.min.js' %}"></script>
+<script src="{% static 'HealthStack-System/Outside_assets/js/script.js' %}"></script>
+</body>
 </html>

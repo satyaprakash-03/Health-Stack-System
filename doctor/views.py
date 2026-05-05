@@ -85,7 +85,7 @@ def patient_id(request):
 def logoutDoctor(request):
     user = User.objects.get(id=request.user.id)
     if user.is_doctor:
-        user.login_status == "offline"
+        user.login_status = False
         user.save()
         logout(request)
     
@@ -275,22 +275,33 @@ def reject_appointment(request, pk):
 #         experience = zip(work_place_array, designation_array, start_year_array, end_year_array)
 
 @csrf_exempt
-@login_required(login_url="doctor-login")
+@login_required(login_url="login")
 def doctor_profile(request, pk):
-    # request.user --> get logged in user
-    if request.user.is_patient:
-        patient = request.user.patient
-    else:
-        patient = None
-    
-    doctor = Doctor_Information.objects.get(doctor_id=pk)
-    # doctor = Doctor_Information.objects.filter(doctor_id=pk).order_by('-doctor_id')
-    
+    # Accessible by both patients and doctors
+    try:
+        doctor = Doctor_Information.objects.get(doctor_id=pk)
+    except Doctor_Information.DoesNotExist:
+        messages.error(request, 'Doctor profile not found.')
+        return redirect('hospital_home')
+
+    patient = None
+    if request.user.is_authenticated and request.user.is_patient:
+        try:
+            patient = request.user.patient
+        except Exception:
+            patient = None
+
     educations = Education.objects.filter(doctor=doctor).order_by('-year_of_completion')
-    experiences = Experience.objects.filter(doctor=doctor).order_by('-from_year','-to_year')
+    experiences = Experience.objects.filter(doctor=doctor).order_by('-from_year', '-to_year')
     doctor_review = Doctor_review.objects.filter(doctor=doctor)
-            
-    context = {'doctor': doctor, 'patient': patient, 'educations': educations, 'experiences': experiences, 'doctor_review': doctor_review}
+
+    context = {
+        'doctor': doctor,
+        'patient': patient,
+        'educations': educations,
+        'experiences': experiences,
+        'doctor_review': doctor_review,
+    }
     return render(request, 'doctor-profile.html', context)
 
 @csrf_exempt
@@ -391,7 +402,7 @@ def doctor_profile_settings(request):
             messages.success(request, 'Profile Updated')
             return redirect('doctor-dashboard')
     else:
-        redirect('doctor-logout')
+        return redirect('doctor-logout')
                
 @csrf_exempt    
 @login_required(login_url="doctor-login")      
@@ -399,10 +410,18 @@ def booking_success(request):
     return render(request, 'booking-success.html')
 
 @csrf_exempt
-@login_required(login_url="doctor-login")
+@login_required(login_url="login")
 def booking(request, pk):
-    patient = request.user.patient
-    doctor = Doctor_Information.objects.get(doctor_id=pk)
+    try:
+        patient = request.user.patient
+    except Exception:
+        messages.error(request, 'Patient profile not set up. Please complete your profile.')
+        return redirect('patient-dashboard')
+    try:
+        doctor = Doctor_Information.objects.get(doctor_id=pk)
+    except Doctor_Information.DoesNotExist:
+        messages.error(request, 'Doctor not found.')
+        return redirect('search')
 
     if request.method == 'POST':
         appointment = Appointment(patient=patient, doctor=doctor)
@@ -465,7 +484,7 @@ def my_patients(request):
         appointments = Appointment.objects.filter(doctor=doctor).filter(appointment_status='confirmed')
         # patients = Patient.objects.all()
     else:
-        redirect('doctor-logout')
+        return redirect('doctor-logout')
     
     
     context = {'doctor': doctor, 'appointments': appointments}
@@ -478,16 +497,24 @@ def my_patients(request):
 @csrf_exempt
 @login_required(login_url="doctor-login")
 def patient_profile(request, pk):
-    if request.user.is_doctor:
-        # doctor = Doctor_Information.objects.get(user_id=pk)
+    if not request.user.is_doctor:
+        return redirect('doctor-logout')
+    try:
         doctor = Doctor_Information.objects.get(user=request.user)
         patient = Patient.objects.get(patient_id=pk)
-        appointments = Appointment.objects.filter(doctor=doctor).filter(patient=patient)
-        prescription = Prescription.objects.filter(doctor=doctor).filter(patient=patient)
-        report = Report.objects.filter(doctor=doctor).filter(patient=patient) 
-    else:
-        redirect('doctor-logout')
-    context = {'doctor': doctor, 'appointments': appointments, 'patient': patient, 'prescription': prescription, 'report': report}  
+    except (Doctor_Information.DoesNotExist, Patient.DoesNotExist):
+        messages.error(request, 'Profile not found.')
+        return redirect('doctor-dashboard')
+    appointments = Appointment.objects.filter(doctor=doctor, patient=patient)
+    prescription = Prescription.objects.filter(doctor=doctor, patient=patient)
+    report = Report.objects.filter(doctor=doctor, patient=patient)
+    context = {
+        'doctor': doctor,
+        'patient': patient,
+        'appointments': appointments,
+        'prescription': prescription,
+        'report': report,
+    }
     return render(request, 'patient-profile.html', context)
 
 
@@ -531,13 +558,24 @@ def create_prescription(request,pk):
                     medicine.save()
 
                 for i in range(len(test_name)):
+                    # Skip blank test rows
+                    if not test_name[i].strip():
+                        continue
                     tests = Prescription_test(prescription=prescription)
                     tests.test_name = test_name[i]
-                    tests.test_description = test_description[i]
-                    tests.test_info_id = test_info_id[i]
-                    test_info = Test_Information.objects.get(test_id=test_info_id[i])
-                    tests.test_info_price = test_info.test_price
-                   
+                    tests.test_description = test_description[i] if i < len(test_description) else ''
+
+                    # test_info_id is optional — doctor may leave it blank
+                    raw_id = test_info_id[i] if i < len(test_info_id) else ''
+                    if raw_id and str(raw_id).strip().isdigit():
+                        tests.test_info_id = int(raw_id)
+                        try:
+                            test_info = Test_Information.objects.get(test_id=int(raw_id))
+                            tests.test_info_price = test_info.test_price
+                        except Test_Information.DoesNotExist:
+                            pass  # price stays blank
+                    else:
+                        tests.test_info_id = None  # no ID provided
                     tests.save()
 
                 messages.success(request, 'Prescription Created')
@@ -611,13 +649,13 @@ def patient_search(request, pk):
 def doctor_test_list(request):
     if request.user.is_authenticated and request.user.is_doctor:
         doctor = Doctor_Information.objects.get(user=request.user)
-        tests = Test_Information.objects.all
+        tests = Test_Information.objects.all()
         context = {'doctor': doctor, 'tests': tests}
         return render(request, 'doctor-test-list.html', context)
     
     elif request.user.is_authenticated and request.user.is_patient:
         patient = Patient.objects.get(user=request.user)
-        tests = Test_Information.objects.all
+        tests = Test_Information.objects.all()
         context = {'patient': patient, 'tests': tests}
         return render(request, 'doctor-test-list.html', context)
         
