@@ -24,11 +24,13 @@ import string
 from datetime import datetime, timedelta
 import datetime
 import re
+from django.conf import settings
 from django.core.mail import BadHeaderError, send_mail
 from django.template.loader import render_to_string
 from django.http import HttpResponse
 from django.utils.html import strip_tags
 from io import BytesIO
+from smtplib import SMTPAuthenticationError, SMTPException
 from urllib import response
 from django.shortcuts import render
 from django.template.loader import get_template
@@ -224,9 +226,13 @@ def accept_appointment(request, pk):
     plain_message = strip_tags(html_message)
     
     try:
-        send_mail(subject, plain_message, 'hospital_admin@gmail.com',  [patient_email], html_message=html_message, fail_silently=False)
+        send_mail(subject, plain_message, settings.DEFAULT_FROM_EMAIL, [patient_email], html_message=html_message, fail_silently=False)
     except BadHeaderError:
         return HttpResponse('Invalid header found')
+    except SMTPAuthenticationError:
+        messages.warning(request, 'Appointment accepted, but email delivery failed due to SMTP authentication error.')
+    except SMTPException:
+        messages.warning(request, 'Appointment accepted, but email delivery failed due to an SMTP error.')
     
     messages.success(request, 'Appointment Accepted')
     
@@ -257,9 +263,13 @@ def reject_appointment(request, pk):
     plain_message = strip_tags(html_message)
     
     try:
-        send_mail(subject, plain_message, 'hospital_admin@gmail.com',  [patient_email], html_message=html_message, fail_silently=False)
+        send_mail(subject, plain_message, settings.DEFAULT_FROM_EMAIL, [patient_email], html_message=html_message, fail_silently=False)
     except BadHeaderError:
         return HttpResponse('Invalid header found')
+    except SMTPAuthenticationError:
+        messages.warning(request, 'Appointment rejected, but email delivery failed due to SMTP authentication error.')
+    except SMTPException:
+        messages.warning(request, 'Appointment rejected, but email delivery failed due to an SMTP error.')
     
     messages.error(request, 'Appointment Rejected')
     
