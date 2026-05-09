@@ -1,452 +1,603 @@
 {% load static %}
 {% load tz%}
-<!DOCTYPE html> 
+<!DOCTYPE html>
 <html lang="en">
-	
-<!-- doccure/chat.html  30 Nov 2019 04:12:18 GMT -->
 <head>
-		<meta charset="utf-8">
-		<title>HealthStack</title>
-		<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
-		
-		<!-- Favicons -->
-		<link type="image/x-icon" href=" {% static 'HealthStack-System/images/Normal/favicon.png' %}" rel="icon">
-		
-		<!-- Bootstrap CSS -->
-		<link rel="stylesheet" href="{% static 'HealthStack-System/css/Normal/bootstrap.min.css' %}">
-		
-		<!-- Fontawesome CSS -->
-		<link rel="stylesheet" href="{% static 'HealthStack-System/plugins/Normal/fontawesome/css/fontawesome.min.css' %}">
-		<link rel="stylesheet" href="{% static 'HealthStack-System/plugins/Normal/fontawesome/css/all.min.css' %}">
-		
-		<!-- Main CSS -->
-		<link rel="stylesheet" href="{% static 'HealthStack-System/css/Normal/style.css' %}">
+    <meta charset="utf-8">
+    <title>HealthStack – Doctor Chat</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
+    <link type="image/x-icon" href="{% static 'HealthStack-System/images/Normal/favicon.png' %}" rel="icon">
+    <link rel="stylesheet" href="{% static 'HealthStack-System/css/Normal/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'HealthStack-System/plugins/Normal/fontawesome/css/fontawesome.min.css' %}">
+    <link rel="stylesheet" href="{% static 'HealthStack-System/plugins/Normal/fontawesome/css/all.min.css' %}">
+    <link rel="stylesheet" href="{% static 'HealthStack-System/css/Normal/style.css' %}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="{% static 'js/jquery-3.6.0.min.js' %}"></script>
+    <script src="{% static 'js/script.js' %}"></script>
+<style>
+/* ========== RESET & BASE ========== */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body.chat-page { background: #111b21; font-family: 'Inter', sans-serif; }
+body.chat-page .content { padding: 0 !important; height: calc(100vh - 65px); }
+body.chat-page .container-fluid,
+body.chat-page .row,
+body.chat-page .col-xl-12 { height: 100%; padding: 0; margin: 0; max-width: 100%; }
 
-		<!-- Fancybox CSS -->
-		<link rel="stylesheet" href="{% static 'HealthStack-System/plugins/Normal/fancybox/jquery.fancybox.min.css'%}">
-		<script src="{% static 'js/jquery-3.6.0.min.js' %}"></script>
-    	{% comment %} <script src="{% static 'js/popper.min.js' %}"></script>
-    	<script src="{% static 'js/bootstrap.min.js' %}"></script> {% endcomment %}
-   	 	<script src="{% static 'js/script.js' %}"></script>
-    	 
-		
-		<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
-		<!--[if lt IE 9]>
-			<script src="assets/js/html5shiv.min.js"></script>
-			<script src="assets/js/respond.min.js"></script>
-		<![endif]-->
-	
-	</head>
-	<body class="chat-page">
+/* ========== LAYOUT ========== */
+.chat-window {
+    display: flex;
+    height: 100%;
+    overflow: hidden;
+    background: #111b21;
+}
 
-		<!-- Main Wrapper -->
-		<div class="main-wrapper">
-		
-			<!-- Header -->
-			<header class="header">{% include 'doctor-navbar.html' %}</header>
-			<!-- /Header -->
-			
-			<!-- Page Content -->
-			<div class="content">
-				<div class="container-fluid">
-					<div class="row">
-						<div class="col-xl-12">
-							<div class="chat-window">
-							
-								<!-- Chat Left -->
-								<div class="chat-cont-left">
-									<div class="chat-header">
-										<span>Chats</span>
-										<a href="javascript:void(0)" class="chat-compose">
-											<i class="material-icons"></i>
-										</a>
-									</div>
-									<form class="chat-search" method="GET" action = "{% url 'chat-home' pk=user.id %}">
-										<div class="input-group">
-											<div class="input-group-prepend">
-												<i class="fas fa-search"></i>
-											</div>
-											<input type="text" class="form-control" placeholder="Search" name="search">
-										</div>
-									</form>
-									<div class="chat-users-list">
-										<div class="chat-scroll">
-										{% for u in patient %} {% if not u.id == 1 and not u.id == user.id %}
-											<a href="{% url 'chat-home' pk=user.id %}?u={{u.user.id}}" class="media">
-												<div class="media-img-wrap">
-													{%if u.user.login_status%}
-													<div class="avatar avatar-online">
-														<img src="{{ u.featured_image.url }}" alt="User Image" class="avatar-img rounded-circle">
-													</div>
-													{%else%}
-													<div class="avatar avatar-away">
-														<img src="{{ u.featured_image.url }}" alt="User Image" class="avatar-img rounded-circle">
-													</div>
-													{%endif%}
-												</div>
-												<div class="media-body">
-													<div>
-														<div class="user-name">{{u.name}}</div>
-														
-														<div>
-															<div class="user-name">{{d.name}}</div>
-															{%if u.user.login_status%}
-															<div class="user-last-chat">Online</div>
-															{%else%}
-															<div class="user-last-chat">Offline</div>
-															{%endif%}
-														</div>
-													</div>
-													<div>
+/* ========== LEFT PANEL ========== */
+.chat-left-panel {
+    width: 360px;
+    min-width: 360px;
+    display: flex;
+    flex-direction: column;
+    background: #111b21;
+    border-right: 1px solid #2a3942;
+    height: 100%;
+}
 
-														<div class="last-chat-time block">{{u.serial_number}}</div>
-														<div class="badge badge-success badge-pill"></div>
-													</div>
-												</div>
-											</a>
-										{%endif%}{% endfor %}
-										</div>
-									</div>
-								</div>
-								<!-- /Chat Left -->
-							
-								<!-- Chat Right -->
-								
-								<div class="chat-cont-right">
-									<div class="chat-header">
-										<a id="back_user_list" href="javascript:void(0)" class="back-user-list">
-											<i class="material-icons">chevron_left</i>
-										</a>
-										<div class="media">
-											<div class="media-img-wrap">
-												<div class="avatar avatar-online">
-													<img src="{{doctor.featured_image.url}}" alt="User Image" class="avatar-img rounded-circle">
-												</div>
-											</div>
-											<div class="media-body">
-												<div class="user-name">{{doctor.name}}</div>
-												<div class="user-status">online</div>
-											</div>
-										</div>
-										
-									</div>
-									{% if not chat_id > 0 %}
-										<div class="d-flex flex-column justify-content-center align-items-center" style="height: 650px;">
-											<h3>Start Chat now</h3>
-											<p><small class="text-muted">Please select a person to chat with.</small></p>
-										</div>
-									{% else %}
+/* Left header */
+.left-panel-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 16px;
+    background: #202c33;
+    height: 60px;
+}
+.left-panel-header .panel-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: #e9edef;
+}
+.doctor-chip {
+    background: linear-gradient(135deg, #00a884, #007c63);
+    color: #fff;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 20px;
+    letter-spacing: 0.4px;
+}
+.left-panel-header .header-icons {
+    display: flex;
+    gap: 10px;
+}
+.left-panel-header .header-icons a {
+    color: #aebac1;
+    font-size: 18px;
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    transition: background 0.2s;
+    text-decoration: none;
+}
+.left-panel-header .header-icons a:hover { background: rgba(255,255,255,0.08); color: #e9edef; }
 
-									<div class="chat-body">
-										<div class="chat-scroll chat-box">
-											<ul class="list-unstyled">
-												{% for chat in chats %} 
-												{% if chat.user_from == user %}
-												<li class="media sent">
-													<div class="media-body">
-														
-														<div class="msg-box">
-															<div class="chat-bubble" data-id="{{chat.id}}">
-																<p>{{chat.message}}</p>
-																<ul class="chat-msg-info">
-																	<li>
-																		<div class="chat-time">
-																			<span>{{chat.date_created|localtime}}</span>
-																			<span>{{value|localtime}}</span>
-																		</div>
-																	</li>
-																</ul>
-															</div>
-														</div>
-														
-													</div>
-												</li>
-												{% else %}
-												<li class="media received">
-													
-													<div class="avatar">
-														<img src="{{ pat.featured_image.url }}" alt="User Image" class="avatar-img rounded-circle">
-													</div>
-													
-													<div class="media-body">
-														<div class="msg-box">
-															<div class="chat-bubble" data-id="{{chat.id}}">
-																<p>{{chat.message}}</p>
-																
-																<ul class="chat-msg-info">
-																	<li>
-																		<div class="chat-time">
-																			<span>{{chat.date_created|localtime}}</span>
-																			<span>{{value|localtime}}</span>
-																		</div>
-																	</li>
-																</ul>
-															</div>
-														</div>
-														
-													</div>
-												</li>
-												{% endif %} 
-												{% endfor %}
-												
-												
-												<!-- <li class="chat-date">Today</li> -->
-				
-												
-											</ul>
-										</div>
-									</div>
-									
-									<div class="chat-box-form border-top p-2" style="height: 70px;">
-										<div class="w-100 h-100">
-											<form action="" id="chat-submit" class="h-100 d-flex ">
-												<input type="hidden" name="user_from" value="{{ user.id }}">
-												<input type="hidden" name="user_to" value="{{ chat_id }}">
-												<div class="col-md-10 h-100">
-													<textarea name="message" id="" class="h-100 w-100 form-control" placeholder="Write your message here"></textarea>
-												</div>
-												<button class="button btn btn-rounded btn-info h-100 w-100 justify-content-center align-items-center d-flex"><i class="fab fa-telegram-plane"></i></button>
-											</form>
-										</div>
-									</div>
-									<!-- <div class="chat-footer">
-										<div class="input-group">
-											<form action="" id="chat-submit">
-											
-												<input type="hidden" name="user_from" value="{{ user.id }}">
-												<input type="hidden" name="user_to" value="{{ chat_id }}">	
+/* Search bar */
+.left-search {
+    padding: 8px 12px;
+    background: #111b21;
+}
+.left-search form {
+    display: flex;
+    align-items: center;
+    background: #202c33;
+    border-radius: 8px;
+    padding: 8px 14px;
+    gap: 10px;
+}
+.left-search form i { color: #8696a0; font-size: 14px; }
+.left-search form input {
+    background: transparent;
+    border: none;
+    outline: none;
+    color: #e9edef;
+    font-size: 15px;
+    width: 100%;
+    font-family: 'Inter', sans-serif;
+}
+.left-search form input::placeholder { color: #8696a0; }
 
-												<input type="text"  name="message" class="input-msg-send form-control" placeholder="Type something">
-											<div class="input-group-append">
-												<button class="btn msg-send-btn"><i class="fab fa-telegram-plane"></i></button>
-											</div>
-											</form>
-										</div>
-									</div> -->
-									{% endif %}
+/* Patient count badge */
+.patients-label {
+    padding: 6px 16px;
+    font-size: 12px;
+    color: #8696a0;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    background: #111b21;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+}
 
-									<!-- <div class="col-md-8 h-100">
-										{% if not chat_id > 0 %}
-										<div class="h-100 d-flex flex-column justify-content-center align-items-center">
-											<h3>Start Chat now</h3>
-											<p><small class="text-muted">Please select a person to chat with.</small></p>
-										</div>
-										{% else%}
-										<div id="chat-box-field" class="h-100">
-											<div class="chat-box" style="height:80%">
-												{% for chat in chats %} 
+/* Contact list */
+.contacts-list { flex: 1; overflow-y: auto; }
+.contacts-list::-webkit-scrollbar { width: 6px; }
+.contacts-list::-webkit-scrollbar-thumb { background: #374045; border-radius: 6px; }
 
-												{% if chat.user_from == user %}
-												<div class="p-2 w-100 d-flex justify-content-end">
-													<div class=" chat-bubble  ml-2 mb-2 bg-primary text-light rounded" data-id="{{chat.id}}">
-														<p>{{chat.message}}</p>
-														<div class="d-flex justify-content-between"><small>You</small> <small>{{chat.date_created|date:"M-d-Y H:i"}}</small></div>
-													</div>
-												</div>
-												{% else %}
+.contact-item {
+    display: flex;
+    align-items: center;
+    padding: 12px 16px;
+    cursor: pointer;
+    border-bottom: 1px solid rgba(255,255,255,0.03);
+    text-decoration: none !important;
+    transition: background 0.15s;
+    gap: 14px;
+    position: relative;
+}
+.contact-item:hover { background: #202c33; }
+.contact-item.active-chat { background: #2a3942 !important; }
 
-												<div class="p-2 w-100 d-flex justify-content-start">
-													<div class="chat-bubble mr-2 mb-2 bg-light text-dark rounded" data-id="{{chat.id}}">
-														<p>{{chat.message}}</p>
-														<div class=" d-flex justify-content-between"><small>Sender</small> <small>{{chat.date_created|date:"M-d-Y H:i"}}</small></div>
-													</div>
-												</div>
-												{% endif %}
+/* Active indicator bar */
+.contact-item.active-chat::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 3px;
+    background: #00a884;
+    border-radius: 0 2px 2px 0;
+}
 
-												{% endfor %}
-											</div>
-											<div class="chat-box-form border-top p-2" style="height:20%">
-												<div class="w-100 h-100">
-													<form action="" id="chat-submit" class="h-100 d-flex ">
-														<input type="hidden" name="user_from" value="{{ user.id }}">
-														<input type="hidden" name="user_to" value="{{ chat_id }}">
-														<div class="col-md-10 h-100">
-															<textarea name="message" id="" class="h-100 w-100 form-control" placeholder="Write your message here"></textarea>
-														</div>
-														<button class="button btn btn-primary h-100 w-100 justify-content-center align-items-center d-flex">SEND</button>
-													</form>
-												</div>
-											</div>
-										</div>
-										{% endif %}
-									</div> -->
-									
-									<!-- <div class="chat-footer">
-										<div class="input-group">
-											<div class="input-group-prepend">
-												<div class="btn-file btn">
-													<i class="fa fa-paperclip"></i>
-													<input type="file">
-												</div>
-											</div>
-											<form action="" id="chat-submit" class="h-100 d-flex">
-											<input type="hidden" name="user_from" value="{{user.id}}">
-											<input type="hidden" name="user_from" value="{{chat_id}}">	
-											<input type="text" class="input-msg-send form-control" placeholder="Type something">
-											<div class="input-group-append">
-												<button name="message" type="button" class="btn msg-send-btn"><i class="fab fa-telegram-plane"></i></button>
-											</div>
-											</form>
-											
-											
-										</div>
-									</div> -->
+.contact-avatar-wrap { position: relative; flex-shrink: 0; }
+.contact-avatar-wrap img {
+    width: 49px; height: 49px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+.contact-status-dot {
+    position: absolute;
+    bottom: 2px; right: 2px;
+    width: 12px; height: 12px;
+    border-radius: 50%;
+    border: 2px solid #111b21;
+}
+.dot-online { background: #00a884; }
+.dot-offline { background: #8696a0; }
 
-								</div>
-								<!-- /Chat Right -->
-								
-							</div>
-						</div>
-					</div>
-					<!-- /Row -->
+.contact-info { flex: 1; min-width: 0; }
+.contact-name {
+    font-size: 16px;
+    font-weight: 500;
+    color: #e9edef;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.contact-sub {
+    font-size: 13px;
+    color: #8696a0;
+    margin-top: 2px;
+}
+.contact-sub.sub-online { color: #00a884; }
+.contact-pid {
+    font-size: 11px;
+    color: #4a5568;
+    margin-top: 1px;
+}
 
-				</div>
+/* ========== RIGHT PANEL ========== */
+.chat-right-panel {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    min-width: 0;
+    background: #0b141a;
+}
 
-			</div>		
-			
-	  
-		<!-- jQuery -->
-		<script src="{% static 'HealthStack-System/js/Normal/jquery.min.js' %}"></script>
-		
-		<!-- Bootstrap Core JS -->
-		<script src="{% static 'HealthStack-System/js/Normal/popper.min.js' %}"></script>
-		<script src="{% static 'HealthStack-System/js/Normal/bootstrap.min.js' %}"></script>
-		
-		<!-- <script src="{% static 'HealthStack-System/Outside_assets/js/script.js' %}"></script> -->
-		<script>
-			$(function() {
-				$('div.dataTables_length select').addClass('bg-dark')
-			})
-		</script>
-		<script>
-			$(function() {
-				if ($('.chat-bubble:last').length > 0) {
-					$('.chat-box').animate({
-						scrollTop: $('.chat-bubble:last').offset().top
-					}, 'fast')
-				}
-				$('#chat-submit').submit(function(e) {
-					e.preventDefault()
-					start_loader()
-					$.ajax({
-						headers: {
-							"X-CSRFToken": '{{csrf_token}}'
-						},
-						url: "{% url 'chat-send' %}",
-						method: "POST",
-						data: $(this).serialize(),
-						dataType: "json",
-						error: err => {
-							console.log(err)
-							alert('an error occured')
-						},
-						success: function(resp) {
-							if (typeof resp == "object" && resp.status == 'success') {
-								location.reload()
-							} else {
-								consol.log(resp)
-								alert('an error occured')
-							}
-						}
-					})
-		
-		
-		
-				})
-				chats_renew()
-				setInterval(() => {
-					chats_renew()
-				}, 2500)
-		
-			})
-		
-			function chats_renew() {
-				var last_id = 0
-				if ($('.chat-bubble').length > 0)
-					last_id = $('.chat-bubble:last').attr('data-id')
-				$.ajax({
-					headers: {
-						"X-CSRFToken": '{{csrf_token}}'
-					},
-					url: "{% url 'chat-renew' %}",
-					method: "POST",
-					data: {
-						last_id: last_id,
-						user_id: '{{user.id}}',
-						chat_id: '{{chat_id}}'
-					},
-					dataType: 'json',
-					error: err => {
-						console.log(err)
-							// alert('an error occured')
-					},
-					success: function(resp) {
-						if (Object.keys(resp).length > 0) {
-							Object.keys(resp).map(k => {
-								if (resp[k].id.user_from == '{{user.id}}') {
-									bubble = '<div class="chat-body">'+
-										'<div class="chat-scroll chat-box">'+
-									'<ul class="list-unstyled">'+
-									'<li class="media sent">'+
-													'<div class="media-body">'+	
-														'<div class="msg-box">'+
-															'<div class="chat-bubble" data-id="' + resp[k].id + '">'+
-																'<p>' + resp[k].message + '</p>'+
-																'<ul class="chat-msg-info">'+
-																	'<li>'+
-																		'<div class="chat-time">'+
-																			'<span>' + resp[k].date_created + '</span>'+
-																		'</div>'+
-																	'</li>'+
-																'</ul>'+
-															'</div>'+
-														'</div>'+
-														
-													'</div>'+
-												'</li>';
-								} else {   
-									bubble = '<div class="chat-body">'+
-												'<div class="chat-scroll chat-box">'+
-											'<ul class="list-unstyled">'+
-									
-											'<li class="media received">'+
-												'<div class="avatar">'+
-													'<img src="{{ pat.featured_image.url }}" alt="User Image" class="avatar-img rounded-circle">'+
-												'</div>'+
-											
-										
-													'<div class="media-body">'+	
-														'<div class="msg-box">'+
-															'<div class="chat-bubble" data-id="' + resp[k].id + '">'+
-																'<p>' + resp[k].message + '</p>'+
-																'<ul class="chat-msg-info">'+
-																	'<li>'+
-																		'<div class="chat-time">'+
-																			'<span>' + resp[k].date_created + '</span>'+
-																		'</div>'+
-																	'</li>'+
-																'</ul>'+
-															'</div>'+
-														'</div>'+
-														
-													'</div>'+
-												'</li>'+
-												'</ul>'+
-												'</div>'+
-												'</div>';
-								}
-								// console.log(bubble)
-								$('.chat-box').append(bubble)
-								$('.chat-box').animate({
-									scrollTop: $('.chat-bubble:last').offset().top * 1000
-								}, 'fast')
-							})
-						}
-					}
-				})
-			}
-		</script>
-	</body>
+/* Active chat header — PATIENT NAME shows here */
+.active-chat-header {
+    display: flex;
+    align-items: center;
+    padding: 10px 16px;
+    background: #202c33;
+    height: 60px;
+    gap: 12px;
+    border-bottom: 1px solid #2a3942;
+}
+.active-chat-header .back-btn {
+    display: none;
+    color: #aebac1;
+    font-size: 18px;
+    text-decoration: none;
+}
+.active-header-avatar img {
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    cursor: pointer;
+}
+.active-header-info { flex: 1; min-width: 0; }
+.active-header-name {
+    font-size: 16px;
+    font-weight: 600;
+    color: #e9edef;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.active-header-status { font-size: 12px; color: #8696a0; margin-top: 1px; }
+.active-header-status.status-online { color: #00a884; }
+.active-header-actions { display: flex; gap: 4px; margin-left: auto; }
+.active-header-actions a {
+    color: #aebac1;
+    font-size: 17px;
+    width: 38px; height: 38px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    text-decoration: none;
+    transition: background 0.2s;
+}
+.active-header-actions a:hover { background: rgba(255,255,255,0.08); color: #e9edef; }
 
-<!-- doccure/chat.html  30 Nov 2019 04:12:18 GMT -->
+/* Welcome screen */
+.chat-welcome {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    padding: 40px;
+    text-align: center;
+}
+.chat-welcome .welcome-icon {
+    width: 100px; height: 100px;
+    border-radius: 50%;
+    background: rgba(0,168,132,0.1);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 40px;
+    color: #00a884;
+    margin-bottom: 8px;
+}
+.chat-welcome h3 { font-size: 22px; font-weight: 300; color: #d1d7db; }
+.chat-welcome p { font-size: 14px; color: #8696a0; max-width: 360px; line-height: 1.6; }
+
+/* Messages */
+.chat-messages-area {
+    flex: 1;
+    overflow-y: auto;
+    padding: 20px 60px;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+.chat-messages-area::-webkit-scrollbar { width: 6px; }
+.chat-messages-area::-webkit-scrollbar-thumb { background: #374045; border-radius: 6px; }
+
+.date-separator { display: flex; justify-content: center; margin: 10px 0; }
+.date-separator span {
+    background: #182229;
+    color: #8696a0;
+    font-size: 12px;
+    padding: 5px 12px;
+    border-radius: 8px;
+    border: 1px solid #2a3942;
+}
+
+/* Bubbles */
+.msg-row { display: flex; margin: 2px 0; }
+.msg-row.sent { justify-content: flex-end; }
+.msg-row.received { justify-content: flex-start; }
+
+.msg-bubble {
+    max-width: 65%;
+    padding: 8px 12px 6px;
+    border-radius: 8px;
+    position: relative;
+    word-wrap: break-word;
+}
+.msg-row.sent .msg-bubble {
+    background: #005c4b;
+    border-radius: 8px 0 8px 8px;
+    color: #e9edef;
+}
+.msg-row.received .msg-bubble {
+    background: #202c33;
+    border-radius: 0 8px 8px 8px;
+    color: #e9edef;
+}
+.msg-row.sent .msg-bubble::after {
+    content: '';
+    position: absolute;
+    top: 0; right: -8px;
+    border: 8px solid transparent;
+    border-top: 0;
+    border-left: 8px solid #005c4b;
+}
+.msg-row.received .msg-bubble::before {
+    content: '';
+    position: absolute;
+    top: 0; left: -8px;
+    border: 8px solid transparent;
+    border-top: 0;
+    border-right: 8px solid #202c33;
+}
+.msg-text { font-size: 14.5px; line-height: 1.45; margin: 0; }
+.msg-meta { display: flex; justify-content: flex-end; align-items: center; gap: 4px; margin-top: 3px; }
+.msg-time { font-size: 11px; color: #8696a0; }
+
+/* ========== INPUT ========== */
+.chat-input-area {
+    display: flex;
+    align-items: flex-end;
+    gap: 10px;
+    padding: 10px 16px;
+    background: #202c33;
+}
+.chat-input-box {
+    flex: 1;
+    background: #2a3942;
+    border-radius: 10px;
+    display: flex;
+    align-items: flex-end;
+    padding: 9px 14px;
+}
+.chat-input-box textarea {
+    flex: 1;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: #e9edef;
+    font-size: 15px;
+    resize: none;
+    max-height: 100px;
+    min-height: 24px;
+    line-height: 1.5;
+    font-family: 'Inter', sans-serif;
+}
+.chat-input-box textarea::placeholder { color: #8696a0; }
+.btn-send-msg {
+    width: 52px; height: 52px;
+    border-radius: 50%;
+    background: #00a884;
+    border: none;
+    color: #fff;
+    font-size: 18px;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: background 0.2s, transform 0.15s;
+    box-shadow: 0 2px 10px rgba(0,168,132,0.4);
+}
+.btn-send-msg:hover { background: #00c49a; transform: scale(1.05); }
+
+@media (max-width: 768px) {
+    .chat-left-panel { width: 100%; min-width: 100%; }
+    .chat-right-panel { display: none; }
+}
+</style>
+</head>
+<body class="chat-page">
+<div class="main-wrapper">
+    <header class="header">{% include 'doctor-navbar.html' %}</header>
+
+    <div class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-xl-12">
+                    <div class="chat-window">
+
+                        <!-- ===== LEFT PANEL ===== -->
+                        <div class="chat-left-panel">
+
+                            <div class="left-panel-header">
+                                <span class="panel-title">My Patients</span>
+                                <span class="doctor-chip">Doctor</span>
+                            </div>
+
+                            <div class="left-search">
+                                <form method="GET" action="{% url 'chat-home' pk=user.id %}">
+                                    <i class="fas fa-search"></i>
+                                    <input type="text" name="search" placeholder="Search patients...">
+                                </form>
+                            </div>
+
+                            <div class="patients-label">All Patients</div>
+
+                            <div class="contacts-list">
+                                {% for u in patient %}
+                                {% if not u.id == 1 and not u.id == user.id %}
+                                <a href="{% url 'chat-home' pk=user.id %}?u={{u.user.id}}"
+                                   class="contact-item {% if chat_id == u.user.id %}active-chat{% endif %}">
+                                    <div class="contact-avatar-wrap">
+                                        <img src="{{ u.featured_image.url }}" alt="{{ u.name }}">
+                                        {% if u.user.login_status %}
+                                        <span class="contact-status-dot dot-online"></span>
+                                        {% else %}
+                                        <span class="contact-status-dot dot-offline"></span>
+                                        {% endif %}
+                                    </div>
+                                    <div class="contact-info">
+                                        <div class="contact-name">{{ u.name }}</div>
+                                        {% if u.user.login_status %}
+                                        <div class="contact-sub sub-online">Online</div>
+                                        {% else %}
+                                        <div class="contact-sub">Offline</div>
+                                        {% endif %}
+                                        {% if u.serial_number %}
+                                        <div class="contact-pid">Patient ID: {{ u.serial_number }}</div>
+                                        {% endif %}
+                                    </div>
+                                </a>
+                                {% endif %}
+                                {% endfor %}
+                            </div>
+                        </div>
+                        <!-- /LEFT PANEL -->
+
+                        <!-- ===== RIGHT PANEL ===== -->
+                        <div class="chat-right-panel">
+
+                            {% if not chat_id > 0 %}
+                            <div class="chat-welcome">
+                                <div class="welcome-icon">
+                                    <i class="fas fa-user-md"></i>
+                                </div>
+                                <h3>Doctor's Message Center</h3>
+                                <p>Select a patient from the left panel to view and send messages. Your conversations are private and secure.</p>
+                            </div>
+
+                            {% else %}
+                            <!-- Active chat header — PATIENT NAME displayed here -->
+                            <div class="active-chat-header">
+                                <a href="{% url 'chat-home' pk=user.id %}" class="back-btn">
+                                    <i class="fas fa-arrow-left"></i>
+                                </a>
+                                <div class="active-header-avatar">
+                                    <img src="{{ pat.featured_image.url }}" alt="{{ pat.name }}">
+                                </div>
+                                <div class="active-header-info">
+                                    <div class="active-header-name">{{ pat.name }}</div>
+                                    {% if pat.user.login_status %}
+                                    <div class="active-header-status status-online">● Online</div>
+                                    {% else %}
+                                    <div class="active-header-status">Offline</div>
+                                    {% endif %}
+                                </div>
+                                <div class="active-header-actions">
+                                    <a href="#" title="View patient profile"><i class="fas fa-user-circle"></i></a>
+                                    <a href="#" title="Medical records"><i class="fas fa-file-medical-alt"></i></a>
+                                    <a href="javascript:void(0)" title="More"><i class="fas fa-ellipsis-v"></i></a>
+                                </div>
+                            </div>
+
+                            <!-- Messages -->
+                            <div class="chat-messages-area" id="chat-box-scroll">
+                                <div class="date-separator"><span>Today</span></div>
+
+                                {% for chat in chats %}
+                                {% if chat.user_from == user %}
+                                <div class="msg-row sent">
+                                    <div class="msg-bubble chat-bubble" data-id="{{ chat.id }}">
+                                        <p class="msg-text">{{ chat.message }}</p>
+                                        <div class="msg-meta">
+                                            <span class="msg-time">{{ chat.date_created|localtime }}</span>
+                                            <i class="fas fa-check-double" style="font-size:11px;color:#53bdeb;"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% else %}
+                                <div class="msg-row received">
+                                    <div class="msg-bubble chat-bubble" data-id="{{ chat.id }}">
+                                        <p class="msg-text">{{ chat.message }}</p>
+                                        <div class="msg-meta">
+                                            <span class="msg-time">{{ chat.date_created|localtime }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endif %}
+                                {% endfor %}
+                            </div>
+
+                            <!-- Input -->
+                            <div class="chat-input-area">
+                                <div class="chat-input-box">
+                                    <form id="chat-submit" style="display:flex;width:100%;align-items:flex-end;">
+                                        <input type="hidden" name="user_from" value="{{ user.id }}">
+                                        <input type="hidden" name="user_to" value="{{ chat_id }}">
+                                        <textarea id="msg-input" name="message" rows="1" placeholder="Type a message to patient..."></textarea>
+                                    </form>
+                                </div>
+                                <button class="btn-send-msg" id="btn-send-trigger" type="button">
+                                    <i class="fas fa-paper-plane"></i>
+                                </button>
+                            </div>
+                            {% endif %}
+
+                        </div>
+                        <!-- /RIGHT PANEL -->
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="{% static 'HealthStack-System/js/Normal/jquery.min.js' %}"></script>
+<script src="{% static 'HealthStack-System/js/Normal/popper.min.js' %}"></script>
+<script src="{% static 'HealthStack-System/js/Normal/bootstrap.min.js' %}"></script>
+<script>
+$(function () {
+    function scrollBottom() {
+        var box = $('#chat-box-scroll');
+        if (box.length) box.scrollTop(box[0].scrollHeight);
+    }
+    scrollBottom();
+
+    $('#msg-input').on('input', function () {
+        this.style.height = 'auto';
+        this.style.height = Math.min(this.scrollHeight, 100) + 'px';
+    });
+
+    $('#msg-input').on('keydown', function (e) {
+        if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault();
+            submitMsg();
+        }
+    });
+
+    $('#btn-send-trigger').on('click', function () { submitMsg(); });
+
+    function submitMsg() {
+        var msg = $('#msg-input').val().trim();
+        if (!msg) return;
+        start_loader();
+        $.ajax({
+            headers: { "X-CSRFToken": '{{csrf_token}}' },
+            url: "{% url 'chat-send' %}",
+            method: "POST",
+            data: $('#chat-submit').serialize(),
+            dataType: "json",
+            error: function (err) { console.log(err); alert('An error occurred'); },
+            success: function (resp) {
+                if (typeof resp == "object" && resp.status == 'success') {
+                    location.reload();
+                } else { alert('An error occurred'); }
+            }
+        });
+    }
+
+    chats_renew();
+    setInterval(chats_renew, 2500);
+});
+
+function chats_renew() {
+    var last_id = 0;
+    if ($('.chat-bubble').length > 0) last_id = $('.chat-bubble:last').attr('data-id');
+    $.ajax({
+        headers: { "X-CSRFToken": '{{csrf_token}}' },
+        url: "{% url 'chat-renew' %}",
+        method: "POST",
+        data: { last_id: last_id, user_id: '{{user.id}}', chat_id: '{{chat_id}}' },
+        dataType: 'json',
+        error: function (err) { console.log(err); },
+        success: function (resp) {
+            if (Object.keys(resp).length > 0) {
+                Object.keys(resp).map(function (k) {
+                    var isSent = resp[k].id.user_from == '{{user.id}}';
+                    var bubble;
+                    if (isSent) {
+                        bubble = '<div class="msg-row sent"><div class="msg-bubble chat-bubble" data-id="' + resp[k].id + '"><p class="msg-text">' + resp[k].message + '</p><div class="msg-meta"><span class="msg-time">' + resp[k].date_created + '</span><i class="fas fa-check-double" style="font-size:11px;color:#53bdeb;"></i></div></div></div>';
+                    } else {
+                        bubble = '<div class="msg-row received"><div class="msg-bubble chat-bubble" data-id="' + resp[k].id + '"><p class="msg-text">' + resp[k].message + '</p><div class="msg-meta"><span class="msg-time">' + resp[k].date_created + '</span></div></div></div>';
+                    }
+                    $('#chat-box-scroll').append(bubble);
+                    var box = $('#chat-box-scroll');
+                    box.scrollTop(box[0].scrollHeight);
+                });
+            }
+        }
+    });
+}
+</script>
+</body>
 </html>
