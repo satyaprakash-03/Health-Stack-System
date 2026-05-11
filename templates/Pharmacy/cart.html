@@ -1,195 +1,394 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
-
-<!-- Mirrored from preview.colorlib.com/theme/coffeeblend/cart.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 18 Apr 2021 16:32:50 GMT -->
-
 <head>
-  <title>HealthStack</title>
-  <!-- Favicons -->
-  <link
-  type="image/x-icon"
-  href="{% static 'HealthStack-System/images/Normal/favicon.png' %}"
-  rel="icon"
-  />
-  <meta charset="utf-8">
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css?family=Josefin+Sans:400,700" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css?family=Great+Vibes" rel="stylesheet">
-  <link rel="stylesheet" href="{% static 'HealthStack-System\pharmacy_assets\css\open-iconic-bootstrap.min.css'%}">
-  <link rel="stylesheet" href="{% static 'HealthStack-System\pharmacy_assets\css\animate.css'%}">
-  <link rel="stylesheet" href="{% static 'HealthStack-System\pharmacy_assets\css\owl.carousel.min.css'%}">
-  <link rel="stylesheet" href="{% static 'HealthStack-System\pharmacy_assets\css\owl.theme.default.min.css'%}">
-  <link rel="stylesheet" href="{% static 'HealthStack-System\pharmacy_assets\css\magnific-popup.css'%}">
-  <link rel="stylesheet" href="{% static 'HealthStack-System\pharmacy_assets\css\owl.theme.default.min.css'%}">
-  <link rel="stylesheet" href="{% static 'HealthStack-System\pharmacy_assets\css\aos.css'%}">
-  <link rel="stylesheet" href="{% static 'HealthStack-System\pharmacy_assets\css\ionicons.min.css'%}">
-  <link rel="stylesheet" href="{% static 'HealthStack-System\pharmacy_assets\css\bootstrap-datepicker.css'%}">
-  <link rel="stylesheet" href="{% static 'HealthStack-System\pharmacy_assets\css\jquery.timepicker.css'%}">
-  <link rel="stylesheet" href="{% static 'HealthStack-System\pharmacy_assets\css\flaticon.css'%}">
-  <link rel="stylesheet" href="{% static 'HealthStack-System\pharmacy_assets\css\icomoon.css'%}">
-  <link rel="stylesheet" href="{% static 'HealthStack-System\pharmacy_assets\css\style.css'%}">
-</head>
+  <title>My Cart | HealthStack MedShop</title>
+  <link type="image/x-icon" href="{% static 'HealthStack-System/images/Normal/favicon.png' %}" rel="icon"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="{% static 'HealthStack-System/pharmacy_assets/css/open-iconic-bootstrap.min.css'%}">
+  <link rel="stylesheet" href="{% static 'HealthStack-System/pharmacy_assets/css/style.css'%}">
+  <style>
+    :root {
+      --primary: #00c9a7; --primary-dark: #00a88e;
+      --primary-glow: rgba(0,201,167,0.15);
+      --bg-dark: #0d1117; --bg-card: #161b27; --bg-card2: #1c2333;
+      --border: rgba(255,255,255,0.08);
+      --text: #e2e8f0; --text-muted: #8892a4;
+      --danger: #ff5757; --accent: #845ef7;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Inter', sans-serif; background: var(--bg-dark); color: var(--text); min-height: 100vh; }
 
+    /* NAVBAR */
+    .med-navbar {
+      position: sticky; top: 0; z-index: 1000;
+      background: rgba(13,17,23,0.95); backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+      padding: 0 2rem; height: 68px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .nav-brand { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+    .nav-brand-icon {
+      width: 38px; height: 38px;
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      border-radius: 10px; display: flex; align-items: center; justify-content: center;
+      font-size: 18px; color: white;
+    }
+    .nav-brand-text { font-size: 1.1rem; font-weight: 700; color: #fff; }
+    .nav-brand-text span { color: var(--primary); }
+    .nav-actions { display: flex; align-items: center; gap: 1rem; }
+    .nav-link-btn {
+      color: var(--text-muted); text-decoration: none; font-size: 0.9rem;
+      font-weight: 500; padding: 6px 14px; border-radius: 8px; transition: all 0.2s;
+    }
+    .nav-link-btn:hover { color: var(--primary); background: var(--primary-glow); }
+    .nav-link-btn.active { color: var(--primary); }
+    .nav-cart-btn {
+      background: var(--bg-card2); border: 1px solid var(--border);
+      color: var(--text); padding: 8px 16px; border-radius: 10px;
+      text-decoration: none; font-size: 0.9rem; font-weight: 600;
+      display: flex; align-items: center; gap: 8px; transition: all 0.2s;
+    }
+    .cart-badge {
+      background: var(--primary); color: #0d1117;
+      font-size: 0.65rem; font-weight: 800;
+      width: 20px; height: 20px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+    }
+
+    /* PAGE HEADER */
+    .page-header {
+      background: linear-gradient(135deg, #0d1117, #1a1f35);
+      border-bottom: 1px solid var(--border);
+      padding: 2.5rem 2rem 2rem;
+      position: relative; overflow: hidden;
+    }
+    .page-header::before {
+      content: ''; position: absolute; inset: 0;
+      background: radial-gradient(ellipse at 30% 50%, rgba(0,201,167,0.08) 0%, transparent 70%);
+    }
+    .page-header h1 { font-size: 1.8rem; font-weight: 800; color: #fff; position: relative; }
+    .page-header p { color: var(--text-muted); font-size: 0.9rem; margin-top: 4px; position: relative; }
+
+    /* MAIN LAYOUT */
+    .cart-page { max-width: 1200px; margin: 0 auto; padding: 2.5rem 2rem 4rem; }
+    .cart-layout { display: grid; grid-template-columns: 1fr 360px; gap: 2rem; align-items: start; }
+    @media (max-width: 900px) { .cart-layout { grid-template-columns: 1fr; } }
+
+    /* CART ITEMS */
+    .cart-items-panel {
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: 20px; overflow: hidden;
+    }
+    .cart-items-header {
+      padding: 1.4rem 1.8rem;
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; gap: 10px;
+    }
+    .cart-items-header h2 { font-size: 1.1rem; font-weight: 700; color: var(--text); }
+    .cart-count-badge {
+      background: var(--primary-glow); border: 1px solid rgba(0,201,167,0.3);
+      color: var(--primary); font-size: 0.75rem; font-weight: 700;
+      padding: 3px 10px; border-radius: 20px;
+    }
+    .cart-item {
+      display: grid;
+      grid-template-columns: 80px 1fr auto auto;
+      gap: 1.2rem;
+      padding: 1.4rem 1.8rem;
+      border-bottom: 1px solid var(--border);
+      align-items: center;
+      transition: background 0.2s;
+    }
+    .cart-item:last-child { border-bottom: none; }
+    .cart-item:hover { background: rgba(255,255,255,0.02); }
+    .cart-item-img {
+      width: 80px; height: 80px;
+      background: var(--bg-card2);
+      border-radius: 12px; overflow: hidden;
+      border: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .cart-item-img img { width: 100%; height: 100%; object-fit: cover; }
+    .cart-item-info .item-name {
+      font-size: 1rem; font-weight: 700; color: var(--text);
+      margin-bottom: 4px;
+    }
+    .cart-item-info .item-desc {
+      font-size: 0.8rem; color: var(--text-muted);
+      display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; overflow: hidden;
+    }
+    .cart-item-info .item-price {
+      font-size: 0.9rem; font-weight: 600; color: var(--primary);
+      margin-top: 6px;
+    }
+    .qty-control {
+      display: flex; align-items: center; gap: 8px;
+      background: var(--bg-card2); border: 1px solid var(--border);
+      border-radius: 10px; padding: 4px 8px;
+    }
+    .qty-btn {
+      width: 28px; height: 28px;
+      display: flex; align-items: center; justify-content: center;
+      background: var(--bg-dark); border: 1px solid var(--border);
+      border-radius: 7px; color: var(--text); font-size: 0.8rem;
+      text-decoration: none; transition: all 0.2s; font-weight: 700;
+    }
+    .qty-btn:hover { background: var(--primary); color: #0d1117; border-color: var(--primary); }
+    .qty-num { font-size: 0.95rem; font-weight: 700; color: var(--text); min-width: 24px; text-align: center; }
+    .item-total { font-size: 1rem; font-weight: 800; color: var(--text); white-space: nowrap; }
+    .remove-btn {
+      display: flex; align-items: center; justify-content: center;
+      width: 32px; height: 32px; background: rgba(255,87,87,0.1);
+      border: 1px solid rgba(255,87,87,0.25); border-radius: 8px;
+      color: var(--danger); text-decoration: none; font-size: 0.8rem;
+      transition: all 0.2s; margin-left: 8px;
+    }
+    .remove-btn:hover { background: rgba(255,87,87,0.25); color: var(--danger); }
+
+    /* ITEM ACTIONS ROW */
+    .item-actions { display: flex; align-items: center; }
+
+    /* EMPTY CART */
+    .empty-cart { text-align: center; padding: 4rem 2rem; }
+    .empty-cart .icon { font-size: 4rem; margin-bottom: 1rem; opacity: 0.3; }
+    .empty-cart h3 { font-size: 1.2rem; font-weight: 700; color: var(--text); margin-bottom: 0.5rem; }
+    .empty-cart p { color: var(--text-muted); margin-bottom: 1.5rem; }
+    .shop-now-btn {
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      color: #0d1117; border: none; border-radius: 12px;
+      padding: 12px 28px; font-size: 0.95rem; font-weight: 700;
+      text-decoration: none; display: inline-flex; align-items: center; gap: 8px;
+      transition: all 0.2s;
+    }
+    .shop-now-btn:hover { box-shadow: 0 6px 24px rgba(0,201,167,0.35); color: #0d1117; text-decoration: none; }
+
+    /* SUMMARY PANEL */
+    .summary-panel {
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: 20px; overflow: hidden;
+      position: sticky; top: 88px;
+    }
+    .summary-header {
+      padding: 1.4rem 1.8rem; border-bottom: 1px solid var(--border);
+    }
+    .summary-header h2 { font-size: 1.1rem; font-weight: 700; color: var(--text); }
+    .summary-body { padding: 1.5rem 1.8rem; display: flex; flex-direction: column; gap: 1rem; }
+    .summary-row {
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .summary-row .lbl { font-size: 0.9rem; color: var(--text-muted); }
+    .summary-row .val { font-size: 0.95rem; font-weight: 600; color: var(--text); }
+    .summary-row .val.delivery { color: var(--warning, #ffb347); }
+    .summary-divider { border: none; border-top: 1px solid var(--border); margin: 0.5rem 0; }
+    .summary-total {
+      display: flex; align-items: center; justify-content: space-between;
+      background: var(--primary-glow); border: 1px solid rgba(0,201,167,0.2);
+      border-radius: 12px; padding: 1rem 1.2rem;
+    }
+    .summary-total .lbl { font-size: 1rem; font-weight: 700; color: var(--text); }
+    .summary-total .val { font-size: 1.3rem; font-weight: 800; color: var(--primary); }
+    .checkout-btn {
+      display: flex; align-items: center; justify-content: center; gap: 10px;
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      color: #0d1117; border: none; border-radius: 14px;
+      padding: 16px; font-size: 1rem; font-weight: 700;
+      text-decoration: none; transition: all 0.25s; margin-top: 0.5rem;
+    }
+    .checkout-btn:hover {
+      transform: translateY(-2px); box-shadow: 0 8px 30px rgba(0,201,167,0.4);
+      color: #0d1117; text-decoration: none;
+    }
+    .continue-btn {
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      background: transparent; border: 1.5px solid var(--border);
+      color: var(--text-muted); border-radius: 14px;
+      padding: 13px; font-size: 0.9rem; font-weight: 600;
+      text-decoration: none; transition: all 0.2s; margin-top: 0.5rem;
+    }
+    .continue-btn:hover { border-color: var(--primary); color: var(--primary); }
+    .secure-note {
+      display: flex; align-items: center; justify-content: center; gap: 6px;
+      color: var(--text-muted); font-size: 0.78rem; margin-top: 1rem;
+    }
+    .secure-note i { color: var(--primary); }
+
+    /* Messages */
+    .msg-alert {
+      padding: 12px 18px;
+      background: var(--primary-glow); border: 1px solid rgba(0,201,167,0.3);
+      border-radius: 10px; color: var(--primary);
+      font-size: 0.88rem; font-weight: 500;
+      margin-bottom: 1.5rem;
+      display: flex; align-items: center; gap: 8px;
+    }
+
+    /* LOADER */
+    #page-loader {
+      position: fixed; inset: 0; background: var(--bg-dark);
+      display: flex; align-items: center; justify-content: center;
+      z-index: 9999; transition: opacity 0.4s;
+    }
+    .loader-ring {
+      width: 50px; height: 50px; border: 4px solid var(--border);
+      border-top-color: var(--primary); border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    @media (max-width: 600px) {
+      .cart-item { grid-template-columns: 64px 1fr; gap: 0.8rem; }
+      .qty-control, .item-total, .item-actions { grid-column: 2; }
+    }
+  </style>
+</head>
 <body>
-  <nav class="navbar navbar-expand-lg navbar-dark ftco_navbar bg-dark ftco-navbar-light" id="ftco-navbar">
-    <div class="container">
-      <a class="navbar-brand" href="">Health Stack<small>Medical Shop</small>
+  <div id="page-loader"><div class="loader-ring"></div></div>
+
+  <!-- Navbar -->
+  <nav class="med-navbar">
+    <a href="{% url 'pharmacy_shop' %}" class="nav-brand">
+      <div class="nav-brand-icon"><i class="fas fa-pills"></i></div>
+      <span class="nav-brand-text">Health<span>Stack</span> <small style="font-size:0.65rem;color:var(--text-muted);font-weight:400;">MedShop</small></span>
+    </a>
+    <div class="nav-actions">
+      <a href="{% url 'pharmacy_shop' %}" class="nav-link-btn"><i class="fas fa-store"></i> Shop</a>
+      <a href="{% url 'patient-dashboard' %}" class="nav-link-btn"><i class="fas fa-th-large"></i> Dashboard</a>
+      <a href="{% url 'cart' %}" class="nav-cart-btn active" style="border-color: var(--primary); color: var(--primary);">
+        <i class="fas fa-shopping-cart"></i> Cart
+        <span class="cart-badge">{{order.count_cart_items}}</span>
       </a>
-      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#ftco-nav"
-        aria-controls="ftco-nav" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="oi oi-menu"></span> Menu
-      </button>
-      <div class="collapse navbar-collapse" id="ftco-nav">
-        <ul class="navbar-nav ml-auto">
-          <li class="nav-item"><a href="{% url 'patient-dashboard'%}" class="nav-link">Dashboard</a></li>
-          <li class="nav-item"><a href="{% url 'pharmacy_shop' %}"class="nav-link">Shop</a></li>
-          <!-- <li class="nav-item"><a href="{% url 'cart' %}" class="nav-link">Cart</a></li> -->
-          <!-- <li class="nav-item"><a href="{% url 'checkout' %}" class="nav-link">Checkout</a></li> -->
-          <li class="nav-item cart">
-            <a href="{% url 'cart' %}" class="nav-link">
-              <span class="icon icon-shopping_cart"></span>
-              <span class="bag d-flex justify-content-center align-items-center">
-                <small>{{order.count_cart_items}}</small>
-              </span>
-            </a>
-          </li>
-        </ul>
-      </div>
     </div>
   </nav>
-  <section class="ftco-section ftco-cart">
-    <div class="container">
-      <div class="row">
-        <div class="col-md-12 ftco-animate">
-          <div class="cart-list">
-            <table class="table">
-              {% include 'message.html' %}
-              <thead class="thead-primary">
-                <tr class="text-center">
-                  <th>&nbsp;</th>
-                  <th>Product</th>
-                  <th>Price</th>
-                  <th>Quantity</th>
-                  <th>Total</th>
-                </tr>
-              </thead>
-              <tbody>
-                
-                {% for cart in carts %} 
 
-                  <tr class="text-center">
-                    <td class="product-remove"><a href="{% url 'remove-item' pk=cart.item.pk  %}"><span class="icon-close"></span></a></td>
-                    
-                    <td class="product-name">
-                      <h3>{{ cart.item.name }}</h3>
-                      <p>{{ cart.item.description}}</p>
-                    </td>
-                    <td class="price">{{ cart.item.price }} BDT</td>
-                    <td>
-                      <div class="input-group col-md-6 d-flex mb-3">
-                        <span class="input-group-btn mr-2">
-                          <a href="{% url 'decrease-item' pk=cart.item.pk %}"><button type="button" class="quantity-left-minus btn" data-type="minus" data-field="">
-                            <i class="icon-minus"></i>
-                          </button>
-                          </a>
-                        </span>
-                        <input type="text" id="quantity" name="quantity" class="form-control input-number" value="{{ cart.quantity }}"
-                          min="1" max="100">
-                        <span class="input-group-btn ml-2">
-                          <a class="mr-2" href="{% url 'increase-item' pk=cart.item.pk %}">
-                            <button type="button" class="quantity-right-plus btn" data-type="plus" data-field="">
-                            <i class="icon-plus"></i>
-                            </button>
-                          </a>
-                        </span>
-                      </div>
-                    </td>
-                    <td class="total">{{ cart.get_total }} BDT</td>
-                  </tr>
-                {% endfor %}
-              </tbody>
-            </table>
+  <!-- Page Header -->
+  <div class="page-header">
+    <h1>🛒 My Cart</h1>
+    <p>Review your selected medicines before checkout</p>
+  </div>
+
+  <!-- Main -->
+  <div class="cart-page">
+    {% if messages %}
+    {% for message in messages %}
+    <div class="msg-alert"><i class="fas fa-check-circle"></i> {{ message }}</div>
+    {% endfor %}
+    {% endif %}
+
+    {% if carts %}
+    <div class="cart-layout">
+      <!-- Items Panel -->
+      <div class="cart-items-panel">
+        <div class="cart-items-header">
+          <h2>Cart Items</h2>
+          <span class="cart-count-badge">{{ carts|length }} item{% if carts|length != 1 %}s{% endif %}</span>
+        </div>
+
+        {% for cart in carts %}
+        <div class="cart-item">
+          <!-- Image -->
+          <div class="cart-item-img">
+            {% if cart.item.featured_image %}
+            <img src="{{ cart.item.featured_image.url }}" alt="{{ cart.item.name }}">
+            {% else %}
+            <i class="fas fa-pills" style="font-size:2rem;color:var(--text-muted);opacity:0.4;"></i>
+            {% endif %}
+          </div>
+
+          <!-- Info -->
+          <div class="cart-item-info">
+            <div class="item-name">{{ cart.item.name }}</div>
+            {% if cart.item.description %}
+            <div class="item-desc">{{ cart.item.description }}</div>
+            {% endif %}
+            <div class="item-price">₹{{ cart.item.price }} BDT each</div>
+          </div>
+
+          <!-- Qty -->
+          <div class="qty-control">
+            <a href="{% url 'decrease-item' pk=cart.item.pk %}" class="qty-btn"><i class="fas fa-minus"></i></a>
+            <span class="qty-num">{{ cart.quantity }}</span>
+            <a href="{% url 'increase-item' pk=cart.item.pk %}" class="qty-btn"><i class="fas fa-plus"></i></a>
+          </div>
+
+          <!-- Total & Remove -->
+          <div class="item-actions">
+            <div style="text-align:right;">
+              <div class="item-total">₹{{ cart.get_total }}</div>
+              <a href="{% url 'remove-item' pk=cart.item.pk %}" class="remove-btn" style="margin: 6px 0 0 auto;" title="Remove">
+                <i class="fas fa-trash-alt"></i>
+              </a>
+            </div>
           </div>
         </div>
+        {% endfor %}
       </div>
-      <div class="row justify-content-end">
-        <div class="col col-lg-3 col-md-6 mt-5 cart-wrap ftco-animate">
-          <div class="cart-total mb-3">
-            <h3>Cart Totals</h3>
-            <p class="d-flex">
-              <span>Subtotal</span>
-              <span>{{ order.get_totals | floatformat:2 }} BDT</span>
-            </p>
-            <p class="d-flex">
-              <span>Delivery</span>
-              <span> 40.00 BDT</span>
-            </p>
-            <p class="d-flex">
-              <span>Discount</span>
-              <span> 0.00 BDT</span>
-            </p>
-            <hr>
-            <p class="d-flex total-price">
-              <span>Total</span>
-              <span>{{ order.final_bill | floatformat:2 }} BDT</span>
-            </p>
-          
+
+      <!-- Summary Panel -->
+      <div class="summary-panel">
+        <div class="summary-header">
+          <h2>Order Summary</h2>
+        </div>
+        <div class="summary-body">
+          <div class="summary-row">
+            <span class="lbl">Subtotal</span>
+            <span class="val">₹{{ order.get_totals|floatformat:2 }} BDT</span>
           </div>
-          <p class="text-center"><a href="{% url 'checkout' %}" class="btn btn-primary py-3 px-4">
-             Proceed to Checkout
-          </a></p>
+          <div class="summary-row">
+            <span class="lbl">Delivery Charges</span>
+            <span class="val delivery">₹40.00 BDT</span>
+          </div>
+          <div class="summary-row">
+            <span class="lbl">Discount</span>
+            <span class="val" style="color:#4caf50;">- ₹0.00</span>
+          </div>
+          <hr class="summary-divider">
+          <div class="summary-total">
+            <span class="lbl">Total Amount</span>
+            <span class="val">₹{{ order.final_bill|floatformat:2 }}</span>
+          </div>
+          <a href="{% url 'checkout' %}" class="checkout-btn">
+            <i class="fas fa-lock"></i> Proceed to Checkout
+          </a>
+          <a href="{% url 'pharmacy_shop' %}" class="continue-btn">
+            <i class="fas fa-arrow-left"></i> Continue Shopping
+          </a>
+          <div class="secure-note">
+            <i class="fas fa-shield-alt"></i>
+            Secure & Encrypted Checkout
+          </div>
         </div>
       </div>
     </div>
-  </section>
+
+    {% else %}
+    <!-- Empty Cart -->
+    <div class="cart-items-panel" style="background:var(--bg-card);border:1px solid var(--border);border-radius:20px;">
+      <div class="empty-cart">
+        <div class="icon">🛒</div>
+        <h3>Your cart is empty</h3>
+        <p>Add some medicines to your cart and they'll appear here.</p>
+        <a href="{% url 'pharmacy_shop' %}" class="shop-now-btn">
+          <i class="fas fa-pills"></i> Browse Medicines
+        </a>
+      </div>
+    </div>
+    {% endif %}
+  </div>
+
   {% include 'footer.html' %}
 
-  <div id="ftco-loader" class="show fullscreen"><svg class="circular" width="48px" height="48px">
-      <circle class="path-bg" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke="#eeeeee" />
-      <circle class="path" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke-miterlimit="10"
-        stroke="#F96D00" />
-    </svg></div>
   <script src="{% static 'HealthStack-System/pharmacy_assets/js/jquery.min.js' %}"></script>
-  <script src="{% static 'HealthStack-System/pharmacy_assets/js/jquery-migrate-3.0.1.min.js' %}"></script>
-  <script src="{% static 'HealthStack-System/pharmacy_assets/js/popper.min.js' %}"></script>
   <script src="{% static 'HealthStack-System/pharmacy_assets/js/bootstrap.min.js' %}"></script>
-  <script src="{% static 'HealthStack-System/pharmacy_assets/js/jquery.easing.1.3.js' %}"></script>
-  <script src="{% static 'HealthStack-System/pharmacy_assets/js/jquery.waypoints.min.js' %}"></script>
-  <script src="{% static 'HealthStack-System/pharmacy_assets/js/jquery.stellar.min.js' %}"></script>
-  <script src="{% static 'HealthStack-System/pharmacy_assets/js/owl.carousel.min.js' %}"></script>
-  <script src="{% static 'HealthStack-System/pharmacy_assets/js/jquery.magnific-popup.min.js' %}"></script>
-  <script src="{% static 'HealthStack-System/pharmacy_assets/js/aos.js' %}"></script>
-  <script src="{% static 'HealthStack-System/pharmacy_assets/js/jquery.animateNumber.min.js' %}"></script>
-  <script src="{% static 'HealthStack-System/pharmacy_assets/js/bootstrap-datepicker.js' %}"></script>
-  <script src="{% static 'HealthStack-System/pharmacy_assets/js/jquery.timepicker.min.js' %}"></script>
-  <script src="{% static 'HealthStack-System/pharmacy_assets/js/scrollax.min.js' %}"></script>
-  <script src="{% static 'HealthStack-System/pharmacy_assets/js/google-map.js' %}"></script>
-  <script src="{% static 'HealthStack-System/pharmacy_assets/js/main.js' %}"></script>
-  <script
-    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBVWaKrjvy3MaE7SQ74_uJiULgl1JY0H2s&amp;sensor=false"></script>
-  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-23581568-13"></script>
   <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag() { dataLayer.push(arguments); }
-    gtag('js', new Date());
-
-    gtag('config', 'UA-23581568-13');
+    window.addEventListener('load', function() {
+      const loader = document.getElementById('page-loader');
+      loader.style.opacity = '0';
+      setTimeout(() => loader.style.display = 'none', 400);
+    });
   </script>
-
-  {% if messages %}
-  <script>
-      {% for message in messages %}
-          $(document).ready(function () {
-              $('.toast').toast('show');
-          });
-      {% endfor %}
-  </script>
-  {% endif %}
-
 </body>
-
-
 </html>

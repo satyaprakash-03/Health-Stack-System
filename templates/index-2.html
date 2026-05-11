@@ -376,6 +376,59 @@
     </div>
   </section>
 
+  <!-- ══ BLOG SECTION ══ -->
+  <section class="hs-blog-section">
+    <div class="container-fluid" style="max-width:1200px;margin:0 auto;padding:0 30px;">
+      <!-- Header -->
+      <div class="hs-blog-header">
+        <div>
+          <div class="hs-sec-label"><i class="fas fa-newspaper"></i> Health Articles</div>
+          <h2 class="hs-sec-title">Explore Our Blogs</h2>
+        </div>
+        <a href="{% url 'blog-list' %}" class="hs-blog-viewall">View all <i class="fas fa-arrow-right"></i></a>
+      </div>
+
+      <!-- Carousel Track -->
+      <div class="hs-blog-carousel-wrap">
+        <div class="hs-blog-track" id="blogTrack">
+          {% for blog in latest_blogs %}
+          <div class="hs-blog-card">
+            <div class="hs-blog-img">
+              {% if blog.featured_image %}
+              <img src="{{ blog.featured_image.url }}" alt="{{ blog.title }}" loading="lazy">
+              {% else %}
+              <div class="hs-blog-no-img">🏥</div>
+              {% endif %}
+              <span class="hs-blog-cat-badge">{{ blog.get_category_display_name }}</span>
+            </div>
+            <div class="hs-blog-body">
+              <a href="{% url 'blog-detail' slug=blog.slug %}" class="hs-blog-title">{{ blog.title|truncatechars:65 }}</a>
+              <div class="hs-blog-meta">
+                <span><i class="fas fa-user-md"></i> {{ blog.author.doctor.name|default:blog.author.username }}</span>
+                <span class="hs-blog-dot">|</span>
+                <span><i class="fas fa-calendar-alt"></i> {{ blog.created_at|date:"M d, Y" }}</span>
+              </div>
+            </div>
+          </div>
+          {% empty %}
+          <div style="padding:40px;text-align:center;color:#64748b;width:100%;">
+            <i class="fas fa-newspaper" style="font-size:2.5rem;opacity:.3;display:block;margin-bottom:12px;"></i>
+            <p>No blogs published yet. Check back soon!</p>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+
+      <!-- Prev / Next arrows -->
+      {% if latest_blogs %}
+      <div class="hs-blog-nav">
+        <button class="hs-blog-nav-btn" id="blogPrev" onclick="scrollBlog(-1)"><i class="fas fa-chevron-left"></i></button>
+        <button class="hs-blog-nav-btn" id="blogNext" onclick="scrollBlog(1)"><i class="fas fa-chevron-right"></i></button>
+      </div>
+      {% endif %}
+    </div>
+  </section>
+
   <!-- ══ BOTTOM CTA ══ -->
   <section class="hs-cta">
     <div class="container-fluid" style="max-width:700px;margin:0 auto;padding:0 30px;">
@@ -399,7 +452,156 @@
 
 <style>
   #check-symptoms-btn:hover{transform:translateY(-3px) scale(1.02);box-shadow:0 14px 36px rgba(0,196,204,0.55) !important;}
+
+  /* ── BLOG SECTION ── */
+  .hs-blog-section {
+    padding: 70px 0 60px;
+    background: #f8faff;
+    border-top: 1px solid #e8eef7;
+  }
+  .hs-blog-header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    margin-bottom: 28px;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .hs-blog-viewall {
+    color: #e53935;
+    font-size: .9rem;
+    font-weight: 600;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: gap .2s;
+    font-family: 'Inter', sans-serif;
+  }
+  .hs-blog-viewall:hover { gap: 10px; color: #c62828; }
+
+  /* Carousel */
+  .hs-blog-carousel-wrap {
+    overflow: hidden;
+    border-radius: 0;
+  }
+  .hs-blog-track {
+    display: flex;
+    gap: 20px;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    padding-bottom: 6px;
+    scrollbar-width: none;
+  }
+  .hs-blog-track::-webkit-scrollbar { display: none; }
+
+  /* Blog Card */
+  .hs-blog-card {
+    flex: 0 0 270px;
+    background: #fff;
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 2px 14px rgba(31,76,122,.10);
+    border: 1px solid #e8eef7;
+    transition: transform .3s, box-shadow .3s;
+    cursor: pointer;
+  }
+  .hs-blog-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 32px rgba(31,76,122,.18);
+  }
+  .hs-blog-img {
+    position: relative;
+    height: 185px;
+    overflow: hidden;
+    background: linear-gradient(135deg, #1f4c7a, #163a5f);
+  }
+  .hs-blog-img img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    transition: transform .4s;
+  }
+  .hs-blog-card:hover .hs-blog-img img { transform: scale(1.06); }
+  .hs-blog-no-img {
+    width: 100%; height: 100%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 3rem; opacity: .35;
+  }
+  .hs-blog-cat-badge {
+    position: absolute;
+    bottom: 10px; left: 12px;
+    background: linear-gradient(135deg, #1f4c7a, #0891b2);
+    color: #fff;
+    font-size: .68rem;
+    font-weight: 700;
+    padding: 4px 12px;
+    border-radius: 20px;
+    text-transform: capitalize;
+    box-shadow: 0 2px 8px rgba(0,0,0,.25);
+  }
+  .hs-blog-body { padding: 14px 16px 16px; }
+  .hs-blog-title {
+    display: block;
+    font-size: .93rem;
+    font-weight: 700;
+    color: #1e293b;
+    text-decoration: none;
+    line-height: 1.45;
+    margin-bottom: 10px;
+    transition: color .2s;
+    font-family: 'Inter', sans-serif;
+  }
+  .hs-blog-title:hover { color: #1f4c7a; }
+  .hs-blog-meta {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: .75rem;
+    color: #94a3b8;
+    font-family: 'Inter', sans-serif;
+  }
+  .hs-blog-meta i { font-size: .7rem; }
+  .hs-blog-dot { opacity: .5; }
+
+  /* Nav Buttons */
+  .hs-blog-nav {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin-top: 24px;
+  }
+  .hs-blog-nav-btn {
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    border: 2px solid #dde9f7;
+    background: #fff;
+    color: #1f4c7a;
+    font-size: .85rem;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: all .2s;
+    box-shadow: 0 2px 8px rgba(31,76,122,.12);
+  }
+  .hs-blog-nav-btn:hover {
+    background: linear-gradient(135deg, #1f4c7a, #2a6cb0);
+    color: #fff;
+    border-color: #1f4c7a;
+    transform: scale(1.08);
+  }
+
+  @media(max-width:768px) {
+    .hs-blog-card { flex: 0 0 230px; }
+    .hs-blog-section { padding: 50px 0 40px; }
+  }
 </style>
+
+<script>
+  function scrollBlog(dir) {
+    var track = document.getElementById('blogTrack');
+    var cardWidth = track.querySelector('.hs-blog-card') ? track.querySelector('.hs-blog-card').offsetWidth + 20 : 290;
+    track.scrollBy({ left: dir * cardWidth * 1.5, behavior: 'smooth' });
+  }
+</script>
 
 <script src="{% static 'HealthStack-System/js/Normal/jquery.min.js' %}"></script>
 <script src="{% static 'HealthStack-System/js/Normal/popper.min.js' %}"></script>

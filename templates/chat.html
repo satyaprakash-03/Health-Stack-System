@@ -331,16 +331,15 @@ body.chat-page .col-xl-12 { height: 100%; padding: 0; margin: 0; max-width: 100%
     min-width: 20px;
     height: 20px;
     border-radius: 10px;
-    display: flex;
+    display: inline-flex;
     align-items: center;
     justify-content: center;
     padding: 0 5px;
-    margin-left: auto;
-    animation: pulse-badge 1s ease infinite;
+    animation: pulse-badge 1.4s ease infinite;
 }
 @keyframes pulse-badge {
-    0%,100% { transform: scale(1); }
-    50% { transform: scale(1.15); }
+    0%,100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(0,168,132,0.5); }
+    50% { transform: scale(1.12); box-shadow: 0 0 0 5px rgba(0,168,132,0); }
 }
 .contact-right {
     display: flex;
@@ -348,12 +347,7 @@ body.chat-page .col-xl-12 { height: 100%; padding: 0; margin: 0; max-width: 100%
     align-items: flex-end;
     gap: 4px;
     flex-shrink: 0;
-}
-.notif-dot {
-    width: 10px; height: 10px;
-    border-radius: 50%;
-    background: #00a884;
-    display: none;
+    min-width: 24px;
 }
 
 /* ========== INPUT AREA ========== */
@@ -400,6 +394,76 @@ body.chat-page .col-xl-12 { height: 100%; padding: 0; margin: 0; max-width: 100%
     box-shadow: 0 2px 10px rgba(0,168,132,0.4);
 }
 .btn-send-msg:hover { background: #00c49a; transform: scale(1.05); }
+
+/* ========== TYPING INDICATOR ========== */
+.typing-indicator { display: none; padding: 6px 14px; }
+.typing-bubble {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: #202c33;
+    padding: 10px 14px;
+    border-radius: 0 8px 8px 8px;
+}
+.typing-dot {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: #8696a0;
+    animation: typingBounce 1.2s infinite;
+}
+.typing-dot:nth-child(2) { animation-delay: 0.2s; }
+.typing-dot:nth-child(3) { animation-delay: 0.4s; }
+@keyframes typingBounce {
+    0%,60%,100% { transform: translateY(0); }
+    30% { transform: translateY(-6px); }
+}
+
+/* ========== MESSAGE ANIMATION ========== */
+@keyframes msgSlideIn {
+    from { opacity: 0; transform: translateY(8px) scale(0.97); }
+    to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+.msg-row { animation: msgSlideIn 0.22s ease; }
+
+/* ========== EMOJI BUTTON ========== */
+.btn-emoji {
+    background: none;
+    border: none;
+    color: #8696a0;
+    font-size: 22px;
+    cursor: pointer;
+    padding: 0 6px;
+    line-height: 1;
+    transition: color 0.2s;
+    flex-shrink: 0;
+}
+.btn-emoji:hover { color: #e9edef; }
+.emoji-picker-panel {
+    display: none;
+    position: absolute;
+    bottom: 72px;
+    left: 16px;
+    background: #233138;
+    border: 1px solid #2a3942;
+    border-radius: 12px;
+    padding: 10px;
+    z-index: 999;
+    flex-wrap: wrap;
+    gap: 6px;
+    width: 300px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+}
+.emoji-picker-panel.open { display: flex; }
+.emoji-btn-item {
+    font-size: 22px;
+    cursor: pointer;
+    padding: 4px 6px;
+    border-radius: 6px;
+    transition: background 0.15s;
+    user-select: none;
+}
+.emoji-btn-item:hover { background: rgba(255,255,255,0.1); }
+.chat-input-area { position: relative; }
 
 /* ========== RESPONSIVE ========== */
 @media (max-width: 768px) {
@@ -535,8 +599,34 @@ body.chat-page .col-xl-12 { height: 100%; padding: 0; margin: 0; max-width: 100%
                                 {% endfor %}
                             </div>
 
+                            <!-- Typing indicator -->
+                            <div class="typing-indicator" id="typing-indicator">
+                                <div class="typing-bubble">
+                                    <div class="typing-dot"></div>
+                                    <div class="typing-dot"></div>
+                                    <div class="typing-dot"></div>
+                                </div>
+                            </div>
+
+                            <!-- Emoji picker -->
+                            <div class="emoji-picker-panel" id="emoji-panel">
+                                <span class="emoji-btn-item">😊</span><span class="emoji-btn-item">😂</span>
+                                <span class="emoji-btn-item">❤️</span><span class="emoji-btn-item">👍</span>
+                                <span class="emoji-btn-item">🙏</span><span class="emoji-btn-item">😍</span>
+                                <span class="emoji-btn-item">🤔</span><span class="emoji-btn-item">💊</span>
+                                <span class="emoji-btn-item">🏥</span><span class="emoji-btn-item">✅</span>
+                                <span class="emoji-btn-item">⚠️</span><span class="emoji-btn-item">📋</span>
+                                <span class="emoji-btn-item">🤒</span><span class="emoji-btn-item">💉</span>
+                                <span class="emoji-btn-item">🔬</span><span class="emoji-btn-item">😷</span>
+                                <span class="emoji-btn-item">🤧</span><span class="emoji-btn-item">💪</span>
+                                <span class="emoji-btn-item">👋</span><span class="emoji-btn-item">😢</span>
+                                <span class="emoji-btn-item">😅</span><span class="emoji-btn-item">🎉</span>
+                                <span class="emoji-btn-item">👀</span><span class="emoji-btn-item">🌟</span>
+                            </div>
+
                             <!-- Input area -->
                             <div class="chat-input-area">
+                                <button class="btn-emoji" id="btn-emoji" type="button" title="Emoji">😊</button>
                                 <div class="chat-input-box">
                                     <form id="chat-submit" style="display:flex;width:100%;align-items:flex-end;">
                                         <input type="hidden" name="user_from" value="{{ user.id }}">
@@ -594,31 +684,147 @@ $(function () {
     // Send button click
     $('#btn-send-trigger').on('click', function () { submitMsg(); });
 
+    function fmtTime(d) {
+        var dt = d ? new Date(d) : new Date();
+        var h = dt.getHours(), m = dt.getMinutes();
+        return (h < 10 ? '0' : '') + h + ':' + (m < 10 ? '0' : '') + m;
+    }
+
+    function appendBubble(msg, id, isSent) {
+        var t = fmtTime();
+        var tick = isSent ? '<i class="fas fa-check-double" style="font-size:11px;color:#53bdeb;"></i>' : '';
+        var row = isSent ? 'sent' : 'received';
+        var html = '<div class="msg-row ' + row + '"><div class="msg-bubble chat-bubble" data-id="' + id + '"><p class="msg-text">' + $('<span>').text(msg).html() + '</p><div class="msg-meta"><span class="msg-time">' + t + '</span>' + tick + '</div></div></div>';
+        $('#chat-box-scroll').append(html);
+        var box = $('#chat-box-scroll');
+        box.scrollTop(box[0].scrollHeight);
+    }
+
     function submitMsg() {
         var msg = $('#msg-input').val().trim();
         if (!msg) return;
-        start_loader();
+        var tempId = 'tmp-' + Date.now();
+        appendBubble(msg, tempId, true);
+        $('#msg-input').val('').css('height', 'auto');
         $.ajax({
             headers: { "X-CSRFToken": '{{csrf_token}}' },
             url: "{% url 'chat-send' %}",
             method: "POST",
-            data: $('#chat-submit').serialize(),
+            data: { user_from: '{{user.id}}', user_to: '{{chat_id}}', message: msg },
             dataType: "json",
-            error: function (err) { console.log(err); alert('An error occurred'); },
+            error: function (err) { console.log(err); },
             success: function (resp) {
-                if (typeof resp == "object" && resp.status == 'success') {
-                    location.reload();
-                } else {
-                    alert('An error occurred');
+                if (resp && resp.status == 'success') {
+                    $('.chat-bubble[data-id="' + tempId + '"]').attr('data-id', resp.id || tempId);
                 }
             }
         });
     }
 
+    // Emoji picker
+    $('#btn-emoji').on('click', function(e) {
+        e.stopPropagation();
+        $('#emoji-panel').toggleClass('open');
+    });
+    $(document).on('click', '.emoji-btn-item', function() {
+        var ta = document.getElementById('msg-input');
+        var pos = ta.selectionStart;
+        var cur = ta.value;
+        ta.value = cur.slice(0, pos) + $(this).text() + cur.slice(pos);
+        ta.selectionStart = ta.selectionEnd = pos + 2;
+        ta.focus();
+        ta.style.height = 'auto';
+        ta.style.height = Math.min(ta.scrollHeight, 100) + 'px';
+    });
+    $(document).on('click', function(e) {
+        if (!$(e.target).closest('#btn-emoji, #emoji-panel').length) {
+            $('#emoji-panel').removeClass('open');
+        }
+    });
+
+
+    // Poll unread counts every 5 seconds for left-panel badges + browser notifications
+    var knownCounts = {};
+    function pollUnreadCounts() {
+        $.ajax({
+            headers: { "X-CSRFToken": '{{csrf_token}}' },
+            url: "{% url 'chat-unread-count' %}",
+            method: "POST",
+            dataType: 'json',
+            success: function(data) {
+                // For each sender id in response
+                $.each(data, function(uid, count) {
+                    var badge = $('#notif-' + uid);
+                    var prev  = knownCounts[uid] || 0;
+                    var diff  = count - prev;
+
+                    // Update badge — skip if this is the currently active chat
+                    if (String(uid) === String(activeChatId)) {
+                        badge.hide().text('0');
+                        knownCounts[uid] = count;
+                        return; // don't notify for currently open chat
+                    }
+
+                    if (count > 0) {
+                        badge.text(count).show();
+                    } else {
+                        badge.hide();
+                    }
+
+                    // Fire browser notification for new messages
+                    if (diff > 0 && Notification && Notification.permission === 'granted') {
+                        var senderName = badge.closest('.contact-item').find('.contact-name').text() || 'Someone';
+                        for (var i = 0; i < diff; i++) {
+                            new Notification('New message from ' + senderName, {
+                                body: diff + ' new message' + (diff > 1 ? 's' : ''),
+                                icon: '/static/HealthStack-System/images/Normal/favicon.png',
+                                tag: 'chat-notif-' + uid
+                            });
+                        }
+                    }
+                    knownCounts[uid] = count;
+                });
+            }
+        });
+    }
+    // Request permission then start polling
+    if (Notification && Notification.permission === 'default') {
+        Notification.requestPermission().then(function() { pollUnreadCounts(); });
+    } else {
+        pollUnreadCounts();
+    }
+    setInterval(pollUnreadCounts, 5000);
+
+    // Mark current chat as read on page load
+    var activeChatId = '{{chat_id}}';
+    if (activeChatId && parseInt(activeChatId) > 0) {
+        markRead(activeChatId);
+    }
+
+    // Mark read when user clicks a contact
+    $(document).on('click', '.contact-item', function() {
+        var uid = $(this).data('uid') || $(this).attr('href').split('u=')[1];
+        if (uid) {
+            markRead(uid);
+            $('#notif-' + uid).hide().text('0');
+            delete knownCounts[String(uid)];
+        }
+    });
+
     // Poll for new messages
     chats_renew();
     setInterval(chats_renew, 2500);
+
 });
+
+function markRead(senderId) {
+    $.ajax({
+        headers: { "X-CSRFToken": '{{csrf_token}}' },
+        url: "{% url 'chat-mark-read' %}",
+        method: "POST",
+        data: { sender_id: senderId }
+    });
+}
 
 function chats_renew() {
     var last_id = 0;
@@ -634,11 +840,14 @@ function chats_renew() {
             if (Object.keys(resp).length > 0) {
                 Object.keys(resp).map(function (k) {
                     var isSent = resp[k].id.user_from == '{{user.id}}';
+                    // skip if already in DOM
+                    if ($('.chat-bubble[data-id="' + resp[k].id + '"]').length) return;
+                    var t = resp[k].date_created ? resp[k].date_created.slice(11,16) : '';
                     var bubble;
                     if (isSent) {
-                        bubble = '<div class="msg-row sent"><div class="msg-bubble chat-bubble" data-id="' + resp[k].id + '"><p class="msg-text">' + resp[k].message + '</p><div class="msg-meta"><span class="msg-time">' + resp[k].date_created + '</span><i class="fas fa-check-double" style="font-size:11px;color:#53bdeb;"></i></div></div></div>';
+                        bubble = '<div class="msg-row sent"><div class="msg-bubble chat-bubble" data-id="' + resp[k].id + '"><p class="msg-text">' + resp[k].message + '</p><div class="msg-meta"><span class="msg-time">' + t + '</span><i class="fas fa-check-double" style="font-size:11px;color:#53bdeb;"></i></div></div></div>';
                     } else {
-                        bubble = '<div class="msg-row received"><div class="msg-bubble chat-bubble" data-id="' + resp[k].id + '"><p class="msg-text">' + resp[k].message + '</p><div class="msg-meta"><span class="msg-time">' + resp[k].date_created + '</span></div></div></div>';
+                        bubble = '<div class="msg-row received"><div class="msg-bubble chat-bubble" data-id="' + resp[k].id + '"><p class="msg-text">' + resp[k].message + '</p><div class="msg-meta"><span class="msg-time">' + t + '</span></div></div></div>';
                         // Show notification badge on left contact
                         var senderUid = resp[k].id.user_from;
                         var badge = $('#notif-' + senderUid);

@@ -1,0 +1,275 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>My Blogs | HealthStack</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link type="image/x-icon" href="{% static 'HealthStack-System/images/Normal/favicon.png' %}" rel="icon"/>
+  <style>
+    :root{--p:#00c9a7;--pd:#00a88e;--pg:rgba(0,201,167,.13);--dark:#0d1117;--card:#161b27;--card2:#1c2333;--bdr:rgba(255,255,255,.08);--txt:#e2e8f0;--mut:#8892a4;--danger:#ff5757;}
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body{font-family:'Inter',sans-serif;background:var(--dark);color:var(--txt);min-height:100vh;}
+    .nav{position:sticky;top:0;z-index:100;background:rgba(13,17,23,.97);backdrop-filter:blur(20px);border-bottom:1px solid var(--bdr);padding:0 2rem;height:68px;display:flex;align-items:center;justify-content:space-between;}
+    .nav-brand{text-decoration:none;}
+    .nav-logo{height:42px;width:auto;object-fit:contain;}
+    .nav-right{display:flex;align-items:center;gap:.8rem;}
+    .nav-a{color:var(--mut);text-decoration:none;font-size:.88rem;font-weight:500;padding:6px 13px;border-radius:8px;transition:.2s;}
+    .nav-a:hover,.nav-a.active{color:var(--p);background:var(--pg);}
+    .nav-btn{background:linear-gradient(135deg,var(--p),var(--pd));color:#0d1117;padding:9px 18px;border-radius:10px;text-decoration:none;font-size:.875rem;font-weight:700;transition:.2s;display:flex;align-items:center;gap:7px;}
+    .nav-btn:hover{transform:translateY(-1px);box-shadow:0 6px 18px rgba(0,201,167,.4);color:#0d1117;}
+
+    /* HEADER */
+    .page-header{background:linear-gradient(135deg,#0d1117,#1a1f35,#0d2a25);padding:2.5rem 2rem;border-bottom:1px solid var(--bdr);}
+    .page-header-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem;}
+    .page-header h1{font-size:1.7rem;font-weight:800;color:#fff;}
+    .page-header p{color:var(--mut);font-size:.9rem;margin-top:.3rem;}
+    .write-btn{background:linear-gradient(135deg,var(--p),var(--pd));color:#0d1117;padding:12px 22px;border-radius:12px;text-decoration:none;font-size:.9rem;font-weight:700;display:flex;align-items:center;gap:8px;transition:.2s;}
+    .write-btn:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(0,201,167,.4);color:#0d1117;}
+
+    /* STATS ROW */
+    .stats-row{max-width:1200px;margin:0 auto;padding:1.5rem 2rem;display:flex;gap:1.2rem;flex-wrap:wrap;}
+    .stat-card{flex:1;min-width:140px;background:var(--card);border:1px solid var(--bdr);border-radius:14px;padding:1.2rem 1.5rem;display:flex;align-items:center;gap:14px;}
+    .stat-icon{width:46px;height:46px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0;}
+    .stat-icon.green{background:var(--pg);color:var(--p);}
+    .stat-icon.blue{background:rgba(0,112,243,.15);color:#60a5fa;}
+    .stat-icon.orange{background:rgba(255,150,0,.15);color:#ffa726;}
+    .stat-num{font-size:1.6rem;font-weight:800;color:#fff;}
+    .stat-lbl{font-size:.75rem;color:var(--mut);}
+
+    /* MAIN */
+    .main{max-width:1200px;margin:0 auto;padding:0 2rem 4rem;}
+
+    /* TOAST */
+    {% if messages %}
+    .msg-bar{background:linear-gradient(135deg,rgba(0,201,167,.15),rgba(0,168,142,.1));border:1px solid rgba(0,201,167,.25);border-radius:12px;padding:12px 18px;margin-bottom:1.5rem;display:flex;align-items:center;gap:10px;font-size:.88rem;color:var(--p);}
+    {% endif %}
+
+    /* TABLE */
+    .table-wrap{background:var(--card);border:1px solid var(--bdr);border-radius:18px;overflow:hidden;}
+    .table-top{padding:1.2rem 1.5rem;border-bottom:1px solid var(--bdr);display:flex;align-items:center;justify-content:space-between;}
+    .table-top h3{font-size:1rem;font-weight:700;}
+    table{width:100%;border-collapse:collapse;}
+    th{padding:12px 16px;text-align:left;font-size:.75rem;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:var(--mut);border-bottom:1px solid var(--bdr);background:var(--card2);}
+    td{padding:14px 16px;border-bottom:1px solid var(--bdr);vertical-align:middle;font-size:.88rem;}
+    tr:last-child td{border-bottom:none;}
+    tr:hover td{background:rgba(255,255,255,.02);}
+
+    /* BLOG ROW */
+    .blog-row-img{width:58px;height:44px;border-radius:8px;object-fit:cover;}
+    .blog-row-no-img{width:58px;height:44px;border-radius:8px;background:var(--card2);display:flex;align-items:center;justify-content:center;font-size:1.2rem;}
+    .blog-row-title{font-weight:600;color:var(--txt);text-decoration:none;transition:.2s;}
+    .blog-row-title:hover{color:var(--p);}
+    .blog-row-excerpt{font-size:.78rem;color:var(--mut);display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical;overflow:hidden;margin-top:3px;}
+
+    /* BADGES */
+    .badge-pub{display:inline-flex;align-items:center;gap:4px;background:rgba(0,201,167,.15);border:1px solid rgba(0,201,167,.3);color:var(--p);font-size:.72rem;font-weight:700;padding:3px 10px;border-radius:20px;}
+    .badge-draft{display:inline-flex;align-items:center;gap:4px;background:rgba(255,150,0,.12);border:1px solid rgba(255,150,0,.25);color:#ffa726;font-size:.72rem;font-weight:700;padding:3px 10px;border-radius:20px;}
+    .badge-cat{display:inline-flex;align-items:center;gap:4px;background:var(--card2);border:1px solid var(--bdr);color:var(--mut);font-size:.72rem;padding:3px 10px;border-radius:20px;}
+
+    /* ACTION BTNS */
+    .action-btns{display:flex;align-items:center;gap:.5rem;}
+    .action-btn{display:inline-flex;align-items:center;gap:5px;padding:7px 14px;border-radius:9px;font-size:.8rem;font-weight:600;text-decoration:none;transition:.2s;border:none;cursor:pointer;font-family:'Inter',sans-serif;}
+    .btn-view{background:rgba(255,255,255,.06);border:1px solid var(--bdr);color:var(--mut);}
+    .btn-view:hover{border-color:var(--p);color:var(--p);}
+    .btn-edit{background:rgba(0,112,243,.14);color:#60a5fa;}
+    .btn-edit:hover{background:rgba(0,112,243,.25);}
+    .btn-toggle-pub{background:rgba(0,201,167,.12);color:var(--p);}
+    .btn-toggle-pub:hover{background:rgba(0,201,167,.22);}
+    .btn-toggle-draft{background:rgba(255,150,0,.12);color:#ffa726;}
+    .btn-toggle-draft:hover{background:rgba(255,150,0,.22);}
+    .btn-del{background:rgba(255,87,87,.1);color:var(--danger);}
+    .btn-del:hover{background:rgba(255,87,87,.2);}
+
+    /* EMPTY */
+    .empty{text-align:center;padding:4rem 2rem;}
+    .empty .ico{font-size:3.5rem;opacity:.3;margin-bottom:1rem;}
+    .empty h3{font-size:1.1rem;font-weight:700;margin-bottom:.4rem;}
+    .empty p{color:var(--mut);font-size:.88rem;margin-bottom:1.5rem;}
+
+    /* MODAL */
+    .modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:9000;display:flex;align-items:center;justify-content:center;display:none;}
+    .modal-bg.open{display:flex;}
+    .modal{background:var(--card);border:1px solid var(--bdr);border-radius:20px;padding:2rem;max-width:420px;width:90%;text-align:center;}
+    .modal h3{font-size:1.2rem;font-weight:800;color:#fff;margin-bottom:.5rem;}
+    .modal p{color:var(--mut);font-size:.9rem;margin-bottom:1.5rem;}
+    .modal-actions{display:flex;gap:.8rem;justify-content:center;}
+    .modal-cancel{background:var(--card2);border:1px solid var(--bdr);color:var(--txt);padding:10px 22px;border-radius:10px;cursor:pointer;font-family:'Inter',sans-serif;font-size:.9rem;font-weight:600;}
+    .modal-delete{background:linear-gradient(135deg,#ff5757,#cc2222);color:#fff;border:none;padding:10px 22px;border-radius:10px;cursor:pointer;font-family:'Inter',sans-serif;font-size:.9rem;font-weight:700;}
+
+    #loader{position:fixed;inset:0;background:var(--dark);display:flex;align-items:center;justify-content:center;z-index:9999;transition:opacity .4s;}
+    .ring{width:48px;height:48px;border:4px solid var(--bdr);border-top-color:var(--p);border-radius:50%;animation:spin .8s linear infinite;}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    @media(max-width:768px){th:nth-child(2),td:nth-child(2){display:none;}.nav{padding:0 1rem;}.main{padding:0 1rem 3rem;}}
+  </style>
+</head>
+<body>
+<div id="loader"><div class="ring"></div></div>
+
+<nav class="nav">
+  <a href="{% url 'hospital_home' %}" class="nav-brand">
+    <img src="{% static 'HealthStack-System/images/Normal/logo.jpg' %}" alt="HealthStack" class="nav-logo">
+  </a>
+  <div class="nav-right">
+    <a href="{% url 'blog-list' %}" class="nav-a"><i class="fas fa-newspaper"></i> All Blogs</a>
+    <a href="{% url 'blog-manage' %}" class="nav-a active"><i class="fas fa-tasks"></i> My Blogs</a>
+    <a href="{% url 'blog-create' %}" class="nav-btn"><i class="fas fa-plus"></i> Write Blog</a>
+  </div>
+</nav>
+
+<!-- PAGE HEADER -->
+<div class="page-header">
+  <div class="page-header-inner">
+    <div>
+      <h1>📋 My Blog Dashboard</h1>
+      <p>Manage your medical articles — create, edit, publish or delete.</p>
+    </div>
+    <a href="{% url 'blog-create' %}" class="write-btn"><i class="fas fa-plus"></i> Write New Blog</a>
+  </div>
+</div>
+
+<!-- STATS -->
+<div class="stats-row">
+  <div class="stat-card">
+    <div class="stat-icon green"><i class="fas fa-newspaper"></i></div>
+    <div><div class="stat-num">{{ total }}</div><div class="stat-lbl">Total Blogs</div></div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-icon blue"><i class="fas fa-globe"></i></div>
+    <div><div class="stat-num">{{ published }}</div><div class="stat-lbl">Published</div></div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-icon orange"><i class="fas fa-file-alt"></i></div>
+    <div><div class="stat-num">{{ drafts }}</div><div class="stat-lbl">Drafts</div></div>
+  </div>
+</div>
+
+<div class="main">
+  <!-- Messages -->
+  {% if messages %}
+  {% for message in messages %}
+  <div class="msg-bar"><i class="fas fa-check-circle"></i> {{ message }}</div>
+  {% endfor %}
+  {% endif %}
+
+  <div class="table-wrap">
+    <div class="table-top">
+      <h3>All My Articles</h3>
+    </div>
+
+    {% if my_blogs %}
+    <table>
+      <thead>
+        <tr>
+          <th>Blog</th>
+          <th>Category</th>
+          <th>Status</th>
+          <th>Views</th>
+          <th>Date</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for blog in my_blogs %}
+        <tr>
+          <!-- Blog title + image -->
+          <td>
+            <div style="display:flex;align-items:center;gap:12px;">
+              {% if blog.featured_image %}
+              <img src="{{ blog.featured_image.url }}" class="blog-row-img" alt="{{ blog.title }}">
+              {% else %}
+              <div class="blog-row-no-img">🏥</div>
+              {% endif %}
+              <div>
+                <a href="{% url 'blog-detail' slug=blog.slug %}" class="blog-row-title" target="_blank">{{ blog.title|truncatechars:55 }}</a>
+                <div class="blog-row-excerpt">{{ blog.excerpt|truncatechars:80 }}</div>
+              </div>
+            </div>
+          </td>
+          <!-- Category -->
+          <td><span class="badge-cat">{{ blog.get_category_display_name }}</span></td>
+          <!-- Status -->
+          <td>
+            {% if blog.is_published %}
+            <span class="badge-pub"><i class="fas fa-circle" style="font-size:.45rem;"></i> Published</span>
+            {% else %}
+            <span class="badge-draft"><i class="fas fa-circle" style="font-size:.45rem;"></i> Draft</span>
+            {% endif %}
+          </td>
+          <!-- Views -->
+          <td><i class="fas fa-eye" style="color:var(--mut);margin-right:4px;font-size:.8rem;"></i>{{ blog.views_count }}</td>
+          <!-- Date -->
+          <td style="color:var(--mut);font-size:.8rem;">{{ blog.created_at|date:"M d, Y" }}</td>
+          <!-- Actions -->
+          <td>
+            <div class="action-btns">
+              {% if blog.is_published %}
+              <a href="{% url 'blog-detail' slug=blog.slug %}" class="action-btn btn-view" target="_blank" title="View"><i class="fas fa-eye"></i></a>
+              {% endif %}
+              <a href="{% url 'blog-edit' pk=blog.pk %}" class="action-btn btn-edit" title="Edit"><i class="fas fa-edit"></i> Edit</a>
+              <a href="{% url 'blog-toggle-publish' pk=blog.pk %}"
+                 class="action-btn {% if blog.is_published %}btn-toggle-draft{% else %}btn-toggle-pub{% endif %}"
+                 title="{% if blog.is_published %}Unpublish{% else %}Publish{% endif %}">
+                <i class="fas fa-{% if blog.is_published %}eye-slash{% else %}globe{% endif %}"></i>
+                {% if blog.is_published %}Unpublish{% else %}Publish{% endif %}
+              </a>
+              <button class="action-btn btn-del" onclick="openDeleteModal({{ blog.pk }}, '{{ blog.title|truncatechars:30|escapejs }}')" title="Delete">
+                <i class="fas fa-trash"></i>
+              </button>
+            </div>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+    <div class="empty">
+      <div class="ico">📝</div>
+      <h3>No blogs yet</h3>
+      <p>Start writing your first medical article to share knowledge with patients.</p>
+      <a href="{% url 'blog-create' %}" style="display:inline-flex;align-items:center;gap:7px;background:linear-gradient(135deg,var(--p),var(--pd));color:#0d1117;padding:12px 24px;border-radius:12px;text-decoration:none;font-weight:700;font-size:.9rem;">
+        <i class="fas fa-plus"></i> Write First Blog
+      </a>
+    </div>
+    {% endif %}
+  </div>
+</div>
+
+<!-- DELETE MODAL -->
+<div class="modal-bg" id="deleteModal">
+  <div class="modal">
+    <div style="font-size:2.5rem;margin-bottom:.8rem;">🗑️</div>
+    <h3>Delete Blog Post?</h3>
+    <p>Are you sure you want to delete "<strong id="blogTitleText"></strong>"? This action cannot be undone.</p>
+    <div class="modal-actions">
+      <button class="modal-cancel" onclick="closeDeleteModal()">Cancel</button>
+      <form method="POST" id="deleteForm">
+        {% csrf_token %}
+        <button type="submit" class="modal-delete">Yes, Delete</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+{% include 'footer.html' %}
+<script>
+  window.addEventListener('load',function(){
+    var l=document.getElementById('loader');l.style.opacity='0';setTimeout(()=>l.style.display='none',400);
+  });
+
+  function openDeleteModal(pk, title){
+    document.getElementById('blogTitleText').textContent=title;
+    document.getElementById('deleteForm').action='/blog/delete/'+pk+'/';
+    document.getElementById('deleteModal').classList.add('open');
+  }
+  function closeDeleteModal(){
+    document.getElementById('deleteModal').classList.remove('open');
+  }
+  document.getElementById('deleteModal').addEventListener('click',function(e){
+    if(e.target===this) closeDeleteModal();
+  });
+</script>
+</body>
+</html>

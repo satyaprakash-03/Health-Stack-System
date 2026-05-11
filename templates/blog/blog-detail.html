@@ -1,0 +1,358 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{ blog.title }} | HealthStack Blog</title>
+  <meta name="description" content="{{ blog.excerpt }}">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link type="image/x-icon" href="{% static 'HealthStack-System/images/Normal/favicon.png' %}" rel="icon"/>
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body{font-family:'Inter',sans-serif;background:#fff;color:#1a1a2e;min-height:100vh;}
+
+    /* ── TOPBAR ── */
+    .hs-topbar{background:#0c2340;color:#fff;padding:8px 0;font-size:.76rem;text-align:center;letter-spacing:.3px;}
+    .hs-topbar a{color:#7ecfff;text-decoration:none;margin:0 8px;}
+
+    /* ── NAV ── */
+    .hs-nav{background:#fff;border-bottom:1px solid #e5eaf2;padding:0 2rem;height:72px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:200;box-shadow:0 2px 12px rgba(0,0,0,.07);}
+    .nav-logo-img{height:46px;width:auto;object-fit:contain;}
+    .nav-links{display:flex;align-items:center;gap:1.8rem;}
+    .nav-links a{color:#1a2d4d;text-decoration:none;font-size:.88rem;font-weight:500;transition:.2s;}
+    .nav-links a:hover{color:#0066cc;}
+    .nav-cta{background:#0066cc;color:#fff !important;padding:9px 20px;border-radius:6px;font-weight:600 !important;font-size:.85rem !important;}
+    .nav-cta:hover{background:#004fa3 !important;color:#fff !important;}
+
+    /* ── BREADCRUMB ── */
+    .breadcrumb-bar{background:#f6f9fd;border-bottom:1px solid #e5eaf2;padding:11px 0;}
+    .breadcrumb-inner{max-width:1160px;margin:0 auto;padding:0 2rem;display:flex;align-items:center;gap:6px;font-size:.78rem;color:#6b7280;font-family:'Inter',sans-serif;}
+    .breadcrumb-inner a{color:#0066cc;text-decoration:none;}
+    .breadcrumb-inner a:hover{text-decoration:underline;}
+    .breadcrumb-inner .sep{color:#bdc5d1;}
+
+    /* ── HERO IMAGE ── */
+    .blog-hero{width:100%;max-height:480px;overflow:hidden;background:#0c2340;}
+    .blog-hero img{width:100%;height:480px;object-fit:cover;display:block;opacity:.88;}
+    .blog-hero-placeholder{height:320px;background:linear-gradient(135deg,#0c2340,#1a4a8a);display:flex;align-items:center;justify-content:center;font-size:5rem;opacity:.2;}
+
+    /* ── MAIN LAYOUT ── */
+    .blog-layout{max-width:1160px;margin:0 auto;padding:40px 2rem 60px;display:grid;grid-template-columns:1fr 320px;gap:48px;align-items:start;}
+    @media(max-width:960px){.blog-layout{grid-template-columns:1fr;}.blog-sidebar{display:none;}}
+    @media(max-width:640px){.blog-layout{padding:24px 1rem 48px;}}
+
+    /* ── ARTICLE ── */
+    .blog-article{}
+    /* Category tag */
+    .blog-category-tag{display:inline-block;background:#e8f0fb;color:#0066cc;font-size:.72rem;font-weight:700;padding:4px 14px;border-radius:4px;text-transform:uppercase;letter-spacing:.6px;margin-bottom:14px;}
+    /* Title */
+    .blog-article h1{font-family:'Inter',sans-serif;font-size:1.85rem;font-weight:800;color:#0c1f3f;line-height:1.3;margin-bottom:14px;}
+    /* Meta row */
+    .blog-meta-row{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #e5eaf2;}
+    .blog-meta-left{display:flex;align-items:center;gap:8px;font-size:.8rem;color:#6b7280;}
+    .blog-meta-left .sep{color:#d1d5db;}
+    .blog-meta-left strong{color:#374151;font-weight:600;}
+    /* Share button */
+    .share-circle{width:36px;height:36px;border-radius:50%;border:1.5px solid #d1d5db;background:#fff;display:flex;align-items:center;justify-content:center;color:#6b7280;cursor:pointer;transition:.2s;position:relative;}
+    .share-circle:hover{border-color:#0066cc;color:#0066cc;}
+    .share-dropdown{position:absolute;top:44px;right:0;background:#fff;border:1px solid #e5eaf2;border-radius:10px;padding:10px 0;box-shadow:0 8px 24px rgba(0,0,0,.12);z-index:100;min-width:160px;display:none;}
+    .share-dropdown.open{display:block;}
+    .share-dropdown a{display:flex;align-items:center;gap:10px;padding:9px 16px;font-size:.83rem;color:#374151;text-decoration:none;transition:.15s;}
+    .share-dropdown a:hover{background:#f6f9fd;color:#0066cc;}
+
+    /* ── ARTICLE CONTENT ── */
+    .article-body{font-family:'Lora',Georgia,serif;font-size:1rem;line-height:1.9;color:#2d3748;}
+    .article-body p{margin-bottom:1.4rem;text-align:left;}
+    .article-body h2{font-family:'Inter',sans-serif;font-size:1.5rem;font-weight:800;color:#0c1f3f;margin:2.5rem 0 1rem;line-height:1.25;}
+    .article-body h3{font-family:'Inter',sans-serif;font-size:1.15rem;font-weight:700;color:#1a2d4d;margin:2rem 0 .8rem;}
+    .article-body h4{font-family:'Inter',sans-serif;font-size:1rem;font-weight:700;color:#1a2d4d;margin:1.5rem 0 .6rem;}
+    .article-body ul,.article-body ol{margin:0 0 1.4rem 1.8rem;}
+    .article-body li{margin-bottom:.5rem;}
+    .article-body strong{color:#0c1f3f;font-weight:700;}
+    .article-body em{font-style:italic;color:#4a5568;}
+    .article-body blockquote{border-left:4px solid #0066cc;background:#f0f6ff;padding:16px 20px;margin:1.5rem 0;border-radius:0 8px 8px 0;font-style:italic;color:#374151;}
+    /* Gradient colored words — like Fortis */
+    .article-body p .hl{
+      background:linear-gradient(90deg,#c0392b,#1a4a8a);
+      -webkit-background-clip:text;
+      -webkit-text-fill-color:transparent;
+      background-clip:text;
+      font-weight:600;
+    }
+
+    /* ── TAGS ── */
+    .blog-tags{margin-top:2.5rem;padding-top:1.5rem;border-top:1px solid #e5eaf2;}
+    .blog-tags h4{font-size:.78rem;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#9ca3af;margin-bottom:10px;}
+    .blog-tags-list{display:flex;flex-wrap:wrap;gap:8px;}
+    .blog-tag{background:#f1f5f9;border:1px solid #e2e8f0;color:#374151;padding:5px 14px;border-radius:20px;font-size:.78rem;text-decoration:none;transition:.2s;}
+    .blog-tag:hover{background:#0066cc;color:#fff;border-color:#0066cc;}
+
+    /* ── SHARE BAR BOTTOM ── */
+    .share-bar{margin-top:2rem;padding:18px 22px;background:#f6f9fd;border-radius:12px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;}
+    .share-bar span{font-size:.85rem;font-weight:600;color:#374151;margin-right:4px;}
+    .share-icon-btn{display:inline-flex;align-items:center;gap:7px;padding:8px 16px;border-radius:7px;font-size:.82rem;font-weight:600;text-decoration:none;transition:.2s;}
+    .share-twitter{background:#e8f5fd;color:#1da1f2;}.share-twitter:hover{background:#1da1f2;color:#fff;}
+    .share-fb{background:#e8f0fb;color:#1877f2;}.share-fb:hover{background:#1877f2;color:#fff;}
+    .share-wa{background:#e8f7ed;color:#25d366;}.share-wa:hover{background:#25d366;color:#fff;}
+    .share-link{background:#f1f5f9;color:#6b7280;}.share-link:hover{background:#0066cc;color:#fff;}
+
+    /* ── SIDEBAR ── */
+    .blog-sidebar{}
+    .sidebar-widget{background:#fff;border:1px solid #e5eaf2;border-radius:14px;padding:22px;margin-bottom:24px;box-shadow:0 2px 10px rgba(0,0,0,.05);}
+    .sidebar-widget h3{font-size:.8rem;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:#9ca3af;margin-bottom:16px;font-family:'Inter',sans-serif;}
+
+    /* Author */
+    .sidebar-author{display:flex;align-items:center;gap:14px;}
+    .sidebar-author-img{width:56px;height:56px;border-radius:50%;object-fit:cover;border:2px solid #dde9f7;flex-shrink:0;}
+    .sidebar-author-noimg{width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,#0c2340,#0066cc);display:flex;align-items:center;justify-content:center;color:#fff;font-size:1.3rem;flex-shrink:0;}
+    .sidebar-author-name{font-size:.95rem;font-weight:700;color:#0c1f3f;font-family:'Inter',sans-serif;}
+    .sidebar-author-role{font-size:.75rem;color:#0066cc;margin-top:2px;font-family:'Inter',sans-serif;}
+
+    /* Related */
+    .related-item{display:flex;gap:12px;padding:12px 0;border-bottom:1px solid #f1f5f9;text-decoration:none;transition:.2s;}
+    .related-item:last-child{border-bottom:none;padding-bottom:0;}
+    .related-item:hover .related-item-title{color:#0066cc;}
+    .related-item-img{width:72px;height:56px;object-fit:cover;border-radius:7px;flex-shrink:0;background:#e8f0fb;}
+    .related-item-noimg{width:72px;height:56px;border-radius:7px;background:#e8f0fb;display:flex;align-items:center;justify-content:center;font-size:1.4rem;flex-shrink:0;}
+    .related-item-title{font-size:.82rem;font-weight:600;color:#1a2d4d;line-height:1.4;display:block;font-family:'Inter',sans-serif;}
+    .related-item-date{font-size:.72rem;color:#9ca3af;margin-top:4px;font-family:'Inter',sans-serif;}
+
+    /* CTA */
+    .sidebar-cta{background:linear-gradient(135deg,#0c2340,#0066cc);border-radius:14px;padding:24px;text-align:center;color:#fff;}
+    .sidebar-cta h4{font-size:1rem;font-weight:700;margin-bottom:8px;}
+    .sidebar-cta p{font-size:.8rem;opacity:.85;margin-bottom:16px;line-height:1.5;}
+    .sidebar-cta a{display:block;background:#fff;color:#0066cc;padding:10px;border-radius:8px;font-weight:700;font-size:.85rem;text-decoration:none;transition:.2s;}
+    .sidebar-cta a:hover{background:#e8f0fb;}
+
+    /* ── BACK BTN ── */
+    .back-link{display:inline-flex;align-items:center;gap:6px;color:#0066cc;font-size:.82rem;font-weight:600;text-decoration:none;margin-bottom:20px;transition:.2s;}
+    .back-link:hover{gap:10px;}
+
+    /* ── VIEWS BADGE ── */
+    .views-badge{display:inline-flex;align-items:center;gap:5px;background:#f1f5f9;border:1px solid #e2e8f0;color:#6b7280;font-size:.72rem;padding:3px 10px;border-radius:20px;}
+
+    /* Loader */
+    #loader{position:fixed;inset:0;background:#fff;display:flex;align-items:center;justify-content:center;z-index:9999;transition:opacity .35s;}
+    .ld-ring{width:44px;height:44px;border:4px solid #e5eaf2;border-top-color:#0066cc;border-radius:50%;animation:spin .75s linear infinite;}
+    @keyframes spin{to{transform:rotate(360deg)}}
+  </style>
+</head>
+<body>
+<div id="loader"><div class="ld-ring"></div></div>
+
+<!-- TOP BAR -->
+<div class="hs-topbar">
+  HealthStack — India's Modern Healthcare Platform &nbsp;|&nbsp;
+  <a href="{% url 'hospital_home' %}">Home</a>
+  <a href="{% url 'blog-list' %}">Blog</a>
+  {% if user.is_authenticated %}<a href="{% url 'logout' %}">Logout</a>{% else %}<a href="{% url 'login' %}">Login</a>{% endif %}
+</div>
+
+<!-- NAV -->
+<nav class="hs-nav">
+  <a href="{% url 'hospital_home' %}">
+    <img src="{% static 'HealthStack-System/images/Normal/logo.jpg' %}" alt="HealthStack" class="nav-logo-img">
+  </a>
+  <div class="nav-links">
+    <a href="{% url 'hospital_home' %}">Home</a>
+    <a href="{% url 'blog-list' %}">Blog</a>
+    <a href="{% url 'about-us' %}">About</a>
+    <a href="{% url 'contact_us' %}">Contact</a>
+    {% if user.is_authenticated and user.is_doctor %}
+    <a href="{% url 'blog-create' %}" class="nav-cta"><i class="fas fa-plus"></i> Write Blog</a>
+    {% else %}
+    <a href="{% url 'login' %}" class="nav-cta">Book Appointment</a>
+    {% endif %}
+  </div>
+</nav>
+
+<!-- BREADCRUMB -->
+<div class="breadcrumb-bar">
+  <div class="breadcrumb-inner">
+    <a href="{% url 'hospital_home' %}">Home</a>
+    <span class="sep"><i class="fas fa-chevron-right" style="font-size:.6rem;"></i></span>
+    <a href="{% url 'blog-list' %}">Blog</a>
+    <span class="sep"><i class="fas fa-chevron-right" style="font-size:.6rem;"></i></span>
+    <span>{{ blog.get_category_display_name }}</span>
+    <span class="sep"><i class="fas fa-chevron-right" style="font-size:.6rem;"></i></span>
+    <span style="color:#374151;">{{ blog.title|truncatechars:50 }}</span>
+  </div>
+</div>
+
+<!-- HERO IMAGE -->
+{% if blog.featured_image %}
+<div class="blog-hero">
+  <img src="{{ blog.featured_image.url }}" alt="{{ blog.title }}">
+</div>
+{% endif %}
+
+<!-- MAIN LAYOUT -->
+<div class="blog-layout">
+
+  <!-- ARTICLE COLUMN -->
+  <article class="blog-article">
+    <a href="{% url 'blog-list' %}" class="back-link"><i class="fas fa-arrow-left"></i> Back to Blog</a>
+
+    <!-- Category -->
+    <div class="blog-category-tag">{{ blog.get_category_display_name }}</div>
+
+    <!-- Title -->
+    <h1>{{ blog.title }}</h1>
+
+    <!-- Meta Row -->
+    <div class="blog-meta-row">
+      <div class="blog-meta-left">
+        <strong>{{ blog.author.doctor.name|default:blog.author.username }}</strong>
+        <span class="sep">|</span>
+        <span>{{ blog.created_at|date:"M d, Y" }}</span>
+        <span class="sep">|</span>
+        <span class="views-badge"><i class="fas fa-eye"></i> {{ blog.views_count }} views</span>
+      </div>
+      <!-- Share circle button -->
+      <div style="position:relative;">
+        <div class="share-circle" onclick="toggleShareDrop()" title="Share">
+          <i class="fas fa-share-alt" style="font-size:.82rem;"></i>
+        </div>
+        <div class="share-dropdown" id="shareDropdown">
+          <a href="https://twitter.com/intent/tweet?text={{ blog.title|urlencode }}" target="_blank"><i class="fab fa-twitter" style="color:#1da1f2;"></i> Twitter</a>
+          <a href="https://www.facebook.com/sharer/sharer.php?u={{ request.build_absolute_uri }}" target="_blank"><i class="fab fa-facebook" style="color:#1877f2;"></i> Facebook</a>
+          <a href="https://wa.me/?text={{ blog.title|urlencode }}%20{{ request.build_absolute_uri|urlencode }}" target="_blank"><i class="fab fa-whatsapp" style="color:#25d366;"></i> WhatsApp</a>
+          <a href="#" onclick="copyLink(); return false;"><i class="fas fa-link" style="color:#6b7280;"></i> Copy Link</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- ARTICLE CONTENT -->
+    <div class="article-body" id="articleContent">
+      {{ blog.content|safe }}
+    </div>
+
+    <!-- TAGS -->
+    <div class="blog-tags">
+      <h4>Category</h4>
+      <div class="blog-tags-list">
+        <a href="{% url 'blog-list' %}?category={{ blog.category }}" class="blog-tag">{{ blog.get_category_display_name }}</a>
+        <a href="{% url 'blog-list' %}" class="blog-tag">Health & Wellness</a>
+        <a href="{% url 'blog-list' %}" class="blog-tag">Medical Advice</a>
+      </div>
+    </div>
+
+    <!-- SHARE BAR BOTTOM -->
+    <div class="share-bar">
+      <span>Share:</span>
+      <a href="https://twitter.com/intent/tweet?text={{ blog.title|urlencode }}" target="_blank" class="share-icon-btn share-twitter"><i class="fab fa-twitter"></i> Twitter</a>
+      <a href="https://www.facebook.com/sharer/sharer.php?u={{ request.build_absolute_uri }}" target="_blank" class="share-icon-btn share-fb"><i class="fab fa-facebook-f"></i> Facebook</a>
+      <a href="https://wa.me/?text={{ blog.title|urlencode }}%20{{ request.build_absolute_uri|urlencode }}" target="_blank" class="share-icon-btn share-wa"><i class="fab fa-whatsapp"></i> WhatsApp</a>
+      <a href="#" onclick="copyLink();return false;" class="share-icon-btn share-link"><i class="fas fa-link"></i> Copy Link</a>
+    </div>
+  </article>
+
+  <!-- SIDEBAR -->
+  <aside class="blog-sidebar">
+
+    <!-- AUTHOR -->
+    <div class="sidebar-widget">
+      <h3>About the Author</h3>
+      <div class="sidebar-author">
+        {% if blog.author.doctor.featured_image %}
+        <img src="{{ blog.author.doctor.featured_image.url }}" alt="{{ blog.author.doctor.name }}" class="sidebar-author-img">
+        {% else %}
+        <div class="sidebar-author-noimg"><i class="fas fa-user-md"></i></div>
+        {% endif %}
+        <div>
+          <div class="sidebar-author-name">{{ blog.author.doctor.name|default:blog.author.username }}</div>
+          <div class="sidebar-author-role">{{ blog.author.doctor.specialization.specialization_name|default:"HealthStack Doctor" }}</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CTA -->
+    <div class="sidebar-cta">
+      <h4>Need Medical Help?</h4>
+      <p>Book an appointment with our verified specialists today.</p>
+      <a href="{% url 'login' %}"><i class="fas fa-calendar-check"></i> Book Appointment</a>
+    </div>
+
+    <!-- RELATED BLOGS -->
+    {% if related %}
+    <div class="sidebar-widget">
+      <h3>Related Articles</h3>
+      {% for rb in related %}
+      <a href="{% url 'blog-detail' slug=rb.slug %}" class="related-item">
+        {% if rb.featured_image %}
+        <img src="{{ rb.featured_image.url }}" alt="{{ rb.title }}" class="related-item-img">
+        {% else %}
+        <div class="related-item-noimg">🏥</div>
+        {% endif %}
+        <div>
+          <span class="related-item-title">{{ rb.title|truncatechars:65 }}</span>
+          <span class="related-item-date">{{ rb.created_at|date:"M d, Y" }}</span>
+        </div>
+      </a>
+      {% endfor %}
+    </div>
+    {% endif %}
+
+    <!-- ALL BLOGS LINK -->
+    <a href="{% url 'blog-list' %}" style="display:flex;align-items:center;justify-content:center;gap:8px;background:#0066cc;color:#fff;padding:13px;border-radius:10px;text-decoration:none;font-size:.88rem;font-weight:700;transition:.2s;font-family:'Inter',sans-serif;">
+      <i class="fas fa-newspaper"></i> Browse All Articles
+    </a>
+  </aside>
+
+</div>
+
+{% include 'footer.html' %}
+
+<script>
+  window.addEventListener('load', function(){
+    var l = document.getElementById('loader');
+    l.style.opacity = '0';
+    setTimeout(function(){ l.style.display='none'; }, 350);
+  });
+
+  // Share dropdown toggle
+  function toggleShareDrop(){
+    var d = document.getElementById('shareDropdown');
+    d.classList.toggle('open');
+  }
+  document.addEventListener('click', function(e){
+    if(!e.target.closest('.share-circle') && !e.target.closest('#shareDropdown')){
+      document.getElementById('shareDropdown').classList.remove('open');
+    }
+  });
+
+  // Copy link
+  function copyLink(){
+    navigator.clipboard.writeText(window.location.href).then(function(){
+      alert('Link copied!');
+    });
+    document.getElementById('shareDropdown').classList.remove('open');
+  }
+
+  // Gradient word highlight — like Fortis blog style
+  (function(){
+    var content = document.getElementById('articleContent');
+    if(!content) return;
+    var paras = content.querySelectorAll('p');
+    paras.forEach(function(p){
+      var html = p.innerHTML;
+      // Split on spaces preserving tags
+      var parts = html.split(/(<[^>]+>|\s+)/);
+      var count = 0;
+      var maxHL = Math.ceil(parts.filter(function(w){ return w.replace(/<[^>]*>/g,'').trim().length > 4; }).length * 0.20);
+      var result = parts.map(function(part, idx){
+        var clean = part.replace(/<[^>]*>/g,'').trim();
+        if(clean.length > 5 && !part.startsWith('<') && count < maxHL && (idx % 5 === 1 || idx % 9 === 0)){
+          count++;
+          return '<span class="hl">' + part + '</span>';
+        }
+        return part;
+      });
+      p.innerHTML = result.join('');
+    });
+  })();
+</script>
+</body>
+</html>

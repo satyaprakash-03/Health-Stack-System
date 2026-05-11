@@ -41,7 +41,10 @@ def hospital_home(request):
     # .order_by('-created_at')[:6]
     doctors = Doctor_Information.objects.filter(register_status='Accepted')
     hospitals = Hospital_Information.objects.all()
-    context = {'doctors': doctors, 'hospitals': hospitals} 
+    # Latest published blogs for homepage
+    from blog.models import BlogPost
+    latest_blogs = BlogPost.objects.filter(is_published=True).order_by('-created_at')[:6]
+    context = {'doctors': doctors, 'hospitals': hospitals, 'latest_blogs': latest_blogs}
     return render(request, 'index-2.html', context)
 
 @csrf_exempt

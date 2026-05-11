@@ -13,5 +13,8 @@ urlpatterns = [
     path('profile/', views.profile, name='chat-profile'),
     path('send/', views.send_chat, name='chat-send'),
     path('renew/', views.get_messages, name='chat-renew'),
+    path('unread-count/', views.unread_count, name='chat-unread-count'),
+    path('mark-read/', views.mark_read, name='chat-mark-read'),
     
 ]
+

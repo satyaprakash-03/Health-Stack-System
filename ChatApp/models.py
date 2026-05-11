@@ -6,6 +6,7 @@ class chatMessages(models.Model):
     user_from = models.ForeignKey(User, on_delete=models.CASCADE, related_name="+")
     user_to = models.ForeignKey(User, on_delete=models.CASCADE, related_name="+")
     message = models.TextField()
+    is_read = models.BooleanField(default=False)
     date_created = models.DateTimeField(default=timezone.now)
     def __str__(self):
         return self.message

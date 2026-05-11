@@ -181,6 +181,33 @@ body.chat-page .col-xl-12 { height: 100%; padding: 0; margin: 0; max-width: 100%
     color: #4a5568;
     margin-top: 1px;
 }
+/* ===== NOTIFICATION BADGE ===== */
+.notif-badge {
+    background: #00a884;
+    color: #fff;
+    font-size: 11px;
+    font-weight: 700;
+    min-width: 20px;
+    height: 20px;
+    border-radius: 10px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 5px;
+    animation: pulse-badge 1.4s ease infinite;
+}
+@keyframes pulse-badge {
+    0%,100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(0,168,132,0.5); }
+    50% { transform: scale(1.12); box-shadow: 0 0 0 5px rgba(0,168,132,0); }
+}
+.contact-right {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 4px;
+    flex-shrink: 0;
+    min-width: 24px;
+}
 
 /* ========== RIGHT PANEL ========== */
 .chat-right-panel {
@@ -190,17 +217,61 @@ body.chat-page .col-xl-12 { height: 100%; padding: 0; margin: 0; max-width: 100%
     height: 100%;
     min-width: 0;
     background: #0b141a;
+    background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.015'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
 }
 
-/* Active chat header — PATIENT NAME shows here */
+/* ========== QUICK REPLIES ========== */
+.quick-replies {
+    display: flex;
+    gap: 8px;
+    padding: 8px 16px;
+    background: #0b141a;
+    overflow-x: auto;
+    border-top: 1px solid #1f2c33;
+    flex-shrink: 0;
+}
+.quick-replies::-webkit-scrollbar { height: 0; }
+.quick-reply-btn {
+    background: #182229;
+    border: 1px solid #2a3942;
+    color: #aebac1;
+    font-size: 12px;
+    padding: 5px 12px;
+    border-radius: 16px;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: 'Inter', sans-serif;
+    flex-shrink: 0;
+}
+.quick-reply-btn:hover {
+    background: #2a3942;
+    color: #e9edef;
+    border-color: #00a884;
+}
+
+/* ========== CHAR COUNTER ========== */
+.char-counter {
+    font-size: 10px;
+    color: #4a5568;
+    align-self: flex-end;
+    padding-bottom: 2px;
+    flex-shrink: 0;
+    transition: color 0.2s;
+}
+.char-counter.warn { color: #f59e0b; }
+.char-counter.limit { color: #ef4444; }
+
+/* Active chat header */
 .active-chat-header {
     display: flex;
     align-items: center;
     padding: 10px 16px;
     background: #202c33;
-    height: 60px;
+    height: 64px;
     gap: 12px;
-    border-bottom: 1px solid #2a3942;
+    border-bottom: 1px solid #1f2c33;
+    box-shadow: 0 1px 8px rgba(0,0,0,0.3);
 }
 .active-chat-header .back-btn {
     display: none;
@@ -208,11 +279,23 @@ body.chat-page .col-xl-12 { height: 100%; padding: 0; margin: 0; max-width: 100%
     font-size: 18px;
     text-decoration: none;
 }
+.active-header-avatar { position: relative; }
 .active-header-avatar img {
-    width: 40px; height: 40px;
+    width: 42px; height: 42px;
     border-radius: 50%;
     object-fit: cover;
     cursor: pointer;
+    border: 2px solid #2a3942;
+    transition: border-color 0.2s;
+}
+.active-header-avatar img:hover { border-color: #00a884; }
+.active-header-avatar .hdr-online-dot {
+    position: absolute;
+    bottom: 1px; right: 1px;
+    width: 11px; height: 11px;
+    border-radius: 50%;
+    background: #00a884;
+    border: 2px solid #202c33;
 }
 .active-header-info { flex: 1; min-width: 0; }
 .active-header-name {
@@ -223,8 +306,22 @@ body.chat-page .col-xl-12 { height: 100%; padding: 0; margin: 0; max-width: 100%
     overflow: hidden;
     text-overflow: ellipsis;
 }
-.active-header-status { font-size: 12px; color: #8696a0; margin-top: 1px; }
+.active-header-sub {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 1px;
+}
+.active-header-status { font-size: 12px; color: #8696a0; }
 .active-header-status.status-online { color: #00a884; }
+.pat-id-badge {
+    font-size: 10px;
+    background: rgba(0,168,132,0.12);
+    color: #00a884;
+    padding: 1px 7px;
+    border-radius: 8px;
+    border: 1px solid rgba(0,168,132,0.2);
+}
 .active-header-actions { display: flex; gap: 4px; margin-left: auto; }
 .active-header-actions a {
     color: #aebac1;
@@ -244,21 +341,39 @@ body.chat-page .col-xl-12 { height: 100%; padding: 0; margin: 0; max-width: 100%
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 16px;
+    gap: 20px;
     padding: 40px;
     text-align: center;
 }
 .chat-welcome .welcome-icon {
-    width: 100px; height: 100px;
+    width: 110px; height: 110px;
     border-radius: 50%;
-    background: rgba(0,168,132,0.1);
+    background: linear-gradient(135deg, rgba(0,168,132,0.15), rgba(0,168,132,0.05));
+    border: 2px solid rgba(0,168,132,0.2);
     display: flex; align-items: center; justify-content: center;
-    font-size: 40px;
+    font-size: 46px;
     color: #00a884;
-    margin-bottom: 8px;
+    margin-bottom: 4px;
+    animation: welcomePulse 3s ease-in-out infinite;
 }
-.chat-welcome h3 { font-size: 22px; font-weight: 300; color: #d1d7db; }
-.chat-welcome p { font-size: 14px; color: #8696a0; max-width: 360px; line-height: 1.6; }
+@keyframes welcomePulse {
+    0%,100% { box-shadow: 0 0 0 0 rgba(0,168,132,0.15); }
+    50% { box-shadow: 0 0 0 16px rgba(0,168,132,0); }
+}
+.chat-welcome h3 { font-size: 24px; font-weight: 400; color: #e9edef; letter-spacing: -0.3px; }
+.chat-welcome p { font-size: 14px; color: #8696a0; max-width: 360px; line-height: 1.7; }
+.welcome-stats {
+    display: flex;
+    gap: 24px;
+    margin-top: 8px;
+    padding: 16px 28px;
+    background: #182229;
+    border-radius: 14px;
+    border: 1px solid #2a3942;
+}
+.welcome-stat { text-align: center; }
+.welcome-stat .stat-val { font-size: 22px; font-weight: 700; color: #00a884; }
+.welcome-stat .stat-lbl { font-size: 11px; color: #8696a0; margin-top: 2px; text-transform: uppercase; letter-spacing: 0.5px; }
 
 /* Messages */
 .chat-messages-area {
@@ -320,7 +435,7 @@ body.chat-page .col-xl-12 { height: 100%; padding: 0; margin: 0; max-width: 100%
     border-top: 0;
     border-right: 8px solid #202c33;
 }
-.msg-text { font-size: 14.5px; line-height: 1.45; margin: 0; }
+.msg-text { font-size: 14.5px; line-height: 1.45; margin: 0; color: #e9edef; }
 .msg-meta { display: flex; justify-content: flex-end; align-items: center; gap: 4px; margin-top: 3px; }
 .msg-time { font-size: 11px; color: #8696a0; }
 
@@ -368,6 +483,72 @@ body.chat-page .col-xl-12 { height: 100%; padding: 0; margin: 0; max-width: 100%
     box-shadow: 0 2px 10px rgba(0,168,132,0.4);
 }
 .btn-send-msg:hover { background: #00c49a; transform: scale(1.05); }
+
+/* ========== TYPING INDICATOR ========== */
+.typing-indicator { display: none; padding: 6px 14px; }
+.typing-bubble {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: #202c33;
+    padding: 10px 14px;
+    border-radius: 0 8px 8px 8px;
+}
+.typing-dot {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: #8696a0;
+    animation: typingBounce 1.2s infinite;
+}
+.typing-dot:nth-child(2) { animation-delay: 0.2s; }
+.typing-dot:nth-child(3) { animation-delay: 0.4s; }
+@keyframes typingBounce {
+    0%,60%,100% { transform: translateY(0); }
+    30% { transform: translateY(-6px); }
+}
+@keyframes msgSlideIn {
+    from { opacity: 0; transform: translateY(8px) scale(0.97); }
+    to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+.msg-row { animation: msgSlideIn 0.22s ease; }
+.btn-emoji {
+    background: none;
+    border: none;
+    color: #8696a0;
+    font-size: 22px;
+    cursor: pointer;
+    padding: 0 6px;
+    line-height: 1;
+    transition: color 0.2s;
+    flex-shrink: 0;
+}
+.btn-emoji:hover { color: #e9edef; }
+.emoji-picker-panel {
+    display: none;
+    position: absolute;
+    bottom: 72px;
+    left: 16px;
+    background: #233138;
+    border: 1px solid #2a3942;
+    border-radius: 12px;
+    padding: 10px;
+    z-index: 999;
+    flex-wrap: wrap;
+    gap: 6px;
+    width: 300px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+}
+.emoji-picker-panel.open { display: flex; }
+.emoji-btn-item {
+    font-size: 22px;
+    cursor: pointer;
+    padding: 4px 6px;
+    border-radius: 6px;
+    transition: background 0.15s;
+    user-select: none;
+}
+.emoji-btn-item:hover { background: rgba(255,255,255,0.1); }
+.chat-input-area { position: relative; }
 
 @media (max-width: 768px) {
     .chat-left-panel { width: 100%; min-width: 100%; }
@@ -426,6 +607,9 @@ body.chat-page .col-xl-12 { height: 100%; padding: 0; margin: 0; max-width: 100%
                                         <div class="contact-pid">Patient ID: {{ u.serial_number }}</div>
                                         {% endif %}
                                     </div>
+                                    <div class="contact-right">
+                                        <span class="notif-badge" id="notif-{{u.user.id}}" style="display:none;">0</span>
+                                    </div>
                                 </a>
                                 {% endif %}
                                 {% endfor %}
@@ -439,28 +623,50 @@ body.chat-page .col-xl-12 { height: 100%; padding: 0; margin: 0; max-width: 100%
                             {% if not chat_id > 0 %}
                             <div class="chat-welcome">
                                 <div class="welcome-icon">
-                                    <i class="fas fa-user-md"></i>
+                                    <i class="fas fa-stethoscope"></i>
                                 </div>
                                 <h3>Doctor's Message Center</h3>
-                                <p>Select a patient from the left panel to view and send messages. Your conversations are private and secure.</p>
+                                <p>Select a patient from the left panel to start a secure conversation. All messages are private and confidential.</p>
+                                <div class="welcome-stats">
+                                    <div class="welcome-stat">
+                                        <div class="stat-val">{{ patient|length }}</div>
+                                        <div class="stat-lbl">Patients</div>
+                                    </div>
+                                    <div class="welcome-stat">
+                                        <div class="stat-val">24/7</div>
+                                        <div class="stat-lbl">Available</div>
+                                    </div>
+                                    <div class="welcome-stat">
+                                        <div class="stat-val">🔒</div>
+                                        <div class="stat-lbl">Encrypted</div>
+                                    </div>
+                                </div>
                             </div>
 
                             {% else %}
-                            <!-- Active chat header — PATIENT NAME displayed here -->
+                            <!-- Active chat header -->
                             <div class="active-chat-header">
                                 <a href="{% url 'chat-home' pk=user.id %}" class="back-btn">
                                     <i class="fas fa-arrow-left"></i>
                                 </a>
                                 <div class="active-header-avatar">
                                     <img src="{{ pat.featured_image.url }}" alt="{{ pat.name }}">
+                                    {% if pat.user.login_status %}
+                                    <span class="hdr-online-dot"></span>
+                                    {% endif %}
                                 </div>
                                 <div class="active-header-info">
                                     <div class="active-header-name">{{ pat.name }}</div>
-                                    {% if pat.user.login_status %}
-                                    <div class="active-header-status status-online">● Online</div>
-                                    {% else %}
-                                    <div class="active-header-status">Offline</div>
-                                    {% endif %}
+                                    <div class="active-header-sub">
+                                        {% if pat.user.login_status %}
+                                        <span class="active-header-status status-online">● Online</span>
+                                        {% else %}
+                                        <span class="active-header-status">● Offline</span>
+                                        {% endif %}
+                                        {% if pat.serial_number %}
+                                        <span class="pat-id-badge">ID: {{ pat.serial_number }}</span>
+                                        {% endif %}
+                                    </div>
                                 </div>
                                 <div class="active-header-actions">
                                     <a href="#" title="View patient profile"><i class="fas fa-user-circle"></i></a>
@@ -497,13 +703,47 @@ body.chat-page .col-xl-12 { height: 100%; padding: 0; margin: 0; max-width: 100%
                                 {% endfor %}
                             </div>
 
+                            <!-- Typing indicator -->
+                            <div class="typing-indicator" id="typing-indicator">
+                                <div class="typing-bubble">
+                                    <div class="typing-dot"></div>
+                                    <div class="typing-dot"></div>
+                                    <div class="typing-dot"></div>
+                                </div>
+                            </div>
+
+                            <!-- Emoji picker -->
+                            <div class="emoji-picker-panel" id="emoji-panel">
+                                <span class="emoji-btn-item">😊</span><span class="emoji-btn-item">😂</span>
+                                <span class="emoji-btn-item">❤️</span><span class="emoji-btn-item">👍</span>
+                                <span class="emoji-btn-item">🙏</span><span class="emoji-btn-item">😷</span>
+                                <span class="emoji-btn-item">💊</span><span class="emoji-btn-item">🏥</span>
+                                <span class="emoji-btn-item">✅</span><span class="emoji-btn-item">⚠️</span>
+                                <span class="emoji-btn-item">📋</span><span class="emoji-btn-item">🤒</span>
+                                <span class="emoji-btn-item">💉</span><span class="emoji-btn-item">🔬</span>
+                                <span class="emoji-btn-item">🤧</span><span class="emoji-btn-item">💪</span>
+                                <span class="emoji-btn-item">👋</span><span class="emoji-btn-item">🌟</span>
+                            </div>
+
+                            <!-- Quick Replies -->
+                            <div class="quick-replies" id="quick-replies">
+                                <button class="quick-reply-btn" type="button">How are you feeling today?</button>
+                                <button class="quick-reply-btn" type="button">Please take the prescribed medication.</button>
+                                <button class="quick-reply-btn" type="button">Your test results are ready.</button>
+                                <button class="quick-reply-btn" type="button">Book a follow-up appointment.</button>
+                                <button class="quick-reply-btn" type="button">Rest and stay hydrated.</button>
+                                <button class="quick-reply-btn" type="button">Any side effects noticed?</button>
+                            </div>
+
                             <!-- Input -->
                             <div class="chat-input-area">
+                                <button class="btn-emoji" id="btn-emoji" type="button" title="Emoji">😊</button>
                                 <div class="chat-input-box">
-                                    <form id="chat-submit" style="display:flex;width:100%;align-items:flex-end;">
+                                    <form id="chat-submit" style="display:flex;width:100%;align-items:flex-end;gap:8px;">
                                         <input type="hidden" name="user_from" value="{{ user.id }}">
                                         <input type="hidden" name="user_to" value="{{ chat_id }}">
-                                        <textarea id="msg-input" name="message" rows="1" placeholder="Type a message to patient..."></textarea>
+                                        <textarea id="msg-input" name="message" rows="1" placeholder="Type a message to patient..." maxlength="1000"></textarea>
+                                        <span class="char-counter" id="char-counter">0/1000</span>
                                     </form>
                                 </div>
                                 <button class="btn-send-msg" id="btn-send-trigger" type="button">
@@ -536,6 +776,13 @@ $(function () {
     $('#msg-input').on('input', function () {
         this.style.height = 'auto';
         this.style.height = Math.min(this.scrollHeight, 100) + 'px';
+        // Char counter
+        var len = this.value.length;
+        var counter = $('#char-counter');
+        counter.text(len + '/1000');
+        counter.removeClass('warn limit');
+        if (len > 900) counter.addClass('limit');
+        else if (len > 700) counter.addClass('warn');
     });
 
     $('#msg-input').on('keydown', function (e) {
@@ -547,27 +794,113 @@ $(function () {
 
     $('#btn-send-trigger').on('click', function () { submitMsg(); });
 
+    function fmtTime() {
+        var dt = new Date();
+        var h = dt.getHours(), m = dt.getMinutes();
+        return (h < 10 ? '0' : '') + h + ':' + (m < 10 ? '0' : '') + m;
+    }
+    function appendBubble(msg, id, isSent) {
+        var t = fmtTime();
+        var tick = isSent ? '<i class="fas fa-check-double" style="font-size:11px;color:#53bdeb;"></i>' : '';
+        var row = isSent ? 'sent' : 'received';
+        var html = '<div class="msg-row ' + row + '"><div class="msg-bubble chat-bubble" data-id="' + id + '"><p class="msg-text">' + $('<span>').text(msg).html() + '</p><div class="msg-meta"><span class="msg-time">' + t + '</span>' + tick + '</div></div></div>';
+        $('#chat-box-scroll').append(html);
+        var box = $('#chat-box-scroll'); box.scrollTop(box[0].scrollHeight);
+    }
+
     function submitMsg() {
         var msg = $('#msg-input').val().trim();
         if (!msg) return;
-        start_loader();
+        var tempId = 'tmp-' + Date.now();
+        appendBubble(msg, tempId, true);
+        $('#msg-input').val('').css('height', 'auto');
         $.ajax({
             headers: { "X-CSRFToken": '{{csrf_token}}' },
             url: "{% url 'chat-send' %}",
             method: "POST",
-            data: $('#chat-submit').serialize(),
+            data: { user_from: '{{user.id}}', user_to: '{{chat_id}}', message: msg },
             dataType: "json",
-            error: function (err) { console.log(err); alert('An error occurred'); },
+            error: function (err) { console.log(err); },
             success: function (resp) {
-                if (typeof resp == "object" && resp.status == 'success') {
-                    location.reload();
-                } else { alert('An error occurred'); }
+                if (resp && resp.status == 'success') {
+                    $('.chat-bubble[data-id="' + tempId + '"]').attr('data-id', resp.id || tempId);
+                }
             }
         });
     }
 
+    // Quick replies
+    $(document).on('click', '.quick-reply-btn', function() {
+        var txt = $(this).text();
+        var ta = document.getElementById('msg-input');
+        ta.value = txt;
+        ta.focus();
+        ta.style.height = 'auto';
+        ta.style.height = Math.min(ta.scrollHeight, 100) + 'px';
+        $('#char-counter').text(txt.length + '/1000');
+    });
+
+    // Emoji picker
+    $('#btn-emoji').on('click', function(e) {
+        e.stopPropagation();
+        $('#emoji-panel').toggleClass('open');
+    });
+    $(document).on('click', '.emoji-btn-item', function() {
+        var ta = document.getElementById('msg-input');
+        var pos = ta.selectionStart, cur = ta.value;
+        ta.value = cur.slice(0, pos) + $(this).text() + cur.slice(pos);
+        ta.selectionStart = ta.selectionEnd = pos + 2;
+        ta.focus();
+        ta.style.height = 'auto';
+        ta.style.height = Math.min(ta.scrollHeight, 100) + 'px';
+    });
+    $(document).on('click', function(e) {
+        if (!$(e.target).closest('#btn-emoji, #emoji-panel').length)
+            $('#emoji-panel').removeClass('open');
+    });
+
     chats_renew();
     setInterval(chats_renew, 2500);
+
+    // Poll unread counts every 5 seconds — badges + browser notifications
+    var knownCounts = {};
+    function pollUnreadCounts() {
+        $.ajax({
+            headers: { "X-CSRFToken": '{{csrf_token}}' },
+            url: "{% url 'chat-unread-count' %}",
+            method: "POST",
+            dataType: 'json',
+            success: function(data) {
+                $.each(data, function(uid, count) {
+                    var badge = $('#notif-' + uid);
+                    var prev  = knownCounts[uid] || 0;
+                    var diff  = count - prev;
+
+                    if (count > 0) {
+                        badge.text(count).show();
+                    } else {
+                        badge.hide();
+                    }
+
+                    if (diff > 0 && Notification && Notification.permission === 'granted') {
+                        var senderName = badge.closest('.contact-item').find('.contact-name').text() || 'Patient';
+                        new Notification('New message from ' + senderName, {
+                            body: diff + ' new message' + (diff > 1 ? 's' : ''),
+                            icon: '/static/HealthStack-System/images/Normal/favicon.png',
+                            tag: 'chat-notif-' + uid
+                        });
+                    }
+                    knownCounts[uid] = count;
+                });
+            }
+        });
+    }
+    if (Notification && Notification.permission === 'default') {
+        Notification.requestPermission().then(function() { pollUnreadCounts(); });
+    } else {
+        pollUnreadCounts();
+    }
+    setInterval(pollUnreadCounts, 5000);
 });
 
 function chats_renew() {
@@ -584,11 +917,13 @@ function chats_renew() {
             if (Object.keys(resp).length > 0) {
                 Object.keys(resp).map(function (k) {
                     var isSent = resp[k].id.user_from == '{{user.id}}';
+                    if ($('.chat-bubble[data-id="' + resp[k].id + '"]').length) return;
+                    var t = resp[k].date_created ? resp[k].date_created.slice(11,16) : '';
                     var bubble;
                     if (isSent) {
-                        bubble = '<div class="msg-row sent"><div class="msg-bubble chat-bubble" data-id="' + resp[k].id + '"><p class="msg-text">' + resp[k].message + '</p><div class="msg-meta"><span class="msg-time">' + resp[k].date_created + '</span><i class="fas fa-check-double" style="font-size:11px;color:#53bdeb;"></i></div></div></div>';
+                        bubble = '<div class="msg-row sent"><div class="msg-bubble chat-bubble" data-id="' + resp[k].id + '"><p class="msg-text">' + resp[k].message + '</p><div class="msg-meta"><span class="msg-time">' + t + '</span><i class="fas fa-check-double" style="font-size:11px;color:#53bdeb;"></i></div></div></div>';
                     } else {
-                        bubble = '<div class="msg-row received"><div class="msg-bubble chat-bubble" data-id="' + resp[k].id + '"><p class="msg-text">' + resp[k].message + '</p><div class="msg-meta"><span class="msg-time">' + resp[k].date_created + '</span></div></div></div>';
+                        bubble = '<div class="msg-row received"><div class="msg-bubble chat-bubble" data-id="' + resp[k].id + '"><p class="msg-text">' + resp[k].message + '</p><div class="msg-meta"><span class="msg-time">' + t + '</span></div></div></div>';
                     }
                     $('#chat-box-scroll').append(bubble);
                     var box = $('#chat-box-scroll');

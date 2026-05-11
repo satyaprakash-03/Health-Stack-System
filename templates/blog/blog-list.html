@@ -1,0 +1,234 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Medical Blog | HealthStack</title>
+  <meta name="description" content="Read expert medical blogs and health tips from HealthStack doctors.">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link type="image/x-icon" href="{% static 'HealthStack-System/images/Normal/favicon.png' %}" rel="icon"/>
+  <style>
+    :root{--p:#00c9a7;--pd:#00a88e;--pg:rgba(0,201,167,.13);--acc:#845ef7;--dark:#0d1117;--card:#161b27;--card2:#1c2333;--bdr:rgba(255,255,255,.08);--txt:#e2e8f0;--mut:#8892a4;}
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body{font-family:'Inter',sans-serif;background:var(--dark);color:var(--txt);min-height:100vh;}
+
+    /* NAV */
+    .nav{position:sticky;top:0;z-index:100;background:rgba(13,17,23,.97);backdrop-filter:blur(20px);border-bottom:1px solid var(--bdr);padding:0 2rem;height:68px;display:flex;align-items:center;justify-content:space-between;}
+    .nav-brand{display:flex;align-items:center;gap:10px;text-decoration:none;}
+    .nav-logo{height:42px;width:auto;object-fit:contain;filter:drop-shadow(0 2px 8px rgba(0,201,167,.3));}
+    .nav-right{display:flex;align-items:center;gap:.8rem;}
+    .nav-a{color:var(--mut);text-decoration:none;font-size:.88rem;font-weight:500;padding:6px 13px;border-radius:8px;transition:.2s;}
+    .nav-a:hover,.nav-a.active{color:var(--p);background:var(--pg);}
+    .nav-btn{background:linear-gradient(135deg,var(--p),var(--pd));color:#0d1117;padding:9px 20px;border-radius:10px;text-decoration:none;font-size:.875rem;font-weight:700;transition:.2s;display:flex;align-items:center;gap:7px;}
+    .nav-btn:hover{transform:translateY(-1px);box-shadow:0 6px 18px rgba(0,201,167,.4);color:#0d1117;}
+
+    /* HERO */
+    .hero{background:linear-gradient(135deg,#0d1117,#1a1f35,#0d2a25);padding:4rem 2rem 3rem;text-align:center;position:relative;overflow:hidden;}
+    .hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 0%,rgba(0,201,167,.15) 0%,transparent 70%);}
+    .hero-tag{display:inline-flex;align-items:center;gap:6px;background:var(--pg);border:1px solid rgba(0,201,167,.3);color:var(--p);font-size:.78rem;font-weight:700;padding:5px 14px;border-radius:20px;margin-bottom:1rem;position:relative;}
+    .hero h1{font-size:2.6rem;font-weight:800;color:#fff;margin-bottom:.7rem;position:relative;}
+    .hero h1 span{color:var(--p);}
+    .hero p{color:var(--mut);font-size:1rem;position:relative;max-width:520px;margin:0 auto 1.8rem;}
+    .hero-stats{display:flex;justify-content:center;gap:2.5rem;position:relative;}
+    .hero-stat .n{font-size:1.4rem;font-weight:800;color:var(--p);}
+    .hero-stat .l{font-size:.75rem;color:var(--mut);}
+
+    /* SEARCH */
+    .search-section{max-width:1200px;margin:0 auto;padding:2rem 2rem 0;}
+    .search-box{display:flex;background:var(--card2);border:1.5px solid var(--bdr);border-radius:14px;overflow:hidden;transition:.2s;margin-bottom:1.5rem;}
+    .search-box:focus-within{border-color:var(--p);box-shadow:0 0 0 3px rgba(0,201,167,.1);}
+    .s-icon{display:flex;align-items:center;padding:0 16px;color:var(--mut);}
+    .s-input{flex:1;background:transparent;border:none;padding:14px 0;font-size:.95rem;color:var(--txt);outline:none;font-family:'Inter',sans-serif;}
+    .s-input::placeholder{color:var(--mut);}
+    .s-btn{background:linear-gradient(135deg,var(--p),var(--pd));border:none;padding:0 22px;color:#0d1117;font-weight:700;cursor:pointer;font-size:.9rem;transition:.2s;}
+    .s-btn:hover{opacity:.88;}
+    .cat-bar{display:flex;gap:.6rem;flex-wrap:wrap;margin-bottom:.5rem;}
+    .cat-pill{display:inline-flex;align-items:center;gap:5px;padding:7px 15px;border-radius:50px;border:1.5px solid var(--bdr);background:transparent;color:var(--mut);font-size:.82rem;font-weight:500;text-decoration:none;transition:.2s;white-space:nowrap;}
+    .cat-pill:hover,.cat-pill.active{background:var(--pg);border-color:var(--p);color:var(--p);}
+
+    /* MAIN */
+    .main{max-width:1200px;margin:0 auto;padding:2rem 2rem 4rem;}
+    .section-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem;flex-wrap:wrap;gap:.8rem;}
+    .section-header h2{font-size:1.1rem;font-weight:700;}
+    .result-count{background:var(--pg);border:1px solid rgba(0,201,167,.25);color:var(--p);font-size:.75rem;font-weight:700;padding:3px 12px;border-radius:20px;}
+    .clear-link{color:var(--mut);font-size:.82rem;text-decoration:none;display:flex;align-items:center;gap:5px;}
+    .clear-link:hover{color:#ff5757;}
+
+    /* BLOG GRID */
+    .blog-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:1.6rem;}
+    .blog-card{background:var(--card);border:1px solid var(--bdr);border-radius:18px;overflow:hidden;display:flex;flex-direction:column;transition:all .3s;}
+    .blog-card:hover{transform:translateY(-5px);border-color:rgba(0,201,167,.35);box-shadow:0 16px 48px rgba(0,0,0,.35);}
+    .blog-card-img{height:200px;overflow:hidden;position:relative;background:linear-gradient(135deg,var(--card2),#1a2540);}
+    .blog-card-img img{width:100%;height:100%;object-fit:cover;transition:transform .4s;}
+    .blog-card:hover .blog-card-img img{transform:scale(1.06);}
+    .no-img-placeholder{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:3rem;opacity:.3;}
+    .blog-cat-badge{position:absolute;top:12px;left:12px;background:linear-gradient(135deg,var(--p),var(--pd));color:#0d1117;font-size:.68rem;font-weight:700;padding:4px 12px;border-radius:20px;text-transform:capitalize;}
+    .blog-card-body{padding:1.3rem;flex:1;display:flex;flex-direction:column;}
+    .blog-meta{display:flex;align-items:center;gap:.8rem;margin-bottom:.8rem;font-size:.75rem;color:var(--mut);}
+    .blog-meta i{font-size:.7rem;}
+    .blog-title{font-size:1.05rem;font-weight:700;color:var(--txt);text-decoration:none;line-height:1.4;display:block;margin-bottom:.6rem;transition:.2s;}
+    .blog-title:hover{color:var(--p);}
+    .blog-excerpt{font-size:.82rem;color:var(--mut);line-height:1.6;flex:1;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;margin-bottom:1rem;}
+    .blog-foot{display:flex;align-items:center;justify-content:space-between;margin-top:auto;}
+    .read-btn{display:inline-flex;align-items:center;gap:6px;background:var(--pg);border:1px solid rgba(0,201,167,.25);color:var(--p);padding:8px 16px;border-radius:9px;font-size:.82rem;font-weight:600;text-decoration:none;transition:.2s;}
+    .read-btn:hover{background:linear-gradient(135deg,var(--p),var(--pd));color:#0d1117;border-color:transparent;}
+    .blog-views{font-size:.75rem;color:var(--mut);display:flex;align-items:center;gap:4px;}
+
+    /* EMPTY */
+    .empty{text-align:center;padding:5rem 2rem;grid-column:1/-1;}
+    .empty .ico{font-size:3.5rem;opacity:.3;margin-bottom:1rem;}
+    .empty h3{font-size:1.2rem;font-weight:700;margin-bottom:.4rem;}
+    .empty p{color:var(--mut);font-size:.9rem;}
+
+    /* LOADER */
+    #loader{position:fixed;inset:0;background:var(--dark);display:flex;align-items:center;justify-content:center;z-index:9999;transition:opacity .4s;}
+    .ring{width:48px;height:48px;border:4px solid var(--bdr);border-top-color:var(--p);border-radius:50%;animation:spin .8s linear infinite;}
+    @keyframes spin{to{transform:rotate(360deg)}}
+
+    /* DOCTOR WRITE BANNER */
+    .write-banner{background:linear-gradient(135deg,#0d2a25,#1a3a6e);border:1px solid rgba(0,201,167,.2);border-radius:16px;padding:1.5rem 2rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;margin-bottom:2rem;flex-wrap:wrap;}
+    .write-banner-text h3{font-size:1.1rem;font-weight:700;color:#fff;margin-bottom:.3rem;}
+    .write-banner-text p{font-size:.85rem;color:var(--mut);}
+    .write-btn{background:linear-gradient(135deg,var(--p),var(--pd));color:#0d1117;padding:11px 22px;border-radius:11px;text-decoration:none;font-size:.9rem;font-weight:700;display:flex;align-items:center;gap:8px;white-space:nowrap;transition:.2s;}
+    .write-btn:hover{box-shadow:0 6px 20px rgba(0,201,167,.4);transform:translateY(-1px);color:#0d1117;}
+
+    @media(max-width:768px){.hero h1{font-size:1.8rem;}.blog-grid{grid-template-columns:1fr;}.nav{padding:0 1rem;}.hero-stats{gap:1.5rem;}}
+  </style>
+</head>
+<body>
+<div id="loader"><div class="ring"></div></div>
+
+<!-- NAV -->
+<nav class="nav">
+  <a href="{% url 'hospital_home' %}" class="nav-brand">
+    <img src="{% static 'HealthStack-System/images/Normal/logo.jpg' %}" alt="HealthStack" class="nav-logo">
+  </a>
+  <div class="nav-right">
+    <a href="{% url 'hospital_home' %}" class="nav-a"><i class="fas fa-home"></i> Home</a>
+    <a href="{% url 'blog-list' %}" class="nav-a active"><i class="fas fa-newspaper"></i> Blog</a>
+    {% if user.is_authenticated and user.is_doctor %}
+    <a href="{% url 'blog-manage' %}" class="nav-a"><i class="fas fa-tasks"></i> My Blogs</a>
+    <a href="{% url 'blog-create' %}" class="nav-btn"><i class="fas fa-plus"></i> Write Blog</a>
+    {% endif %}
+    {% if user.is_authenticated and user.is_patient %}
+    <a href="{% url 'patient-dashboard' %}" class="nav-a"><i class="fas fa-th-large"></i> Dashboard</a>
+    {% endif %}
+    {% if not user.is_authenticated %}
+    <a href="{% url 'login' %}" class="nav-btn"><i class="fas fa-sign-in-alt"></i> Login</a>
+    {% endif %}
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-tag"><i class="fas fa-heartbeat"></i> Medical Blog</div>
+  <h1>Health <span>Insights</span> & Tips</h1>
+  <p>Expert medical knowledge from our verified doctors. Stay informed, stay healthy.</p>
+  <div class="hero-stats">
+    <div class="hero-stat"><div class="n">{{ total }}</div><div class="l">Articles</div></div>
+    <div class="hero-stat"><div class="n">{{ categories|length }}</div><div class="l">Categories</div></div>
+    <div class="hero-stat"><div class="n">100%</div><div class="l">Doctor Verified</div></div>
+  </div>
+</div>
+
+<!-- SEARCH + FILTERS -->
+<div class="search-section">
+  <form action="{% url 'blog-list' %}" method="GET">
+    {% if category_filter %}<input type="hidden" name="category" value="{{ category_filter }}">{% endif %}
+    <div class="search-box">
+      <span class="s-icon"><i class="fas fa-search"></i></span>
+      <input type="text" class="s-input" name="search" value="{{ search_query }}" placeholder="Search blogs by title, keyword, category...">
+      <button type="submit" class="s-btn"><i class="fas fa-search"></i> Search</button>
+    </div>
+  </form>
+  <div class="cat-bar">
+    <a href="{% url 'blog-list' %}{% if search_query %}?search={{ search_query }}{% endif %}" class="cat-pill {% if not category_filter %}active{% endif %}">
+      <i class="fas fa-border-all"></i> All
+    </a>
+    {% for cat_key, cat_label in categories %}
+    <a href="{% url 'blog-list' %}?category={{ cat_key }}{% if search_query %}&search={{ search_query }}{% endif %}"
+       class="cat-pill {% if category_filter == cat_key %}active{% endif %}">
+      {{ cat_label }}
+    </a>
+    {% endfor %}
+  </div>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+  {% if user.is_authenticated and user.is_doctor %}
+  <div class="write-banner">
+    <div class="write-banner-text">
+      <h3>✍️ Share Your Medical Knowledge</h3>
+      <p>Write expert blogs to help patients and the community stay healthy.</p>
+    </div>
+    <a href="{% url 'blog-create' %}" class="write-btn"><i class="fas fa-plus"></i> Write a Blog</a>
+  </div>
+  {% endif %}
+
+  {% if search_query or category_filter %}
+  <div class="section-header">
+    <h2>
+      {% if search_query %}Results for "<strong style="color:var(--p)">{{ search_query }}</strong>"{% endif %}
+      {% if category_filter and search_query %} in {% endif %}
+      {% if category_filter %}<strong style="color:var(--p)">{{ category_filter|title }}</strong>{% endif %}
+    </h2>
+    <div style="display:flex;align-items:center;gap:1rem;">
+      <span class="result-count">{{ total }} article{% if total != 1 %}s{% endif %}</span>
+      <a href="{% url 'blog-list' %}" class="clear-link"><i class="fas fa-times"></i> Clear</a>
+    </div>
+  </div>
+  {% else %}
+  <div class="section-header">
+    <h2>Latest Medical Articles <span style="color:var(--mut);font-weight:400;font-size:.9rem;margin-left:6px;">({{ total }} articles)</span></h2>
+  </div>
+  {% endif %}
+
+  <div class="blog-grid">
+    {% for blog in blogs %}
+    <div class="blog-card">
+      <div class="blog-card-img">
+        {% if blog.featured_image %}
+        <img src="{{ blog.featured_image.url }}" alt="{{ blog.title }}" loading="lazy">
+        {% else %}
+        <div class="no-img-placeholder">🏥</div>
+        {% endif %}
+        <span class="blog-cat-badge">{{ blog.get_category_display_name }}</span>
+      </div>
+      <div class="blog-card-body">
+        <div class="blog-meta">
+          <span><i class="fas fa-user-md"></i> {{ blog.author.doctor.name|default:blog.author.username }}</span>
+          <span><i class="fas fa-calendar"></i> {{ blog.created_at|date:"M d, Y" }}</span>
+        </div>
+        <a href="{% url 'blog-detail' slug=blog.slug %}" class="blog-title">{{ blog.title }}</a>
+        <p class="blog-excerpt">{{ blog.excerpt }}</p>
+        <div class="blog-foot">
+          <a href="{% url 'blog-detail' slug=blog.slug %}" class="read-btn">
+            <i class="fas fa-book-open"></i> Read More
+          </a>
+          <span class="blog-views"><i class="fas fa-eye"></i> {{ blog.views_count }}</span>
+        </div>
+      </div>
+    </div>
+    {% empty %}
+    <div class="empty">
+      <div class="ico">📝</div>
+      <h3>No blogs found</h3>
+      <p>Try a different keyword or browse all categories.</p>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+
+{% include 'footer.html' %}
+
+<script>
+  window.addEventListener('load',function(){
+    var l=document.getElementById('loader');
+    l.style.opacity='0';setTimeout(()=>l.style.display='none',400);
+  });
+</script>
+</body>
+</html>

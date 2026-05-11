@@ -49,18 +49,58 @@ def pharmacy_shop(request):
     if request.user.is_authenticated and request.user.is_patient:
         
         patient = Patient.objects.get(user=request.user)
-        medicines = Medicine.objects.all()
         orders = Order.objects.filter(user=request.user, ordered=False)
         carts = Cart.objects.filter(user=request.user, purchased=False)
         
-        medicines, search_query = searchMedicines(request)
+        medicines, search_query, category_filter = searchMedicines(request)
+        
+        # Group medicines by category for section-wise display
+        CATEGORIES = [
+            ('fever', 'Fever & Temperature', '🌡️'),
+            ('pain', 'Pain Relief', '💊'),
+            ('cough', 'Cough & Cold', '🫁'),
+            ('flu', 'Flu', '🤒'),
+            ('diabetes', 'Diabetes Care', '🩸'),
+            ('bloodpressure', 'Blood Pressure', '❤️'),
+            ('heartdisease', 'Heart Disease', '🫀'),
+            ('vitamins', 'Vitamins & Supplements', '🌿'),
+            ('allergy', 'Allergy', '🤧'),
+            ('asthma', 'Asthma', '🌬️'),
+            ('digestivehealth', 'Digestive Health', '🏥'),
+            ('skin', 'Skin Care', '✨'),
+            ('eye', 'Eye Care', '👁️'),
+            ('ear', 'Ear Care', '👂'),
+            ('infection', 'Infection', '🦠'),
+            ('nurological', 'Neurological', '🧠'),
+        ]
+        
+        categorized = []
+        for cat_key, cat_label, cat_emoji in CATEGORIES:
+            cat_medicines = medicines.filter(medicine_category=cat_key)
+            if cat_medicines.exists():
+                categorized.append({
+                    'key': cat_key,
+                    'label': cat_label,
+                    'emoji': cat_emoji,
+                    'medicines': cat_medicines,
+                })
         
         if carts.exists() and orders.exists():
             order = orders[0]
-            context = {'patient': patient, 'medicines': medicines,'carts': carts,'order': order, 'orders': orders, 'search_query': search_query}
+            context = {
+                'patient': patient, 'medicines': medicines,
+                'carts': carts, 'order': order, 'orders': orders,
+                'search_query': search_query, 'category_filter': category_filter,
+                'categorized': categorized,
+            }
             return render(request, 'Pharmacy/shop.html', context)
         else:
-            context = {'patient': patient, 'medicines': medicines,'carts': carts,'orders': orders, 'search_query': search_query}
+            context = {
+                'patient': patient, 'medicines': medicines,
+                'carts': carts, 'orders': orders,
+                'search_query': search_query, 'category_filter': category_filter,
+                'categorized': categorized,
+            }
             return render(request, 'Pharmacy/shop.html', context)
     
     else:

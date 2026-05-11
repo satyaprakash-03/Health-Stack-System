@@ -1,247 +1,451 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
-
-<!-- Mirrored from preview.colorlib.com/theme/coffeeblend/checkout.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 18 Apr 2021 16:32:50 GMT -->
-
 <head>
-	<title>HealthStack</title>
-	<!-- Favicons -->
-	<link type="image/x-icon" href="{% static 'HealthStack-System/images/Normal/favicon.png' %}" rel="icon" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>Checkout | HealthStack MedShop</title>
+  <link type="image/x-icon" href="{% static 'HealthStack-System/images/Normal/favicon.png' %}" rel="icon"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="{% static 'HealthStack-System/pharmacy_assets/css/open-iconic-bootstrap.min.css'%}">
+  <link rel="stylesheet" href="{% static 'HealthStack-System/pharmacy_assets/css/style.css'%}">
+  <style>
+    :root {
+      --primary: #00c9a7; --primary-dark: #00a88e;
+      --primary-glow: rgba(0,201,167,0.15);
+      --accent: #845ef7;
+      --bg-dark: #0d1117; --bg-card: #161b27; --bg-card2: #1c2333;
+      --border: rgba(255,255,255,0.08);
+      --text: #e2e8f0; --text-muted: #8892a4;
+      --danger: #ff5757;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Inter', sans-serif; background: var(--bg-dark); color: var(--text); min-height: 100vh; }
 
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-	<link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700" rel="stylesheet">
-	<link href="https://fonts.googleapis.com/css?family=Josefin+Sans:400,700" rel="stylesheet">
-	<link href="https://fonts.googleapis.com/css?family=Great+Vibes" rel="stylesheet">
-	<link href="https://fonts.googleapis.com/css?family=Great+Vibes" rel="stylesheet">
-	<link rel="stylesheet" href="{% static 'HealthStack-System\pharmacy_assets\css\open-iconic-bootstrap.min.css'%}">
-	<link rel="stylesheet" href="{% static 'HealthStack-System\pharmacy_assets\css\animate.css'%}">
-	<link rel="stylesheet" href="{% static 'HealthStack-System\pharmacy_assets\css\owl.carousel.min.css'%}">
-	<link rel="stylesheet" href="{% static 'HealthStack-System\pharmacy_assets\css\owl.theme.default.min.css'%}">
-	<link rel="stylesheet" href="{% static 'HealthStack-System\pharmacy_assets\css\magnific-popup.css'%}">
-	<link rel="stylesheet" href="{% static 'HealthStack-System\pharmacy_assets\css\owl.theme.default.min.css'%}">
-	<link rel="stylesheet" href="{% static 'HealthStack-System\pharmacy_assets\css\aos.css'%}">
-	<link rel="stylesheet" href="{% static 'HealthStack-System\pharmacy_assets\css\ionicons.min.css'%}">
-	<link rel="stylesheet" href="{% static 'HealthStack-System\pharmacy_assets\css\bootstrap-datepicker.css'%}">
-	<link rel="stylesheet" href="{% static 'HealthStack-System\pharmacy_assets\css\jquery.timepicker.css'%}">
-	<link rel="stylesheet" href="{% static 'HealthStack-System\pharmacy_assets\css\flaticon.css'%}">
-	<link rel="stylesheet" href="{% static 'HealthStack-System\pharmacy_assets\css\icomoon.css'%}">
-	<link rel="stylesheet" href="{% static 'HealthStack-System\pharmacy_assets\css\style.css'%}">
+    /* NAVBAR */
+    .med-navbar {
+      position: sticky; top: 0; z-index: 1000;
+      background: rgba(13,17,23,0.95); backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+      padding: 0 2rem; height: 68px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .nav-brand { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+    .nav-brand-icon {
+      width: 38px; height: 38px;
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      border-radius: 10px; display: flex; align-items: center; justify-content: center;
+      font-size: 18px; color: white;
+    }
+    .nav-brand-text { font-size: 1.1rem; font-weight: 700; color: #fff; }
+    .nav-brand-text span { color: var(--primary); }
+    .nav-actions { display: flex; align-items: center; gap: 1rem; }
+    .nav-link-btn {
+      color: var(--text-muted); text-decoration: none; font-size: 0.9rem;
+      font-weight: 500; padding: 6px 14px; border-radius: 8px; transition: all 0.2s;
+    }
+    .nav-link-btn:hover { color: var(--primary); background: var(--primary-glow); }
+
+    /* PROGRESS STEPS */
+    .checkout-progress {
+      background: var(--bg-card); border-bottom: 1px solid var(--border);
+      padding: 1.4rem 2rem;
+    }
+    .steps { display: flex; align-items: center; justify-content: center; gap: 0; max-width: 500px; margin: 0 auto; }
+    .step { display: flex; align-items: center; gap: 8px; }
+    .step-circle {
+      width: 32px; height: 32px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.8rem; font-weight: 700;
+    }
+    .step-circle.done { background: var(--primary); color: #0d1117; }
+    .step-circle.active { background: var(--accent); color: white; }
+    .step-circle.pending { background: var(--bg-card2); border: 1px solid var(--border); color: var(--text-muted); }
+    .step-label { font-size: 0.82rem; font-weight: 600; }
+    .step-label.done { color: var(--primary); }
+    .step-label.active { color: #fff; }
+    .step-label.pending { color: var(--text-muted); }
+    .step-line { flex: 1; height: 2px; background: var(--border); margin: 0 1rem; min-width: 40px; }
+    .step-line.done { background: var(--primary); }
+
+    /* MAIN LAYOUT */
+    .checkout-page { max-width: 1200px; margin: 0 auto; padding: 2.5rem 2rem 4rem; }
+    .checkout-layout { display: grid; grid-template-columns: 1fr 380px; gap: 2rem; align-items: start; }
+    @media (max-width: 900px) { .checkout-layout { grid-template-columns: 1fr; } }
+
+    /* FORM PANEL */
+    .form-panel {
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: 20px; overflow: hidden;
+    }
+    .form-section { padding: 2rem; border-bottom: 1px solid var(--border); }
+    .form-section:last-child { border-bottom: none; }
+    .section-title {
+      font-size: 1.05rem; font-weight: 700; color: var(--text);
+      margin-bottom: 1.5rem; display: flex; align-items: center; gap: 10px;
+    }
+    .section-title .icon {
+      width: 34px; height: 34px;
+      background: var(--primary-glow); border: 1px solid rgba(0,201,167,0.25);
+      border-radius: 9px; display: flex; align-items: center; justify-content: center;
+      color: var(--primary); font-size: 0.9rem;
+    }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    @media (max-width: 600px) { .form-row { grid-template-columns: 1fr; } }
+    .form-group { display: flex; flex-direction: column; gap: 6px; margin-bottom: 1rem; }
+    .form-group label { font-size: 0.82rem; font-weight: 600; color: var(--text-muted); }
+    .form-control {
+      background: var(--bg-card2); border: 1.5px solid var(--border);
+      border-radius: 10px; padding: 12px 16px;
+      font-size: 0.92rem; color: var(--text);
+      font-family: 'Inter', sans-serif;
+      outline: none; transition: border-color 0.2s, box-shadow 0.2s;
+      width: 100%;
+    }
+    .form-control::placeholder { color: var(--text-muted); }
+    .form-control:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(0,201,167,0.12);
+    }
+    select.form-control { cursor: pointer; }
+
+    /* PAYMENT METHODS */
+    .payment-methods { display: flex; flex-direction: column; gap: 10px; }
+    .payment-option {
+      display: flex; align-items: center; gap: 14px;
+      padding: 14px 18px;
+      background: var(--bg-card2); border: 1.5px solid var(--border);
+      border-radius: 12px; cursor: pointer; transition: all 0.2s;
+    }
+    .payment-option:hover { border-color: rgba(0,201,167,0.35); }
+    .payment-option input[type="radio"] { display: none; }
+    .payment-option.selected { border-color: var(--primary); background: var(--primary-glow); }
+    .radio-circle {
+      width: 20px; height: 20px; border-radius: 50%;
+      border: 2px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; transition: all 0.2s;
+    }
+    .payment-option.selected .radio-circle { border-color: var(--primary); }
+    .radio-dot {
+      width: 10px; height: 10px; background: var(--primary);
+      border-radius: 50%; opacity: 0; transition: opacity 0.2s;
+    }
+    .payment-option.selected .radio-dot { opacity: 1; }
+    .payment-icon { font-size: 1.3rem; }
+    .payment-info .name { font-size: 0.95rem; font-weight: 600; color: var(--text); }
+    .payment-info .desc { font-size: 0.78rem; color: var(--text-muted); margin-top: 2px; }
+    .payment-tag {
+      margin-left: auto; font-size: 0.7rem; font-weight: 700;
+      padding: 3px 9px; border-radius: 20px;
+    }
+    .payment-tag.popular { background: rgba(0,201,167,0.15); color: var(--primary); border: 1px solid rgba(0,201,167,0.3); }
+
+    /* TERMS */
+    .terms-check {
+      display: flex; align-items: flex-start; gap: 12px;
+      margin-top: 0.5rem;
+    }
+    .terms-check input[type="checkbox"] { margin-top: 3px; accent-color: var(--primary); }
+    .terms-check label { font-size: 0.85rem; color: var(--text-muted); cursor: pointer; line-height: 1.5; }
+    .terms-check label a { color: var(--primary); }
+
+    /* ORDER SUMMARY PANEL */
+    .summary-panel {
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: 20px; overflow: hidden;
+      position: sticky; top: 88px;
+    }
+    .summary-header { padding: 1.4rem 1.8rem; border-bottom: 1px solid var(--border); }
+    .summary-header h2 { font-size: 1.05rem; font-weight: 700; }
+    .summary-body { padding: 1.5rem 1.8rem; display: flex; flex-direction: column; gap: 1rem; }
+    .summary-row { display: flex; align-items: center; justify-content: space-between; }
+    .summary-row .lbl { font-size: 0.88rem; color: var(--text-muted); }
+    .summary-row .val { font-size: 0.92rem; font-weight: 600; color: var(--text); }
+    .summary-divider { border: none; border-top: 1px solid var(--border); }
+    .summary-total {
+      display: flex; align-items: center; justify-content: space-between;
+      background: var(--primary-glow); border: 1px solid rgba(0,201,167,0.2);
+      border-radius: 12px; padding: 1rem 1.2rem;
+    }
+    .summary-total .lbl { font-size: 1rem; font-weight: 700; }
+    .summary-total .val { font-size: 1.3rem; font-weight: 800; color: var(--primary); }
+    .place-order-btn {
+      display: flex; align-items: center; justify-content: center; gap: 10px;
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      color: #0d1117; border: none; border-radius: 14px;
+      padding: 16px; font-size: 1rem; font-weight: 700;
+      text-decoration: none; cursor: pointer; transition: all 0.25s;
+      width: 100%; margin-top: 0.5rem;
+    }
+    .place-order-btn:hover {
+      transform: translateY(-2px); box-shadow: 0 8px 30px rgba(0,201,167,0.4);
+    }
+    .secure-note {
+      display: flex; align-items: center; justify-content: center; gap: 6px;
+      color: var(--text-muted); font-size: 0.78rem; margin-top: 1rem;
+    }
+    .secure-note i { color: var(--primary); }
+    .trust-badges { display: flex; gap: 0.8rem; justify-content: center; flex-wrap: wrap; margin-top: 1rem; }
+    .trust-badge {
+      background: var(--bg-card2); border: 1px solid var(--border);
+      border-radius: 8px; padding: 6px 12px;
+      font-size: 0.72rem; color: var(--text-muted);
+      display: flex; align-items: center; gap: 5px;
+    }
+
+    /* LOADER */
+    #page-loader {
+      position: fixed; inset: 0; background: var(--bg-dark);
+      display: flex; align-items: center; justify-content: center;
+      z-index: 9999; transition: opacity 0.4s;
+    }
+    .loader-ring {
+      width: 50px; height: 50px; border: 4px solid var(--border);
+      border-top-color: var(--primary); border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+  </style>
 </head>
-
 <body>
-	<nav class="navbar navbar-expand-lg navbar-dark ftco_navbar bg-dark ftco-navbar-light" id="ftco-navbar">
-		<div class="container">
-			<a class="navbar-brand" href="">Health Stack<small>Medical Shop</small></a>
-			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#ftco-nav"
-				aria-controls="ftco-nav" aria-expanded="false" aria-label="Toggle navigation">
-				<span class="oi oi-menu"></span> Menu
-			</button>
-			<div class="collapse navbar-collapse" id="ftco-nav">
-				<ul class="navbar-nav ml-auto">
-					<li class="nav-item"><a href="{% url 'patient-dashboard' %}"
-							class="nav-link">Dashboard</a></li>
-					<li class="nav-item"><a href="{% url 'pharmacy_shop' %}"class="nav-link">Shop</a></li>
-					<li class="nav-item"><a href="{% url 'cart' %}" class="nav-link">Cart</a></li>
-					<li class="nav-item"><a href="{% url 'checkout' %}" class="nav-link">Checkout</a></li>
-					<li class="nav-item cart">
-						<a href="cart.html" class="nav-link">
-							<span class="icon icon-shopping_cart"></span>
-							<span class="bag d-flex justify-content-center align-items-center">
-								<small>1</small>
-							</span>
-						</a>
-					</li>
-				</ul>
-			</div>
-		</div>
-	</nav>
+  <div id="page-loader"><div class="loader-ring"></div></div>
 
-	<section class="ftco-section">
-		<div class="container">
-			<div class="row">
-				<div class="col-xl-8 ftco-animate">
-					<form action="#" class="billing-form ftco-bg-dark p-3 p-md-5">
-						<h3 class="mb-4 billing-heading">Billing Details</h3>
-						<div class="row align-items-end">
-							<div class="col-md-6">
-								<div class="form-group">
-									<label for="firstname">Firt Name</label>
-									<input type="text" class="form-control" placeholder="">
-								</div>
-							</div>
-							<div class="col-md-6">
-								<div class="form-group">
-									<label for="lastname">Last Name</label>
-									<input type="text" class="form-control" placeholder="">
-								</div>
-							</div>
-							<div class="w-100"></div>
-							<div class="col-md-12">
-								<div class="form-group">
-									<label for="country">Select City</label>
-									<div class="select-wrap">
-										<div class="icon"><span class="ion-ios-arrow-down"></span></div>
-										<select name="" id="" class="form-control">
-											<option value="">Lucknow</option>
-											<option value=""></option>
-											<option value="">Philippines</option>
-											<option value="">South Korea</option>
-											<option value="">Hongkong</option>
-											<option value="">Japan</option>
-										</select>
-									</div>
-								</div>
-							</div>
-							<div class="w-100"></div>
-							<div class="col-md-6">
-								<div class="form-group">
-									<label for="streetaddress">Street Address</label>
-									<input type="text" class="form-control" placeholder="House number and street name">
-								</div>
-							</div>
-							<div class="col-md-6">
-								<div class="form-group">
-									<input type="text" class="form-control"
-										placeholder="Appartment, suite, unit etc: (optional)">
-								</div>
-							</div>
-							<div class="w-100"></div>
-							<div class="col-md-6">
-								<div class="form-group">
-									<label for="towncity">Town / City</label>
-									<input type="text" class="form-control" placeholder="">
-								</div>
-							</div>
-							<div class="col-md-6">
-								<div class="form-group">
-									<label for="postcodezip">Postcode / ZIP *</label>
-									<input type="text" class="form-control" placeholder="">
-								</div>
-							</div>
-							<div class="w-100"></div>
-							<div class="col-md-6">
-								<div class="form-group">
-									<label for="phone">Phone</label>
-									<input type="text" class="form-control" placeholder="">
-								</div>
-							</div>
-							<div class="col-md-6">
-								<div class="form-group">
-									<label for="emailaddress">Email Address</label>
-									<input type="text" class="form-control" placeholder="">
-								</div>
-							</div>
-							<div class="w-100"></div>
-							<div class="col-md-12">
-								<div class="form-group mt-4">
-									<div class="radio">
-										<label class="mr-3"><input type="radio" name="optradio"> Create an Account?
-										</label>
-										<label><input type="radio" name="optradio"> Ship to different address</label>
-									</div>
-								</div>
-							</div>
-						</div>
-					</form>
-					<div class="row mt-5 pt-3 d-flex">
-						<div class="col-md-6 d-flex">
-							<div class="cart-detail cart-total ftco-bg-dark p-3 p-md-4">
-								<h3 class="billing-heading mb-4">Cart Total</h3>
-								<p class="d-flex">
-									<span>Subtotal</span>
-									<span>20.60</span>
-								</p>
-								<p class="d-flex">
-									<span>Delivery</span>
-									<span>0.00</span>
-								</p>
-								<p class="d-flex">
-									<span>Discount</span>
-									<span>3.00</span>
-								</p>
-								<hr>
-								<p class="d-flex total-price">
-									<span>Total</span>
-									<span>17.60</span>
-								</p>
-							</div>
-						</div>
-						<div class="col-md-6">
-							<div class="cart-detail ftco-bg-dark p-3 p-md-4">
-								<h3 class="billing-heading mb-4">Payment Method</h3>
-								<div class="form-group">
-									<div class="col-md-12">
-										<div class="radio">
-											<label><input type="radio" name="optradio" class="mr-2"> Paytm</label>
-										</div>
-									</div>
-								</div>
-								<div class="form-group">
-									<div class="col-md-12">
-										<div class="radio">
-											<label><input type="radio" name="optradio" class="mr-2"> UPI Payment</label>
-										</div>
-									</div>
-								</div>
-								<div class="form-group">
-									<div class="col-md-12">
-										<div class="radio">
-											<label><input type="radio" name="optradio" class="mr-2">Cash On Delivery</label>
-										</div>
-									</div>
-								</div>
-								<div class="form-group">
-									<div class="col-md-12">
-										<div class="checkbox">
-											<label><input type="checkbox" value="" class="mr-2"> I have read and accept
-												the terms and conditions</label>
-										</div>
-									</div>
-								</div>
-								<p><a href="#" class="btn btn-primary py-3 px-4">Place an order</a></p>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</section>
-	{% include 'footer.html' %}
-	
-	  <div id="ftco-loader" class="show fullscreen"><svg class="circular" width="48px" height="48px">
-		  <circle class="path-bg" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke="#eeeeee" />
-		  <circle class="path" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke-miterlimit="10"
-			stroke="#F96D00" />
-		</svg></div>
-	  <script src="{% static 'HealthStack-System/pharmacy_assets/js/jquery.min.js' %}"></script>
-	  <script src="{% static 'HealthStack-System/pharmacy_assets/js/jquery-migrate-3.0.1.min.js' %}"></script>
-	  <script src="{% static 'HealthStack-System/pharmacy_assets/js/popper.min.js' %}"></script>
-	  <script src="{% static 'HealthStack-System/pharmacy_assets/js/bootstrap.min.js' %}"></script>
-	  <script src="{% static 'HealthStack-System/pharmacy_assets/js/jquery.easing.1.3.js' %}"></script>
-	  <script src="{% static 'HealthStack-System/pharmacy_assets/js/jquery.waypoints.min.js' %}"></script>
-	  <script src="{% static 'HealthStack-System/pharmacy_assets/js/jquery.stellar.min.js' %}"></script>
-	  <script src="{% static 'HealthStack-System/pharmacy_assets/js/owl.carousel.min.js' %}"></script>
-	  <script src="{% static 'HealthStack-System/pharmacy_assets/js/jquery.magnific-popup.min.js' %}"></script>
-	  <script src="{% static 'HealthStack-System/pharmacy_assets/js/aos.js' %}"></script>
-	  <script src="{% static 'HealthStack-System/pharmacy_assets/js/jquery.animateNumber.min.js' %}"></script>
-	  <script src="{% static 'HealthStack-System/pharmacy_assets/js/bootstrap-datepicker.js' %}"></script>
-	  <script src="{% static 'HealthStack-System/pharmacy_assets/js/jquery.timepicker.min.js' %}"></script>
-	  <script src="{% static 'HealthStack-System/pharmacy_assets/js/scrollax.min.js' %}"></script>
-	  <script src="{% static 'HealthStack-System/pharmacy_assets/js/google-map.js' %}"></script>
-	  <script src="{% static 'HealthStack-System/pharmacy_assets/js/main.js' %}"></script>
-	  <script
-		src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBVWaKrjvy3MaE7SQ74_uJiULgl1JY0H2s&amp;sensor=false"></script>
-	  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-23581568-13"></script>
-	  <script>
-		window.dataLayer = window.dataLayer || [];
-		function gtag() { dataLayer.push(arguments); }
-		gtag('js', new Date());
-	
-		gtag('config', 'UA-23581568-13');
-	  </script>
-	</body>
-	
-	
-	</html>
+  <!-- Navbar -->
+  <nav class="med-navbar">
+    <a href="{% url 'pharmacy_shop' %}" class="nav-brand">
+      <div class="nav-brand-icon"><i class="fas fa-pills"></i></div>
+      <span class="nav-brand-text">Health<span>Stack</span> <small style="font-size:0.65rem;color:var(--text-muted);font-weight:400;">MedShop</small></span>
+    </a>
+    <div class="nav-actions">
+      <a href="{% url 'pharmacy_shop' %}" class="nav-link-btn"><i class="fas fa-store"></i> Shop</a>
+      <a href="{% url 'cart' %}" class="nav-link-btn"><i class="fas fa-shopping-cart"></i> Cart</a>
+      <a href="{% url 'patient-dashboard' %}" class="nav-link-btn"><i class="fas fa-th-large"></i> Dashboard</a>
+    </div>
+  </nav>
+
+  <!-- Progress Steps -->
+  <div class="checkout-progress">
+    <div class="steps">
+      <div class="step">
+        <div class="step-circle done"><i class="fas fa-check"></i></div>
+        <span class="step-label done">Cart</span>
+      </div>
+      <div class="step-line done"></div>
+      <div class="step">
+        <div class="step-circle active">2</div>
+        <span class="step-label active">Checkout</span>
+      </div>
+      <div class="step-line"></div>
+      <div class="step">
+        <div class="step-circle pending">3</div>
+        <span class="step-label pending">Confirm</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main -->
+  <div class="checkout-page">
+    <div class="checkout-layout">
+
+      <!-- Form Panel -->
+      <div class="form-panel">
+
+        <!-- Billing Details -->
+        <div class="form-section">
+          <div class="section-title">
+            <div class="icon"><i class="fas fa-user"></i></div>
+            Billing Details
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="firstname">First Name *</label>
+              <input type="text" class="form-control" id="firstname" placeholder="Enter first name">
+            </div>
+            <div class="form-group">
+              <label for="lastname">Last Name *</label>
+              <input type="text" class="form-control" id="lastname" placeholder="Enter last name">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="phone">Phone Number *</label>
+              <input type="tel" class="form-control" id="phone" placeholder="+91 XXXXX XXXXX">
+            </div>
+            <div class="form-group">
+              <label for="email">Email Address *</label>
+              <input type="email" class="form-control" id="email" placeholder="you@example.com">
+            </div>
+          </div>
+        </div>
+
+        <!-- Shipping Address -->
+        <div class="form-section">
+          <div class="section-title">
+            <div class="icon"><i class="fas fa-map-marker-alt"></i></div>
+            Delivery Address
+          </div>
+          <div class="form-group">
+            <label for="city">Select City *</label>
+            <select class="form-control" id="city">
+              <option value="">Select your city...</option>
+              <option value="lucknow">Lucknow</option>
+              <option value="delhi">Delhi</option>
+              <option value="mumbai">Mumbai</option>
+              <option value="bangalore">Bangalore</option>
+              <option value="hyderabad">Hyderabad</option>
+              <option value="chennai">Chennai</option>
+              <option value="kolkata">Kolkata</option>
+              <option value="pune">Pune</option>
+              <option value="ahmedabad">Ahmedabad</option>
+            </select>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="street">Street Address *</label>
+              <input type="text" class="form-control" id="street" placeholder="House no. and street name">
+            </div>
+            <div class="form-group">
+              <label for="apartment">Apartment / Suite</label>
+              <input type="text" class="form-control" id="apartment" placeholder="Apartment, suite, unit (optional)">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="towncity">Town / City *</label>
+              <input type="text" class="form-control" id="towncity" placeholder="Town or city name">
+            </div>
+            <div class="form-group">
+              <label for="pincode">Pincode / ZIP *</label>
+              <input type="text" class="form-control" id="pincode" placeholder="Enter pincode">
+            </div>
+          </div>
+        </div>
+
+        <!-- Payment Methods -->
+        <div class="form-section">
+          <div class="section-title">
+            <div class="icon"><i class="fas fa-credit-card"></i></div>
+            Payment Method
+          </div>
+          <div class="payment-methods">
+            <label class="payment-option selected" onclick="selectPayment(this)">
+              <input type="radio" name="payment" value="upi" checked>
+              <div class="radio-circle"><div class="radio-dot"></div></div>
+              <span class="payment-icon">📱</span>
+              <div class="payment-info">
+                <div class="name">UPI Payment</div>
+                <div class="desc">Pay via PhonePe, GPay, Paytm UPI</div>
+              </div>
+              <span class="payment-tag popular">Popular</span>
+            </label>
+            <label class="payment-option" onclick="selectPayment(this)">
+              <input type="radio" name="payment" value="paytm">
+              <div class="radio-circle"><div class="radio-dot"></div></div>
+              <span class="payment-icon">💳</span>
+              <div class="payment-info">
+                <div class="name">Paytm Wallet</div>
+                <div class="desc">Pay using your Paytm balance</div>
+              </div>
+            </label>
+            <label class="payment-option" onclick="selectPayment(this)">
+              <input type="radio" name="payment" value="card">
+              <div class="radio-circle"><div class="radio-dot"></div></div>
+              <span class="payment-icon">🏦</span>
+              <div class="payment-info">
+                <div class="name">Credit / Debit Card</div>
+                <div class="desc">Visa, Mastercard, Rupay accepted</div>
+              </div>
+            </label>
+            <label class="payment-option" onclick="selectPayment(this)">
+              <input type="radio" name="payment" value="cod">
+              <div class="radio-circle"><div class="radio-dot"></div></div>
+              <span class="payment-icon">💵</span>
+              <div class="payment-info">
+                <div class="name">Cash on Delivery</div>
+                <div class="desc">Pay when you receive your order</div>
+              </div>
+            </label>
+          </div>
+          <div class="terms-check" style="margin-top:1.5rem;">
+            <input type="checkbox" id="terms">
+            <label for="terms">I have read and accept the <a href="#">Terms & Conditions</a> and <a href="#">Privacy Policy</a></label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Summary Panel -->
+      <div class="summary-panel">
+        <div class="summary-header">
+          <h2>Order Summary</h2>
+        </div>
+        <div class="summary-body">
+          <div class="summary-row">
+            <span class="lbl">Subtotal</span>
+            <span class="val">₹{{ order.get_totals|floatformat:2 }} BDT</span>
+          </div>
+          <div class="summary-row">
+            <span class="lbl">Delivery</span>
+            <span class="val" style="color:#ffb347;">₹40.00 BDT</span>
+          </div>
+          <div class="summary-row">
+            <span class="lbl">Discount</span>
+            <span class="val" style="color:#4caf50;">- ₹0.00</span>
+          </div>
+          <hr class="summary-divider">
+          <div class="summary-total">
+            <span class="lbl">Grand Total</span>
+            <span class="val">₹{{ order.final_bill|floatformat:2 }}</span>
+          </div>
+          <button class="place-order-btn" onclick="placeOrder()" id="placeOrderBtn">
+            <i class="fas fa-check-circle"></i> Place Order
+          </button>
+          <div class="secure-note">
+            <i class="fas fa-shield-alt"></i> SSL Secured & Encrypted
+          </div>
+          <div class="trust-badges">
+            <span class="trust-badge"><i class="fas fa-truck" style="color:var(--primary)"></i> Fast Delivery</span>
+            <span class="trust-badge"><i class="fas fa-undo" style="color:var(--primary)"></i> Easy Return</span>
+            <span class="trust-badge"><i class="fas fa-certificate" style="color:var(--primary)"></i> Genuine</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  {% include 'footer.html' %}
+
+  <script src="{% static 'HealthStack-System/pharmacy_assets/js/jquery.min.js' %}"></script>
+  <script src="{% static 'HealthStack-System/pharmacy_assets/js/bootstrap.min.js' %}"></script>
+  <script>
+    window.addEventListener('load', function() {
+      const loader = document.getElementById('page-loader');
+      loader.style.opacity = '0';
+      setTimeout(() => loader.style.display = 'none', 400);
+    });
+
+    function selectPayment(el) {
+      document.querySelectorAll('.payment-option').forEach(o => o.classList.remove('selected'));
+      el.classList.add('selected');
+    }
+
+    function placeOrder() {
+      const terms = document.getElementById('terms');
+      if (!terms.checked) {
+        alert('Please accept the Terms & Conditions to continue.');
+        return;
+      }
+      const btn = document.getElementById('placeOrderBtn');
+      btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+      btn.disabled = true;
+      // Add your actual form submission / payment gateway logic here
+      setTimeout(() => {
+        btn.innerHTML = '<i class="fas fa-check"></i> Order Placed!';
+        btn.style.background = 'linear-gradient(135deg, #4caf50, #388e3c)';
+      }, 2000);
+    }
+  </script>
+</body>
+</html>

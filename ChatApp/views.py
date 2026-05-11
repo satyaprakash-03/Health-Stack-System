@@ -12,6 +12,7 @@ from hospital.models import Patient
 from doctor.models import Doctor_Information  , Appointment  
 from django.db.models import Q
 import json,datetime
+from django.db.models import Count
 from django.core import serializers
 from django.views.decorators.cache import cache_control
 from django.views.decorators.csrf import csrf_exempt
@@ -184,5 +185,39 @@ def send_chat(request):
 
 
 
+@csrf_exempt
+@login_required(login_url='login')
+def unread_count(request):
+    """
+    Returns UNREAD message counts per sender for the logged-in user.
+    Response: { "<sender_user_id>": <count>, ... }
+    """
+    if request.method == 'POST':
+        counts = (
+            chatMessages.objects
+            .filter(user_to=request.user.id, is_read=False)
+            .values('user_from')
+            .annotate(total=Count('id'))
+        )
+        data = {str(row['user_from']): row['total'] for row in counts}
+        return HttpResponse(json.dumps(data), content_type="application/json")
+    return HttpResponse(json.dumps({}), content_type="application/json")
 
-       
+
+@csrf_exempt
+@login_required(login_url='login')
+def mark_read(request):
+    """
+    Marks all messages from a specific sender as read.
+    POST params: sender_id
+    """
+    if request.method == 'POST':
+        sender_id = request.POST.get('sender_id')
+        if sender_id:
+            chatMessages.objects.filter(
+                user_from=sender_id,
+                user_to=request.user.id,
+                is_read=False
+            ).update(is_read=True)
+            return HttpResponse(json.dumps({'status': 'ok'}), content_type="application/json")
+    return HttpResponse(json.dumps({'status': 'failed'}), content_type="application/json")
