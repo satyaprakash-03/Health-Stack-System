@@ -117,224 +117,115 @@
 														</div>
 													</div>
 												</div>
-												<div class="col-12 col-md-12">
-													<div class="card card-table">
-														<div class="card-body">
-															<div class="table-responsive">
-																<table class="table table-hover table-center">
-																	<thead>
-																		<tr>
-																			<th style="min-width: 300px">Hospital Name
-																			</th>
-																			<th style="min-width: 50px;"></th>
-																		</tr>
-																	</thead>
-																	<tbody>
-																		<tr>
-																			<td>
-																				<input class="form-control" type="text"
-																					name="hospital_name">
-																			</td>
-																		</tr>
-																	</tbody>
-																</table>
-															</div>
-														</div>
-													</div>
-													<div class="card card-table">
-														<div class="card-body">
-															<div class="table-responsive">
-																<table class="table table-hover table-center">
-																	<thead>
-																		<tr>
-																			<th style="min-width: 300px">Address</th>
-																			<th style="min-width: 50px;"></th>
-																		</tr>
-																	</thead>
-																	<tbody>
-																		<tr>
-																			<td>
-																				<input class="form-control" type="text"
-																					name="address">
-																			</td>
-																		</tr>
-																	</tbody>
-																</table>
-															</div>
-														</div>
-													</div>
-													<div class="card card-table">
-														<div class="card-body">
-															<div class="table-responsive">
-																<table class="table table-hover table-center">
-																	<thead>
-																		<tr>
-																			<th style="min-width: 300px">Email</th>
-																			<th style="min-width: 300px">Phone number
-																			</th>
-																			<th style="min-width: 50px;"></th>
-																		</tr>
-																	</thead>
-																	<tbody>
-																		<tr>
-																			<td>
-																				<input class="form-control" type="email"
-																					name="email">
-																			</td>
-																			<td>
-																				<input class="form-control" type="text"
-																					name="phone_number">
-																			</td>
-																		</tr>
-																	</tbody>
-																</table>
-															</div>
-														</div>
-													</div>
-													<div class="card card-table">
-														<div class="card-body">
-															<div class="table-responsive">
-																<table class="table table-hover table-center">
-																	<thead>
-																		<tr>
-																			<th style="min-width: 300px">Hospital Type
-																			</th>
-																			{% comment %} <th style="min-width: 300px">
-																				Upload Image</th> {% endcomment %}
-																			<th style="min-width: 50px;"></th>
-																		</tr>
-																	</thead>
-																	<tbody>
-																		<tr>
-																			<td>
-																				<label for="cars">Choose Hospital Type:
-																				</label>
-																				<select id="type" name="type">
-																					<option value="public">Public
-																					</option>
-																					<option value="private">Private
-																					</option>
-																				</select>
-																			</td>
-																			{% comment %} <td>
-																				<input class="form-control" type="file"
-																					name="image">
-																			</td> {% endcomment %}
-																		</tr>
-																	</tbody>
-																</table>
-															</div>
-														</div>
-													</div>
-													<div class="card">
-														<div class="card-body">
-															<h4 class="card-title">Departments</h4>
-															<div class="department-info">
-																<div class="row form-row department-cont">
-																	<div class="col-12 col-md-10 col-lg-5">
-																		<div class="form-group">
-																			<label>Add New Departments</label>
-																			<input type="text" class="form-control"
-																				id="departments" name="department">
-																		</div>
-																	</div>
-																	<div class="col-12 col-md-2 col-lg-2">
-																		<label
-																			class="d-md-block d-sm-none d-none">&nbsp;</label>
-																		<a href="#" class="btn btn-danger trash"><i
-																				class="far fa-trash-alt"></i></a>
-																	</div>
+												<div class="col-12">
+													<div class="hospital-form-card">
+														<h4 class="card-title">Basic Information</h4>
+														<div class="row">
+															<div class="col-md-6">
+																<div class="modern-form-group">
+																	<label>Hospital Name <span class="text-danger">*</span></label>
+																	<input class="modern-input" type="text" name="hospital_name" placeholder="Enter hospital name" required>
 																</div>
 															</div>
-															<div class="add-more">
-																<a href="javascript:void(0);" class="add-department"><i
-																		class="fa fa-plus-circle"></i> Add More</a>
-															</div>
-														</div>
-													</div>
-													<div class="card">
-														<div class="card-body">
-															<h4 class="card-title">Services</h4>
-															<div class="service-info">
-																<div class="row form-row service-cont">
-																	<div class="col-12 col-md-10 col-lg-5">
-																		<div class="form-group">
-																			<label>Add New Services</label>
-																			<input type="text" class="form-control"
-																				id="service" name="service">
-																		</div>
-																	</div>
-																	<div class="col-12 col-md-2 col-lg-2">
-																		<label
-																			class="d-md-block d-sm-none d-none">&nbsp;</label>
-																		<a href="#" class="btn btn-danger trash"><i
-																				class="far fa-trash-alt"></i></a>
-																	</div>
+															<div class="col-md-6">
+																<div class="modern-form-group">
+																	<label>Hospital Type <span class="text-danger">*</span></label>
+																	<select class="modern-input" id="type" name="type" required>
+																		<option value="public">Public</option>
+																		<option value="private">Private</option>
+																	</select>
 																</div>
 															</div>
-															<div class="add-more">
-																<a href="javascript:void(0);" class="add-service"
-																	style="color: #20c0f3"><i
-																		class="fa fa-plus-circle"></i> Add More</a>
-															</div>
-														</div>
-													</div>
-													<div class="card">
-														<div class="card-body">
-															<h4 class="card-title">Specialization</h4>
-															<div class="specialization-info">
-																<div class="row form-row specialization-cont">
-																	<div class="col-12 col-md-10 col-lg-5">
-																		<div class="form-group">
-																			<label>Add New Specialization</label>
-																			<input type="text" class="form-control"
-																				id="specialization"
-																				name="specialization">
-																		</div>
-																	</div>
-																	<div class="col-12 col-md-2 col-lg-2">
-																		<label
-																			class="d-md-block d-sm-none d-none">&nbsp;</label>
-																		<a href="#" class="btn btn-danger trash"><i
-																				class="far fa-trash-alt"></i></a>
-																	</div>
+															<div class="col-md-6">
+																<div class="modern-form-group">
+																	<label>Email Address</label>
+																	<input class="modern-input" type="email" name="email" placeholder="example@hospital.com">
 																</div>
 															</div>
-															<div class="add-more">
-																<a href="javascript:void(0);"
-																	class="add-specialization"><i
-																		class="fa fa-plus-circle"></i> Add More</a>
+															<div class="col-md-6">
+																<div class="modern-form-group">
+																	<label>Phone Number</label>
+																	<input class="modern-input" type="text" name="phone_number" placeholder="+1 234 567 8900">
+																</div>
+															</div>
+															<div class="col-md-12">
+																<div class="modern-form-group">
+																	<label>Address</label>
+																	<input class="modern-input" type="text" name="address" placeholder="123 Health Ave, City, Country">
+																</div>
+															</div>
+															<div class="col-md-12">
+																<div class="modern-form-group">
+																	<label>Description</label>
+																	<textarea class="modern-input" rows="4" name="description" placeholder="Brief description of the hospital facilities and history..."></textarea>
+																</div>
 															</div>
 														</div>
 													</div>
-													<div class="card card-table">
-														<div class="card-body">
-															<div class="table-responsive">
-																<table class="table table-hover table-center">
-																	<thead>
-																		<tr>
-																			<th style="min-width: 300px">Description
-																			</th>
-																			<th style="min-width: 50px;"></th>
-																		</tr>
-																	</thead>
-																	<tbody>
-																		<tr>
-																			<td>
-																				<textarea class="form-control" rows="4"
-																					cols="50" type="text"
-																					name="description"></textarea>
-																			</td>
-																		</tr>
-																	</tbody>
-																</table>
+
+													<div class="hospital-form-card">
+														<h4 class="card-title">Departments</h4>
+														<div class="department-info">
+															<div class="row dynamic-row department-cont">
+																<div class="col-12 col-md-10">
+																	<div class="modern-form-group mb-0">
+																		<label>Department Name</label>
+																		<input type="text" class="modern-input" name="department" placeholder="e.g. Cardiology">
+																	</div>
+																</div>
+																<div class="col-12 col-md-2 text-md-right">
+																	<a href="#" class="btn btn-trash-modern trash"><i class="far fa-trash-alt"></i></a>
+																</div>
 															</div>
+														</div>
+														<div class="add-more">
+															<a href="javascript:void(0);" class="add-department"><i class="fa fa-plus-circle"></i> Add More Department</a>
+														</div>
+													</div>
+
+													<div class="hospital-form-card">
+														<h4 class="card-title">Services</h4>
+														<div class="service-info">
+															<div class="row dynamic-row service-cont">
+																<div class="col-12 col-md-10">
+																	<div class="modern-form-group mb-0">
+																		<label>Service Name</label>
+																		<input type="text" class="modern-input" name="service" placeholder="e.g. 24/7 Emergency">
+																	</div>
+																</div>
+																<div class="col-12 col-md-2 text-md-right">
+																	<a href="#" class="btn btn-trash-modern trash"><i class="far fa-trash-alt"></i></a>
+																</div>
+															</div>
+														</div>
+														<div class="add-more">
+															<a href="javascript:void(0);" class="add-service"><i class="fa fa-plus-circle"></i> Add More Service</a>
+														</div>
+													</div>
+
+													<div class="hospital-form-card">
+														<h4 class="card-title">Specialization</h4>
+														<div class="specialization-info">
+															<div class="row dynamic-row specialization-cont">
+																<div class="col-12 col-md-10">
+																	<div class="modern-form-group mb-0">
+																		<label>Specialization Name</label>
+																		<input type="text" class="modern-input" name="specialization" placeholder="e.g. Neuro Surgery">
+																	</div>
+																</div>
+																<div class="col-12 col-md-2 text-md-right">
+																	<a href="#" class="btn btn-trash-modern trash"><i class="far fa-trash-alt"></i></a>
+																</div>
+															</div>
+														</div>
+														<div class="add-more">
+															<a href="javascript:void(0);" class="add-specialization"><i class="fa fa-plus-circle"></i> Add More Specialization</a>
 														</div>
 													</div>
 												</div>
-												<div class="submit-section">
-													<button type="submit" class="btn btn-primary submit-btn">
-														Save Changes
+												<div class="col-12 text-center mt-3 mb-5">
+													<button type="submit" class="btn submit-btn-modern w-50">
+														<i class="fas fa-save mr-2"></i> Save Hospital Details
 													</button>
 												</div>
 											</div>

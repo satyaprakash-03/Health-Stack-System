@@ -1,146 +1,178 @@
 {%load static%}
 <!DOCTYPE html>
 <html lang="en">
-    
 <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
-        <title>HealthStack</title>
-        <!-- Favicons -->
-        <link
-        type="image/x-icon"
-        href="{% static 'HealthStack-System/images/Normal/favicon.png' %}"
-        rel="icon"
-        />
-		
-		<!-- Favicon -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
+  <title>Medicine List – HealthStack Admin</title>
+  <link rel="shortcut icon" type="image/x-icon" href="{% static 'HealthStack-System/images/Normal/favicon.png' %}"/>
+  <link rel="stylesheet" href="{% static 'HealthStack-System/css/admin/bootstrap.min.css'%}">
+  <link rel="stylesheet" href="{% static 'HealthStack-System/css/admin/font-awesome.min.css'%}">
+  <link rel="stylesheet" href="{% static 'HealthStack-System/admin_assets/css/feathericon.min.css'%}">
+  <link rel="stylesheet" href="{% static 'HealthStack-System/plugins/admin/datatables/datatables.min.css'%}">
+  <link rel="stylesheet" href="{% static 'HealthStack-System/css/admin/style.css'%}">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <style>
+    :root { --primary:#4f46e5;--primary-light:#6366f1;--primary-dark:#3730a3;--success:#10b981;--warning:#f59e0b;--danger:#ef4444;--info:#06b6d4;--bg:#f1f5f9;--card:#ffffff;--text:#1e293b;--muted:#64748b;--border:#e2e8f0;--sidebar-w:260px; }
+    *{box-sizing:border-box;}body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);margin:0;}
+    .header{background:linear-gradient(135deg,var(--primary-dark) 0%,var(--primary) 100%);box-shadow:0 4px 20px rgba(79,70,229,.35);position:fixed;top:0;left:0;right:0;z-index:1040;height:64px;}
+    .nav-link,#toggle_btn,.mobile_btn{color:#fff!important;}
+    .sidebar{background:linear-gradient(180deg,#1e1b4b 0%,#312e81 100%);width:var(--sidebar-w);position:fixed;top:64px;bottom:0;overflow-y:auto;z-index:1030;box-shadow:4px 0 20px rgba(0,0,0,.15);}
+    .sidebar::-webkit-scrollbar{width:4px;}.sidebar::-webkit-scrollbar-thumb{background:rgba(255,255,255,.2);border-radius:4px;}
+    .sidebar-inner{padding:16px 0;}.menu-title span{color:rgba(255,255,255,.4);font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;padding:0 20px;}
+    .sidebar-menu ul{padding:0;margin:0;list-style:none;}
+    .sidebar-menu li a{display:flex;align-items:center;gap:10px;padding:11px 20px;color:rgba(255,255,255,.7);font-size:13.5px;font-weight:500;text-decoration:none;border-radius:0 30px 30px 0;margin:2px 12px 2px 0;transition:all .25s;}
+    .sidebar-menu li a:hover,.sidebar-menu li.active>a{background:rgba(255,255,255,.15);color:#fff;}
+    .sidebar-menu li a i{font-size:16px;width:20px;text-align:center;}
+    .sidebar-menu .submenu>ul{background:rgba(0,0,0,.2);border-radius:8px;margin:4px 12px 4px 20px;padding:4px 0;}
+    .sidebar-menu .submenu>ul li a{margin:0;border-radius:6px;font-size:13px;}
+    .page-wrapper{margin-left:var(--sidebar-w);padding-top:64px;min-height:100vh;}.content{padding:28px;}
+    
+    .page-hero{background:linear-gradient(135deg,var(--primary-dark) 0%,var(--primary-light) 100%);border-radius:20px;padding:32px 36px 72px;position:relative;overflow:hidden;box-shadow:0 8px 32px rgba(79,70,229,.3);margin-bottom:0;}
+    .page-hero::before{content:'';position:absolute;top:-60px;right:-60px;width:240px;height:240px;border-radius:50%;background:rgba(255,255,255,.07);}
+    .page-hero::after{content:'';position:absolute;bottom:-80px;left:120px;width:180px;height:180px;border-radius:50%;background:rgba(255,255,255,.05);}
+    .hero-breadcrumb{margin-bottom:12px;}.hero-breadcrumb a,.hero-breadcrumb span{color:rgba(255,255,255,.65);font-size:13px;text-decoration:none;}
+    .hero-breadcrumb .sep{margin:0 8px;color:rgba(255,255,255,.3);}.hero-breadcrumb .active{color:rgba(255,255,255,.4);}
+    .hero-title{color:#fff;font-size:22px;font-weight:700;margin:0;}.hero-subtitle{color:rgba(255,255,255,.65);font-size:13px;margin-top:4px;}
 
-		<!-- Bootstrap CSS -->
-        <link rel="stylesheet" href="{% static 'HealthStack-System/css/admin/bootstrap.min.css'%}"> 
-		
-		<!-- Fontawesome CSS -->
-        <link rel="stylesheet" href="{% static 'HealthStack-System/css/admin/font-awesome.min.css'%}">
-		
-		<!-- Feathericon CSS -->
-        <link rel="stylesheet" href="{% static 'HealthStack-System/admin_assets/css/feathericon.min.css'%}">
-		
-		<!-- Datatables CSS -->
-		<link rel="stylesheet" href="{% static 'HealthStack-System/plugins/admin/datatables/datatables.min.css'%}"> 
-		
-		<!-- Main CSS -->
-        <link rel="stylesheet" href="{% static 'HealthStack-System/css/admin/style.css'%}"> 
-		<link rel="stylesheet"href="{% static 'HealthStack-System/css/Normal/search2.css' %}">
-		
-		<!--[if lt IE 9]>
-			<script src="assets/js/html5shiv.min.js"></script>
-			<script src="assets/js/respond.min.js"></script>
-		<![endif]-->
-    </head>
-    <body>
-	
-		<!-- Main Wrapper -->
-        <div class="main-wrapper">
-			<header class="header">{% include 'hospital_admin/pharmacist-navbar.html' %}</header>
-          
-			<!-- /Header -->
-			
-			<!-- Sidebar -->
-			<aside class="sidebar" id="sidebar">
-				{% include 'hospital_admin/pharmacist-sidebar.html' %} </aside>
-			<!-- /Sidebar -->
-			
-            <div class="page-wrapper">
+    .main-card-wrapper{margin-top:-48px;position:relative;z-index:5;}
+    .main-card{background:var(--card);border-radius:20px;box-shadow:0 8px 40px rgba(0,0,0,.1);border:1px solid var(--border);overflow:hidden;}
+    .card-toolbar{display:flex;align-items:center;justify-content:space-between;padding:20px 28px;border-bottom:1px solid var(--border);flex-wrap:wrap;gap:12px;}
+    .card-toolbar-title{font-size:15px;font-weight:700;color:var(--text);display:flex;align-items:center;gap:8px;}
+    .badge-count{background:linear-gradient(135deg,var(--primary),var(--primary-light));color:#fff;font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;}
+    
+    .table-wrap{padding:0 8px 20px;}
+    .custom-table{width:100%;border-collapse:collapse;}
+    .custom-table thead tr{background:#f8fafc;}
+    .custom-table thead th{padding:14px 16px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--muted);border-bottom:2px solid var(--border);white-space:nowrap;}
+    .custom-table tbody tr{border-bottom:1px solid #f1f5f9;transition:background .2s;}
+    .custom-table tbody tr:hover{background:#f8faff;}
+    .custom-table tbody td{padding:14px 16px;font-size:13.5px;color:var(--text);vertical-align:middle;}
+    
+    .user-cell{display:flex;align-items:center;gap:12px;}
+    .user-avatar{width:40px;height:40px;border-radius:10px;object-fit:cover;border:2px solid var(--border);flex-shrink:0;}
+    .user-name{font-weight:600;color:var(--text);font-size:13.5px;}
+    
+    .tag{display:inline-block;padding:3px 12px;border-radius:20px;font-size:11px;font-weight:600;}
+    .tag-emerald{background:rgba(16,185,129,.1);color:var(--success);}
+    .tag-blue{background:rgba(59,130,246,.1);color:#3b82f6;}
+    
+    .btn-action{display:inline-flex;align-items:center;gap:6px;padding:7px 16px;border-radius:8px;font-size:12px;font-weight:600;text-decoration:none;border:none;cursor:pointer;transition:all .2s;}
+    .btn-action-primary{background:rgba(79,70,229,.1);color:var(--primary);}
+    .btn-action-primary:hover{background:var(--primary);color:#fff;}
+    .btn-action-danger{background:rgba(239,68,68,.1);color:var(--danger);}
+    .btn-action-danger:hover{background:var(--danger);color:#fff;}
+    
+    .search-wrapper { position:relative; }
+    .search-wrapper i { position:absolute; left:12px; top:50%; transform:translateY(-50%); color:var(--muted); }
+    .search-wrapper input { padding-left:36px; border:1px solid var(--border); border-radius:8px; height:40px; font-size:13.5px; outline:none; transition:border-color .2s; }
+    .search-wrapper input:focus { border-color:var(--primary); box-shadow:0 0 0 3px rgba(79,70,229,.1); }
 
-                <div class="content container-fluid">
-					
-					<div class="col-md-6 col-6 text-right float-right">
-						<div class="top-nav-search">
-						  <form action="{% url 'medicine-list' %}" method="GET">
-							<input type="text" class="form-control" placeholder="Search medicine" name="search_query" value="{{search_query}}">
-							<button class="btn" type="submit"><i class="fe fe-search"></i></button>
-						  </form>
-						</div>
-					</div>
-					
-					<!-- Page Header -->
-					<div class="page-header">
-						<div class="row">
-							<div class="col-sm-12">
-								<h3 class="page-title">List of Medicine</h3>
-								<ul class="breadcrumb">
-									<li class="breadcrumb-item"><a href="#">Dashboard</a></li>
-									<li class="breadcrumb-item active">Medicine</li>
-								</ul>
-							</div>
-							
-						</div>
-					</div>
+    .empty-state{text-align:center;padding:60px 20px;}
+    .empty-state i{font-size:48px;color:var(--border);margin-bottom:16px;display:block;}
+    .empty-state p{color:var(--muted);font-size:14px;}
+  </style>
+</head>
+<body>
+  <div class="main-wrapper">
+    <header class="header">{% include 'hospital_admin/pharmacist-navbar.html' %}</header>
+    <aside class="sidebar" id="sidebar">{% include 'hospital_admin/pharmacist-sidebar.html' %}</aside>
 
-					<div class="row">
-						 <div class="col-sm-12">
-							 <div class="card">
-								 <div class="card-body">
-									 <div class="table-responsive">
-										<table class="datatable table table-hover table-center mb-0">
-											 <thead>
-												<tr>
-													<th>Medicine Name</th>
-													<th>Stock Quantity</th>
-													<th>Medicine Type</th>
-													<th>Medicine Category</th>
-													<th>Price</th>
-													<th>Each Quantity</th>
-													<th>Edit Medicine</th>
-													<th>Delete Medicine</th>
-												</tr>
-											 </thead>
-											 {% for medicine in medicine %}
-												<tr>
-													<td>
-														<h2 class="table-avatar">
-															<a href="" class="avatar avatar-sm mr-2"><img class="avatar-img rounded-circle" src="{{medicine.featured_image.url}}" alt="Medicine Image"></a>															
-															<a href="">{{medicine.name}}</a>
-														</h2>
-													</td>
-													<td>{{medicine.stock_quantity}}</td>
-													<td>{{medicine.medicine_type}}</td>
-													<td>{{medicine.medicine_category}}</td>
-													<td>{{medicine.price}}</td>
-													<td>{{medicine.quantity}}</td>
-													<td><a href="{% url 'edit-medicine' pk=medicine.serial_number %}" class="btn btn-primary">Edit</a></td>
-													<td><a href="{% url 'delete-medicine' pk=medicine.serial_number %}" onclick="return confirm('Are you sure you want to Delete?');" class="btn btn-danger btn-m">Delete</a></td>
-												</tr>
-											  {% endfor %}
-										</table>
-									</div>
-								</div>
-							</div>	
-					    </div>
-					</div>
-				</div>
-			<!-- /Page Wrapper -->
-		
+    <div class="page-wrapper">
+      <div class="content container-fluid">
+
+        <div class="page-hero">
+          <div class="hero-breadcrumb">
+            <a href="#">Dashboard</a>
+            <span class="sep">/</span>
+            <span class="active">Medicine List</span>
+          </div>
+          <h2 class="hero-title"><i class="fe fe-activity" style="margin-right:8px;"></i>Medicine Inventory</h2>
+          <p class="hero-subtitle">Manage all medicines, their stock, and pricing in the system</p>
         </div>
-		<!-- /Main Wrapper -->
-		
-		<!-- jQuery -->
-        <script src="{% static 'HealthStack-System/js/admin/jquery-3.2.1.min.js' %}"></script> 
-		
-		<!-- Bootstrap Core JS -->
-        <script src="{% static 'HealthStack-System/js/admin/popper.min.js' %}"></script> 
-        <script src="{% static 'HealthStack-System/js/admin/bootstrap.min.js' %}"></script> 
-		
-		<!-- Slimscroll JS -->
-        <script src="{% static 'HealthStack-System/plugins/admin/slimscroll/jquery.slimscroll.min.js' %}"></script>
-		
-		<!-- Datatables JS -->
-		<script src="{% static 'HealthStack-System/plugins/admin/datatables/jquery.dataTables.min.js'%}"></script> 
-		<script src="{% static 'HealthStack-System/plugins/admin/datatables/datatables.min.js'%}"></script>
-		
-		<!-- Custom JS -->
-		<script src="{% static 'HealthStack-System/js/admin/script.js' %}"></script>
-		<script src="{% static 'HealthStack-System/js/Normal/script.js' %}"></script>
-		
-    </body>
 
+        <div class="main-card-wrapper">
+          <div class="main-card">
+            <div class="card-toolbar">
+              <div class="card-toolbar-title">
+                <i class="fe fe-activity" style="color:var(--primary);"></i>
+                All Medicines
+                <span class="badge-count">{{ medicine|length }}</span>
+              </div>
+              <form action="{% url 'medicine-list' %}" method="GET" class="search-wrapper">
+                <i class="fe fe-search"></i>
+                <input type="text" placeholder="Search medicine..." name="search_query" value="{{search_query}}">
+              </form>
+            </div>
+
+            <div class="table-wrap">
+              <div class="table-responsive" style="padding:16px 12px 0;">
+                {% if medicine %}
+                <table class="datatable custom-table">
+                  <thead>
+                    <tr>
+                      <th>Medicine Name</th>
+                      <th>Stock Qty</th>
+                      <th>Type</th>
+                      <th>Category</th>
+                      <th>Price</th>
+                      <th>Each Qty</th>
+                      <th>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for med in medicine %}
+                    <tr>
+                      <td>
+                        <div class="user-cell">
+                          <img class="user-avatar" src="{{ med.featured_image.url }}" alt="{{ med.name }}">
+                          <div><div class="user-name">{{ med.name }}</div></div>
+                        </div>
+                      </td>
+                      <td>
+                        {% if med.stock_quantity > 0 %}
+                          <span class="tag tag-emerald">{{ med.stock_quantity }} in stock</span>
+                        {% else %}
+                          <span class="tag" style="background:rgba(239,68,68,.1);color:var(--danger);">Out of stock</span>
+                        {% endif %}
+                      </td>
+                      <td>{{ med.medicine_type }}</td>
+                      <td><span class="tag tag-blue">{{ med.medicine_category }}</span></td>
+                      <td style="font-weight:600; color:var(--success);">₹{{ med.price }}</td>
+                      <td>{{ med.quantity }}</td>
+                      <td>
+                        <a href="{% url 'edit-medicine' pk=med.serial_number %}" class="btn-action btn-action-primary">
+                          <i class="fas fa-edit"></i> Edit
+                        </a>
+                        <a href="{% url 'delete-medicine' pk=med.serial_number %}" onclick="return confirm('Are you sure you want to Delete?');" class="btn-action btn-action-danger">
+                          <i class="fas fa-trash"></i> Delete
+                        </a>
+                      </td>
+                    </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+                {% else %}
+                <div class="empty-state">
+                  <i class="fe fe-box"></i>
+                  <p>No medicines found in the inventory.</p>
+                </div>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <script src="{% static 'HealthStack-System/js/admin/jquery-3.2.1.min.js' %}"></script>
+  <script src="{% static 'HealthStack-System/js/admin/popper.min.js' %}"></script>
+  <script src="{% static 'HealthStack-System/js/admin/bootstrap.min.js' %}"></script>
+  <script src="{% static 'HealthStack-System/plugins/admin/slimscroll/jquery.slimscroll.min.js' %}"></script>
+  <script src="{% static 'HealthStack-System/plugins/admin/datatables/jquery.dataTables.min.js'%}"></script>
+  <script src="{% static 'HealthStack-System/plugins/admin/datatables/datatables.min.js'%}"></script>
+  <script src="{% static 'HealthStack-System/js/admin/script.js' %}"></script>
+</body>
 </html>

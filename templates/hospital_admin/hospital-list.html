@@ -26,6 +26,7 @@
 		
 		<!-- Main CSS -->
         <link rel="stylesheet" href="{% static 'HealthStack-System/css/admin/style.css'%}"> 
+		<link rel="stylesheet" href="{% static 'HealthStack-System/css/admin/add-hospital.css'%}"> 
 		
 		<!--[if lt IE 9]>
 			<script src="assets/js/html5shiv.min.js"></script>
@@ -54,17 +55,17 @@
 
                 <div class="content container-fluid">
 					<div class="">
-						<a href="{% url 'add-hospital' %}"  class="fe fe-plus btn btn-primary float-right mt-2 ">Add hospital</a>
+						<a href="{% url 'add-hospital' %}"  class="btn submit-btn-modern float-right mt-2" style="width: auto; padding: 10px 20px;"><i class="fe fe-plus"></i> Add hospital</a>
 					</div>
 					<!-- Page Header -->
 					<div class="page-header">
 						<div class="row">
 							<div class="col-sm-12">
-								<h3 class="page-title">List of Hospital</h3>
+								<h3 class="page-title">Hospitals</h3>
 								<ul class="breadcrumb">
-									<li class="breadcrumb-item"><a href="index.html">Dashboard</a></li>
-									<li class="breadcrumb-item"><a href="javascript:(0);">Users</a></li>
-									<li class="breadcrumb-item active">Hospital</li>
+									<li class="breadcrumb-item"><a href="{% url 'admin-dashboard' %}">Dashboard</a></li>
+									<li class="breadcrumb-item"><a href="javascript:(0);">Hospitals</a></li>
+									<li class="breadcrumb-item active">Hospital List</li>
 								</ul>
 								{% include 'message.html' %}
 							</div>
@@ -75,64 +76,57 @@
 					
 					<div class="row">
 						 <div class="col-sm-12">
-							 <div class="card">
+							 <div class="card hospital-form-card">
 								 <div class="card-body">
 									 <div class="table-responsive">
-										<table class="datatable table table-hover table-center mb-0">
-										
-											 
-											 
+										<table class="datatable table table-hover table-center mb-0" style="border-collapse: separate; border-spacing: 0 10px;">
+											<thead style="background: #f8fafc; border-radius: 8px;">
 												<tr style="text-align: center;">
-													<th style="text-align: left;">Hospital Name</th>
-													<th>Address</th>
-													<th>Email</th>
-													<th>Phone Number</th>
-													<th>Hospital Type</th>
-													<th>Edit Hospital</th>
-													<th>Department List</th>
-													<th>Delete Hospital</th>
-													
-													
+													<th style="text-align: left; padding: 15px; border-bottom: none;">Hospital Name</th>
+													<th style="padding: 15px; border-bottom: none;">Address</th>
+													<th style="padding: 15px; border-bottom: none;">Email</th>
+													<th style="padding: 15px; border-bottom: none;">Phone Number</th>
+													<th style="padding: 15px; border-bottom: none;">Hospital Type</th>
+													<th style="padding: 15px; border-bottom: none;">Edit Hospital</th>
+													<th style="padding: 15px; border-bottom: none;">Department List</th>
+													<th style="padding: 15px; border-bottom: none;">Delete Hospital</th>
 												</tr>
-											 
+											</thead>
+											<tbody>
 											 {% for hospital in hospitals %}
-												<tr style="text-align: center;">
-													<td style="text-align: left;">
+												<tr style="text-align: center; background: #ffffff; box-shadow: 0 4px 6px rgba(0,0,0,0.02); transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 12px rgba(0,0,0,0.05)';" onmouseout="this.style.transform='none'; this.style.boxShadow='0 4px 6px rgba(0,0,0,0.02)';">
+													<td style="text-align: left; padding: 15px;">
 														<h2 class="table-avatar">
-															<a href="#" class="avatar avatar-sm mr-2"><img class="avatar-img rounded-circle" src="{{hospital.featured_image.url}}" alt="User Image"></a>															
-															<a href="#">{{hospital.name}}</a>
+															<a href="#" class="avatar avatar-sm mr-2"><img class="avatar-img rounded-circle" src="{{hospital.featured_image.url}}" alt="User Image" style="box-shadow: 0 2px 4px rgba(0,0,0,0.1);"></a>															
+															<a href="#" style="font-weight: 600; color: #1f2937;">{{hospital.name}}</a>
 														</h2>
 													</td>
-													<td>{{hospital.address}}</td>
-													
-													<td>{{hospital.email}}<br>
-													
-													<td>{{hospital.phone_number}}</td>
-
-													<td>{{hospital.hospital_type}}</td>
-													<td><a href="{% url 'edit-hospital' pk=hospital.hospital_id %}" class="btn btn-primary">Edit</a></td>
-													<td><a href="{% url 'department-image-list' pk=hospital.hospital_id%}" class="btn btn-primary">Edit</a></td>
-													<td class="text-center">
+													<td style="padding: 15px; color: #4b5563;">{{hospital.address}}</td>
+													<td style="padding: 15px; color: #4b5563;">{{hospital.email}}</td>
+													<td style="padding: 15px; color: #4b5563;">{{hospital.phone_number}}</td>
+													<td style="padding: 15px;"><span class="badge badge-pill bg-primary-light" style="padding: 8px 12px; font-weight: 600;">{{hospital.hospital_type}}</span></td>
+													<td style="padding: 15px;"><a href="{% url 'edit-hospital' pk=hospital.hospital_id %}" class="btn btn-sm" style="background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); color: white; border: none; box-shadow: 0 4px 10px rgba(59, 130, 246, 0.3); transition: all 0.3s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='none'">Edit</a></td>
+													<td style="padding: 15px;"><a href="{% url 'department-image-list' pk=hospital.hospital_id%}" class="btn btn-sm" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; border: none; box-shadow: 0 4px 10px rgba(16, 185, 129, 0.3); transition: all 0.3s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='none'">Edit</a></td>
+													<td class="text-center" style="padding: 15px;">
 														<div class="actions">
-															<a  data-toggle="modal" data-target="#delete_modal{{hospital.hospital_id}}" class="btn btn-sm bg-danger-light">
+															<a  data-toggle="modal" data-target="#delete_modal{{hospital.hospital_id}}" class="btn btn-sm" style="background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); color: white; border: none; box-shadow: 0 4px 10px rgba(239, 68, 68, 0.3); transition: all 0.3s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='none'">
 																<i class="fe fe-trash"></i> Delete
 															</a>
-															
 														</div>
 													</td>
 												</tr>
 												<div class="modal fade" id="delete_modal{{hospital.hospital_id}}" aria-hidden="true" role="dialog">
 													<form method="POST" action="{% url 'delete-hospital' pk=hospital.hospital_id %}">
 													<div class="modal-dialog modal-dialog-centered" role="document" >
-														<div class="modal-content">
+														<div class="modal-content" style="border-radius: 16px; border: none; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
 															{% csrf_token %}
 																<div class="modal-body">
 																<div class="form-content p-2">
-																	<h4 class="modal-title" style="display:flex;justify-content: center;align-items: center;">Delete</h4>
-																	<p class="mb-4"  style="display:flex;justify-content: center;align-items: center;">Are you sure want to delete?</p>
+																	<h4 class="modal-title" style="display:flex;justify-content: center;align-items: center; font-weight: 700;">Delete</h4>
+																	<p class="mb-4"  style="display:flex;justify-content: center;align-items: center; color: #4b5563;">Are you sure want to delete?</p>
 																	<div style="display:flex;justify-content: center">
-																		<button type="submit" class="btn btn-primary" style="margin-right: 5px;">Save</button>
-																		<button type="button" class="btn btn-danger" style="margin-left: 5px;" data-dismiss="modal">Close</button>
+																		<button type="submit" class="btn" style="margin-right: 5px; background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); color: white; border: none; padding: 10px 20px; border-radius: 8px;">Confirm Delete</button>
+																		<button type="button" class="btn btn-light" style="margin-left: 5px; padding: 10px 20px; border-radius: 8px; border: 1px solid #e5e7eb;" data-dismiss="modal">Close</button>
 																	</div>
 																</div>
 															</div>
@@ -142,8 +136,8 @@
 												</div>	
 		                                 {% endfor %}
 
-	</tbody>
-</table>
+	                                        </tbody>
+                                        </table>
 </div>
 </div>
 </div>

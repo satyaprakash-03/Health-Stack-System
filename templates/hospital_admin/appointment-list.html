@@ -1,379 +1,186 @@
-{% load static%}
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
-    
-<!-- Mirrored from dreamguys.co.in/demo/doccure/admin/appointment-list.html by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 30 Nov 2019 04:12:46 GMT -->
 <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
-        <title>HealthStack</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0" />
+  <title>Appointments – HealthStack Admin</title>
+  <link rel="shortcut icon" type="image/x-icon" href="{% static 'HealthStack-System/images/Normal/favicon.png' %}"/>
+  <link rel="stylesheet" href="{% static 'HealthStack-System/css/admin/bootstrap.min.css'%}">
+  <link rel="stylesheet" href="{% static 'HealthStack-System/css/admin/font-awesome.min.css'%}">
+  <link rel="stylesheet" href="{% static 'HealthStack-System/admin_assets/css/feathericon.min.css'%}">
+  <link rel="stylesheet" href="{% static 'HealthStack-System/plugins/admin/datatables/datatables.min.css'%}">
+  <link rel="stylesheet" href="{% static 'HealthStack-System/css/admin/style.css'%}">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <style>
+    :root { --primary:#4f46e5;--primary-light:#6366f1;--primary-dark:#3730a3;--success:#10b981;--warning:#f59e0b;--danger:#ef4444;--info:#06b6d4;--bg:#f1f5f9;--card:#ffffff;--text:#1e293b;--muted:#64748b;--border:#e2e8f0;--sidebar-w:260px; }
+    *{box-sizing:border-box;}body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);margin:0;}
+    .header{background:linear-gradient(135deg,var(--primary-dark) 0%,var(--primary) 100%);box-shadow:0 4px 20px rgba(79,70,229,.35);position:fixed;top:0;left:0;right:0;z-index:1040;height:64px;}
+    .nav-link,#toggle_btn,.mobile_btn{color:#fff!important;}
+    .sidebar{background:linear-gradient(180deg,#1e1b4b 0%,#312e81 100%);width:var(--sidebar-w);position:fixed;top:64px;bottom:0;overflow-y:auto;z-index:1030;box-shadow:4px 0 20px rgba(0,0,0,.15);}
+    .sidebar::-webkit-scrollbar{width:4px;}.sidebar::-webkit-scrollbar-thumb{background:rgba(255,255,255,.2);border-radius:4px;}
+    .sidebar-inner{padding:16px 0;}.menu-title span{color:rgba(255,255,255,.4);font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;padding:0 20px;}
+    .sidebar-menu ul{padding:0;margin:0;list-style:none;}
+    .sidebar-menu li a{display:flex;align-items:center;gap:10px;padding:11px 20px;color:rgba(255,255,255,.7);font-size:13.5px;font-weight:500;text-decoration:none;border-radius:0 30px 30px 0;margin:2px 12px 2px 0;transition:all .25s;}
+    .sidebar-menu li a:hover,.sidebar-menu li.active>a{background:rgba(255,255,255,.15);color:#fff;}
+    .sidebar-menu li a i{font-size:16px;width:20px;text-align:center;}
+    .sidebar-menu .submenu>ul{background:rgba(0,0,0,.2);border-radius:8px;margin:4px 12px 4px 20px;padding:4px 0;}
+    .sidebar-menu .submenu>ul li a{margin:0;border-radius:6px;font-size:13px;}
+    .page-wrapper{margin-left:var(--sidebar-w);padding-top:64px;min-height:100vh;}.content{padding:28px;}
+    
+    .page-hero{background:linear-gradient(135deg,var(--primary-dark) 0%,var(--primary-light) 100%);border-radius:20px;padding:32px 36px 72px;position:relative;overflow:hidden;box-shadow:0 8px 32px rgba(79,70,229,.3);margin-bottom:0;}
+    .page-hero::before{content:'';position:absolute;top:-60px;right:-60px;width:240px;height:240px;border-radius:50%;background:rgba(255,255,255,.07);}
+    .page-hero::after{content:'';position:absolute;bottom:-80px;left:120px;width:180px;height:180px;border-radius:50%;background:rgba(255,255,255,.05);}
+    .hero-breadcrumb{margin-bottom:12px;}.hero-breadcrumb a,.hero-breadcrumb span{color:rgba(255,255,255,.65);font-size:13px;text-decoration:none;}
+    .hero-breadcrumb .sep{margin:0 8px;color:rgba(255,255,255,.3);}.hero-breadcrumb .active{color:rgba(255,255,255,.4);}
+    .hero-title{color:#fff;font-size:22px;font-weight:700;margin:0;}.hero-subtitle{color:rgba(255,255,255,.65);font-size:13px;margin-top:4px;}
 
-    	<!-- Favicon -->
+    .main-card-wrapper{margin-top:-48px;position:relative;z-index:5;}
+    .main-card{background:var(--card);border-radius:20px;box-shadow:0 8px 40px rgba(0,0,0,.1);border:1px solid var(--border);overflow:hidden;}
+    .card-toolbar{display:flex;align-items:center;justify-content:space-between;padding:20px 28px;border-bottom:1px solid var(--border);flex-wrap:wrap;gap:12px;}
+    .card-toolbar-title{font-size:15px;font-weight:700;color:var(--text);display:flex;align-items:center;gap:8px;}
+    
+    .table-wrap{padding:0 8px 20px;}
+    .custom-table{width:100%;border-collapse:collapse;}
+    .custom-table thead tr{background:#f8fafc;}
+    .custom-table thead th{padding:14px 16px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--muted);border-bottom:2px solid var(--border);white-space:nowrap;}
+    .custom-table tbody tr{border-bottom:1px solid #f1f5f9;transition:background .2s;}
+    .custom-table tbody tr:hover{background:#f8faff;}
+    .custom-table tbody td{padding:14px 16px;font-size:13.5px;color:var(--text);vertical-align:middle;}
+    
+    .user-cell{display:flex;align-items:center;gap:12px;}
+    .user-avatar{width:36px;height:36px;border-radius:50%;object-fit:cover;border:2px solid var(--border);flex-shrink:0;}
+    .user-name{font-weight:600;color:var(--text);font-size:13.5px;}
+    .user-sub{font-size:12px;color:var(--muted);margin-top:2px;}
+    
+    .tag{display:inline-block;padding:3px 12px;border-radius:20px;font-size:11px;font-weight:600;}
+    .tag-blue{background:rgba(59,130,246,.1);color:#3b82f6;}
+    .tag-success{background:rgba(16,185,129,.1);color:#10b981;}
 
-    	<link rel="shortcut icon" type="image/x-icon" href="{% static 'HealthStack-System/images/Normal/favicon.png' %}"/>
+    .switch {position:relative;display:inline-block;width:34px;height:20px;}
+    .switch input {opacity:0;width:0;height:0;}
+    .slider {position:absolute;cursor:pointer;top:0;left:0;right:0;bottom:0;background-color:#ccc;transition:.4s;border-radius:20px;}
+    .slider:before {position:absolute;content:"";height:14px;width:14px;left:3px;bottom:3px;background-color:white;transition:.4s;border-radius:50%;}
+    input:checked + .slider {background-color:var(--success);}
+    input:checked + .slider:before {transform:translateX(14px);}
+  </style>
+</head>
+<body>
+  <div class="main-wrapper">
+    <header class="header">{% include 'hospital_admin/hospital-admin-navbar.html' %}</header>
+    <aside class="sidebar" id="sidebar">{% include 'hospital_admin/hospital-admin-sidebar.html' %}</aside>
 
-		<!-- Bootstrap CSS -->
-        <link rel="stylesheet" href="{% static 'HealthStack-System/css/admin/bootstrap.min.css'%}"> 
-		
-		<!-- Fontawesome CSS -->
-        <link rel="stylesheet" href="{% static 'HealthStack-System/css/admin/font-awesome.min.css'%}">
-		
-		<!-- Feathericon CSS -->
-        <link rel="stylesheet" href="{% static 'HealthStack-System/admin_assets/css/feathericon.min.css'%}"> 
-		
-		<!-- Datatables CSS -->
-		<link rel="stylesheet" href="{% static 'HealthStack-System/plugins/admin/datatables/datatables.min.css'%}"> 
-		
-		<!-- Main CSS -->
-        <link rel="stylesheet" href="{% static 'HealthStack-System/css/admin/style.css'%}"> 
-		
-		<!--[if lt IE 9]>
-			<script src="assets/js/html5shiv.min.js"></script>
-			<script src="assets/js/respond.min.js"></script>
-		<![endif]-->
-    </head>
-    <body>
-	
-		<!-- Main Wrapper -->
-        <div class="main-wrapper">
-		
-			<!-- Header -->
-			<div class="main-wrapper">
-				<header class="header">{% include 'hospital_admin/hospital-admin-navbar.html' %}</header>
-			<!-- /Header -->
-			
-			<!-- Sidebar -->
-            <aside class="sidebar" id="sidebar">
-				{% include 'hospital_admin/hospital-admin-sidebar.html' %} </aside>
-			<!-- /Sidebar -->
-			
-			<!-- Page Wrapper -->
-            <div class="page-wrapper">
-                <div class="content container-fluid">
-				
-					<!-- Page Header -->
-					<div class="page-header">
-						<div class="row">
-							<div class="col-sm-12">
-								<h3 class="page-title">Appointments</h3>
-								<ul class="breadcrumb">
-									<li class="breadcrumb-item"><a href="index.html">Dashboard</a></li>
-									<li class="breadcrumb-item active">Appointments</li>
-								</ul>
-							</div>
-						</div>
-					</div>
-					<!-- /Page Header -->
-					<div class="row">
-						<div class="col-md-12">
-						
-							<!-- Recent Orders -->
-							<div class="card">
-								<div class="card-body">
-									<div class="table-responsive">
-										<table class="datatable table table-hover table-center mb-0">
-											<thead>
-												<tr>
-													<th>Doctor Name</th>
-													<th>Speciality</th>
-													<th>Patient Name</th>
-													<th>Apointment Time</th>
-													<th>Status</th>
-													<th class="text-right">Amount</th>
-												</tr>
-											</thead>
-											<tbody>
-												<tr>
-													<td>
-														<h2 class="table-avatar">
-															<a href="profile.html" class="avatar avatar-sm mr-2"><img class="avatar-img rounded-circle" src="assets/img/doctors/doctor-thumb-01.jpg" alt="User Image"></a>
-															<a href="profile.html">Dr. Ruby Perrin</a>
-														</h2>
-													</td>
-													<td>Dental</td>
-													<td>
-														<h2 class="table-avatar">
-															<a href="profile.html" class="avatar avatar-sm mr-2"><img class="avatar-img rounded-circle" src="assets/img/patients/patient1.jpg" alt="User Image"></a>
-															<a href="profile.html">Charlene Reed </a>
-														</h2>
-													</td>
-													<td>9 Nov 2019 <span class="text-primary d-block">11.00 AM - 11.15 AM</span></td>
-													<td>
-														<div class="status-toggle">
-															<input type="checkbox" id="status_1" class="check" checked>
-															<label for="status_1" class="checktoggle">checkbox</label>
-														</div>
-													</td>
-													<td class="text-right">
-														$200.00
-													</td>
-												</tr>
-												<tr>
-													<td>
-														<h2 class="table-avatar">
-															<a href="profile.html" class="avatar avatar-sm mr-2"><img class="avatar-img rounded-circle" src="assets/img/doctors/doctor-thumb-02.jpg" alt="User Image"></a>
-															<a href="profile.html">Dr. Darren Elder</a>
-														</h2>
-													</td>
-													<td>Dental</td>
-													<td>
-														<h2 class="table-avatar">
-															<a href="profile.html" class="avatar avatar-sm mr-2"><img class="avatar-img rounded-circle" src="assets/img/patients/patient2.jpg" alt="User Image"></a>
-															<a href="profile.html">Travis Trimble </a>
-														</h2>
-													</td>
-													
-													<td>5 Nov 2019 <span class="text-primary d-block">11.00 AM - 11.35 AM</span></td>
-													<td>
-														<div class="status-toggle">
-															<input type="checkbox" id="status_2" class="check" checked>
-															<label for="status_2" class="checktoggle">checkbox</label>
-														</div>
-													</td>
-													<td class="text-right">
-														$300.00
-													</td>
-												</tr>
-												<tr>
-													<td>
-														<h2 class="table-avatar">
-															<a href="profile.html" class="avatar avatar-sm mr-2"><img class="avatar-img rounded-circle" src="assets/img/doctors/doctor-thumb-03.jpg" alt="User Image"></a>
-															<a href="profile.html">Dr. Deborah Angel</a>
-														</h2>
-													</td>
-													<td>Cardiology</td>
-													<td>
-														<h2 class="table-avatar">
-															<a href="profile.html" class="avatar avatar-sm mr-2"><img class="avatar-img rounded-circle" src="assets/img/patients/patient3.jpg" alt="User Image"></a>
-															<a href="profile.html">Carl Kelly</a>
-														</h2>
-													</td>
-													<td>11 Nov 2019 <span class="text-primary d-block">12.00 PM - 12.15 PM</span></td>
-													<td>
-														<div class="status-toggle">
-															<input type="checkbox" id="status_3" class="check" checked>
-															<label for="status_3" class="checktoggle">checkbox</label>
-														</div>
-													</td>
-													<td class="text-right">
-														$150.00
-													</td>
-												</tr>
-												<tr>
-													<td>
-														<h2 class="table-avatar">
-															<a href="profile.html" class="avatar avatar-sm mr-2"><img class="avatar-img rounded-circle" src="assets/img/doctors/doctor-thumb-04.jpg" alt="User Image"></a>
-															<a href="profile.html">Dr. Sofia Brient</a>
-														</h2>
-													</td>
-													<td>Urology</td>
-													<td>
-														<h2 class="table-avatar">
-															<a href="profile.html" class="avatar avatar-sm mr-2"><img class="avatar-img rounded-circle" src="assets/img/patients/patient4.jpg" alt="User Image"></a>
-															<a href="profile.html"> Michelle Fairfax</a>
-														</h2>
-													</td>
-													<td>7 Nov 2019 <span class="text-primary d-block">1.00 PM - 1.20 PM</span></td>
-													<td>
-														<div class="status-toggle">
-															<input type="checkbox" id="status_4" class="check" checked>
-															<label for="status_4" class="checktoggle">checkbox</label>
-														</div>
-													</td>
-													<td class="text-right">
-														$150.00
-													</td>
-												</tr>
-												<tr>
-													<td>
-														<h2 class="table-avatar">
-															<a href="profile.html" class="avatar avatar-sm mr-2"><img class="avatar-img rounded-circle" src="assets/img/doctors/doctor-thumb-05.jpg" alt="User Image"></a>
-															<a href="profile.html">Dr. Marvin Campbell</a>
-														</h2>
-													</td>
-													<td>Orthopaedics</td>
-													<td>
-														<h2 class="table-avatar">
-															<a href="profile.html" class="avatar avatar-sm mr-2"><img class="avatar-img rounded-circle" src="assets/img/patients/patient5.jpg" alt="User Image"></a>
-															<a href="profile.html">Gina Moore</a>
-														</h2>
-													</td>
-													
-													<td>15 Nov 2019 <span class="text-primary d-block">1.00 PM - 1.15 PM</span></td>
-													<td>
-														<div class="status-toggle">
-															<input type="checkbox" id="status_5" class="check" checked>
-															<label for="status_5" class="checktoggle">checkbox</label>
-														</div>
-													</td>
-													<td class="text-right">
-														$200.00
-													</td>
-												</tr>
-												<tr>
-													<td>
-														<h2 class="table-avatar">
-															<a href="profile.html" class="avatar avatar-sm mr-2"><img class="avatar-img rounded-circle" src="assets/img/doctors/doctor-thumb-06.jpg" alt="User Image"></a>
-															<a href="profile.html">Dr. Katharine Berthold</a>
-														</h2>
-													</td>
-													<td>Orthopaedics</td>
-													<td>
-														<h2 class="table-avatar">
-															<a href="profile.html" class="avatar avatar-sm mr-2"><img class="avatar-img rounded-circle" src="assets/img/patients/patient6.jpg" alt="User Image"></a>
-															<a href="profile.html">Elsie Gilley</a>
-														</h2>
-													</td>
-													
-													<td>16 Nov 2019 <span class="text-primary d-block">1.00 PM - 1.15 PM</span></td>
-													<td>
-														<div class="status-toggle">
-															<input type="checkbox" id="status_5" class="check" checked>
-															<label for="status_5" class="checktoggle">checkbox</label>
-														</div>
-													</td>
-													<td class="text-right">
-														$250.00
-													</td>
-												</tr>
-												<tr>
-													<td>
-														<h2 class="table-avatar">
-															<a href="profile.html" class="avatar avatar-sm mr-2"><img class="avatar-img rounded-circle" src="assets/img/doctors/doctor-thumb-07.jpg" alt="User Image"></a>
-															<a href="profile.html">Dr. Linda Tobin</a>
-														</h2>
-													</td>
-													<td>Neurology</td>
-													<td>
-														<h2 class="table-avatar">
-															<a href="profile.html" class="avatar avatar-sm mr-2"><img class="avatar-img rounded-circle" src="assets/img/patients/patient7.jpg" alt="User Image"></a>
-															<a href="profile.html">Joan Gardner</a>
-														</h2>
-													</td>
-													
-													<td>18 Nov 2019 <span class="text-primary d-block">1.10 PM - 1.25 PM</span></td>
-													<td>
-														<div class="status-toggle">
-															<input type="checkbox" id="status_5" class="check" checked>
-															<label for="status_5" class="checktoggle">checkbox</label>
-														</div>
-													</td>
-													<td class="text-right">
-														$260.00
-													</td>
-												</tr>
-												<tr>
-													<td>
-														<h2 class="table-avatar">
-															<a href="profile.html" class="avatar avatar-sm mr-2"><img class="avatar-img rounded-circle" src="assets/img/doctors/doctor-thumb-08.jpg" alt="User Image"></a>
-															<a href="profile.html">Dr. Paul Richard</a>
-														</h2>
-													</td>
-													<td>Dermatology</td>
-													<td>
-														<h2 class="table-avatar">
-															<a href="profile.html" class="avatar avatar-sm mr-2"><img class="avatar-img rounded-circle" src="assets/img/patients/patient8.jpg" alt="User Image"></a>
-															<a href="profile.html"> Daniel Griffing</a>
-														</h2>
-													</td>
-													
-													<td>18 Nov 2019 <span class="text-primary d-block">11.10 AM - 11.25 AM</span></td>
-													<td>
-														<div class="status-toggle">
-															<input type="checkbox" id="status_5" class="check" checked>
-															<label for="status_5" class="checktoggle">checkbox</label>
-														</div>
-													</td>
-													<td class="text-right">
-														$260.00
-													</td>
-												</tr>
-												<tr>
-													<td>
-														<h2 class="table-avatar">
-															<a href="profile.html" class="avatar avatar-sm mr-2"><img class="avatar-img rounded-circle" src="assets/img/doctors/doctor-thumb-09.jpg" alt="User Image"></a>
-															<a href="profile.html">Dr. John Gibbs</a>
-														</h2>
-													</td>
-													<td>Dental</td>
-													<td>
-														<h2 class="table-avatar">
-															<a href="profile.html" class="avatar avatar-sm mr-2"><img class="avatar-img rounded-circle" src="assets/img/patients/patient9.jpg" alt="User Image"></a>
-															<a href="profile.html">Walter Roberson</a>
-														</h2>
-													</td>
-													
-													<td>21 Nov 2019 <span class="text-primary d-block">12.10 PM - 12.25 PM</span></td>
-													<td>
-														<div class="status-toggle">
-															<input type="checkbox" id="status_5" class="check" checked>
-															<label for="status_5" class="checktoggle">checkbox</label>
-														</div>
-													</td>
-													<td class="text-right">
-														$300.00
-													</td>
-												</tr>
-												<tr>
-													<td>
-														<h2 class="table-avatar">
-															<a href="profile.html" class="avatar avatar-sm mr-2"><img class="avatar-img rounded-circle" src="assets/img/doctors/doctor-thumb-10.jpg" alt="User Image"></a>
-															<a href="profile.html">Dr. Olga Barlow</a>
-														</h2>
-													</td>
-													<td>Dental</td>
-													<td>
-														<h2 class="table-avatar">
-															<a href="profile.html" class="avatar avatar-sm mr-2"><img class="avatar-img rounded-circle" src="assets/img/patients/patient10.jpg" alt="User Image"></a>
-															<a href="profile.html">Robert Rhodes</a>
-														</h2>
-													</td>
-													
-													<td>23 Nov 2019 <span class="text-primary d-block">12.10 PM - 12.25 PM</span></td>
-													<td>
-														<div class="status-toggle">
-															<input type="checkbox" id="status_5" class="check" checked>
-															<label for="status_5" class="checktoggle">checkbox</label>
-														</div>
-													</td>
-													<td class="text-right">
-														$300.00
-													</td>
-												</tr>
-											</tbody>
-										</table>
-									</div>
-								</div>
-							</div>
-							<!-- /Recent Orders -->
-							
-						</div>
-					</div>
-				</div>			
-			</div>
-			<!-- /Page Wrapper -->
-		
+    <div class="page-wrapper">
+      <div class="content container-fluid">
+
+        <div class="page-hero">
+          <div class="hero-breadcrumb">
+            <a href="#">Dashboard</a>
+            <span class="sep">/</span>
+            <span class="active">Appointments</span>
+          </div>
+          <h2 class="hero-title"><i class="fe fe-calendar" style="margin-right:8px;"></i>Appointments List</h2>
+          <p class="hero-subtitle">Manage upcoming and past patient appointments</p>
         </div>
-		<!-- /Main Wrapper -->
-		
-		<!-- jQuery -->
-        <script src="{% static 'HealthStack-System/js/admin/jquery-3.2.1.min.js' %}"></script> 
-		
-		<!-- Bootstrap Core JS -->
-        <script src="{% static 'HealthStack-System/js/admin/popper.min.js' %}"></script> 
-        <script src="{% static 'HealthStack-System/js/admin/bootstrap.min.js' %}"></script> 
-		
-		<!-- Slimscroll JS -->
-        <script src="{% static 'HealthStack-System/plugins/admin/slimscroll/jquery.slimscroll.min.js' %}"></script>
-		
-		<!-- Datatables JS -->
-		<script src="{% static 'HealthStack-System/plugins/admin/datatables/jquery.dataTables.min.js'%}"></script> 
-		<script src="{% static 'HealthStack-System/plugins/admin/datatables/datatables.min.js'%}"></script>
-		
-		<!-- Custom JS -->
-		<script src="{% static 'HealthStack-System/js/admin/script.js' %}"></script>
-		
-    </body>
 
-<!-- Mirrored from dreamguys.co.in/demo/doccure/admin/appointment-list.html by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 30 Nov 2019 04:12:49 GMT -->
+        <div class="main-card-wrapper">
+          <div class="main-card">
+            <div class="card-toolbar">
+              <div class="card-toolbar-title">
+                <i class="fe fe-calendar" style="color:var(--primary);"></i>
+                All Appointments
+              </div>
+            </div>
+
+            <div class="table-wrap">
+              <div class="table-responsive" style="padding:16px 12px 0;">
+                <table class="datatable custom-table">
+                  <thead>
+                    <tr>
+                      <th>Doctor</th>
+                      <th>Speciality</th>
+                      <th>Patient</th>
+                      <th>Appointment Time</th>
+                      <th>Status</th>
+                      <th class="text-right">Amount</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>
+                        <div class="user-cell">
+                          <img class="user-avatar" src="{% static 'HealthStack-System/images/Normal/default.jpg' %}" alt="Doctor">
+                          <div>
+                            <div class="user-name">Dr. Ruby Perrin</div>
+                            <div class="user-sub">MBBS, MD</div>
+                          </div>
+                        </div>
+                      </td>
+                      <td><span class="tag tag-blue">Dental</span></td>
+                      <td>
+                        <div class="user-cell">
+                          <img class="user-avatar" src="{% static 'HealthStack-System/images/Normal/default.jpg' %}" alt="Patient">
+                          <div class="user-name">Charlene Reed</div>
+                        </div>
+                      </td>
+                      <td>
+                        <div style="font-weight:600;color:var(--text);">9 Nov 2023</div>
+                        <div style="font-size:12px;color:var(--primary);font-weight:600;">11:00 AM - 11:15 AM</div>
+                      </td>
+                      <td>
+                        <label class="switch">
+                          <input type="checkbox" checked>
+                          <span class="slider"></span>
+                        </label>
+                      </td>
+                      <td class="text-right" style="font-weight:600;color:var(--success);">₹200.00</td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <div class="user-cell">
+                          <img class="user-avatar" src="{% static 'HealthStack-System/images/Normal/default.jpg' %}" alt="Doctor">
+                          <div>
+                            <div class="user-name">Dr. Darren Elder</div>
+                            <div class="user-sub">BDS, MDS</div>
+                          </div>
+                        </div>
+                      </td>
+                      <td><span class="tag tag-blue">Dental</span></td>
+                      <td>
+                        <div class="user-cell">
+                          <img class="user-avatar" src="{% static 'HealthStack-System/images/Normal/default.jpg' %}" alt="Patient">
+                          <div class="user-name">Travis Trimble</div>
+                        </div>
+                      </td>
+                      <td>
+                        <div style="font-weight:600;color:var(--text);">5 Nov 2023</div>
+                        <div style="font-size:12px;color:var(--primary);font-weight:600;">11:00 AM - 11:35 AM</div>
+                      </td>
+                      <td>
+                        <label class="switch">
+                          <input type="checkbox" checked>
+                          <span class="slider"></span>
+                        </label>
+                      </td>
+                      <td class="text-right" style="font-weight:600;color:var(--success);">₹300.00</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <script src="{% static 'HealthStack-System/js/admin/jquery-3.2.1.min.js' %}"></script>
+  <script src="{% static 'HealthStack-System/js/admin/popper.min.js' %}"></script>
+  <script src="{% static 'HealthStack-System/js/admin/bootstrap.min.js' %}"></script>
+  <script src="{% static 'HealthStack-System/plugins/admin/slimscroll/jquery.slimscroll.min.js' %}"></script>
+  <script src="{% static 'HealthStack-System/plugins/admin/datatables/jquery.dataTables.min.js'%}"></script>
+  <script src="{% static 'HealthStack-System/plugins/admin/datatables/datatables.min.js'%}"></script>
+  <script src="{% static 'HealthStack-System/js/admin/script.js' %}"></script>
+</body>
 </html>

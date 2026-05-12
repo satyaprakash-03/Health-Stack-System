@@ -1,6 +1,5 @@
-from django.shortcuts import render
-from django.urls import reverse
 from django.shortcuts import render, HttpResponseRedirect, redirect
+from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
 import random
@@ -9,19 +8,14 @@ from .models import Payment
 from hospital.models import Patient
 from pharmacy.models import Order, Cart
 from doctor.models import Appointment, Prescription, Prescription_test, testCart, testOrder 
-from django.contrib.auth.decorators import login_required
-
 
 from django.core.mail import BadHeaderError, send_mail
 from django.template.loader import render_to_string
 from django.http import HttpResponse
 from django.utils.html import strip_tags
 
-
-# from .models import Patient, User
 from sslcommerz_lib import SSLCOMMERZ
 from django.conf import settings
-
 
 STORE_ID = settings.STORE_ID
 STORE_PASSWORD = settings.STORE_PASSWORD
