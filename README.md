@@ -1,5 +1,8 @@
 # HealthStack System 
 
+<img width="1887" height="861" alt="1" src="https://github.com/user-attachments/assets/e7bcc3d0-28a5-4dba-a782-09b9b8ed1cb8" />
+
+
 HealthStack System is a Django-based healthcare management platform for connecting patients, doctors, hospitals, hospital administrators, lab workers, and pharmacists in one place. The application supports hospital discovery, doctor registration and approval, appointment booking, prescriptions, lab reports, pharmacy ordering, online payments, email notifications, PDF generation, chat, and an AI symptom checker.
 
 This project was built as a Software Engineering project for B.Sc. Computer Science and Engineering.
