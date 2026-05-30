@@ -80,7 +80,23 @@ def schedule_timings(request):
 @csrf_exempt
 @login_required(login_url="doctor-login")
 def patient_id(request):
-    return render(request, 'patient-id.html')
+    try:
+        doctor = Doctor_Information.objects.get(user=request.user)
+    except Doctor_Information.DoesNotExist:
+        messages.error(request, 'Doctor profile not found.')
+        return redirect('hospital_home')
+
+    # Get unique patients associated with this doctor through appointments
+    patient_ids = Appointment.objects.filter(doctor=doctor).values_list('patient_id', flat=True).distinct()
+    patients = Patient.objects.filter(patient_id__in=patient_ids)
+    total_patients = patients.count()
+
+    context = {
+        'doctor': doctor,
+        'patients': patients,
+        'total_patients': total_patients,
+    }
+    return render(request, 'patient-id.html', context)
 
 @csrf_exempt
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
@@ -184,7 +200,7 @@ def doctor_dashboard(request):
 @login_required(login_url="doctor-login")
 def appointments(request):
     doctor = Doctor_Information.objects.get(user=request.user)
-    appointments = Appointment.objects.filter(doctor=doctor).filter(appointment_status='pending').order_by('date')
+    appointments = Appointment.objects.filter(doctor=doctor).filter(Q(appointment_status='pending') | Q(appointment_status='confirmed')).order_by('date')
     context = {'doctor': doctor, 'appointments': appointments}
     return render(request, 'appointments.html', context) 
  
@@ -440,13 +456,17 @@ def booking(request, pk):
         appointment_type = request.POST['appointment_type']
         message = request.POST['message']
 
-    
-        transformed_date = datetime.datetime.strptime(date, '%m/%d/%Y').strftime('%Y-%m-%d')
-        transformed_date = str(transformed_date)
+        try:
+            transformed_date = datetime.datetime.strptime(date, '%m/%d/%Y').strftime('%Y-%m-%d')
+        except ValueError:
+            try:
+                transformed_date = datetime.datetime.strptime(date, '%Y-%m-%d').strftime('%Y-%m-%d')
+            except ValueError:
+                transformed_date = date
          
         appointment.date = transformed_date
         appointment.time = time
-        appointment.appointment_status = 'pending'
+        appointment.appointment_status = 'confirmed'
         appointment.serial_number = generate_random_string()
         appointment.appointment_type = appointment_type
         appointment.message = message
@@ -479,12 +499,42 @@ def booking(request, pk):
             except BadHeaderError:
                 return HttpResponse('Invalid header found')
         
-        
-        messages.success(request, 'Appointment Booked')
-        return redirect('patient-dashboard')
+        messages.success(request, 'Appointment Booked Successfully!')
+        return redirect('appointment-letter', appointment_id=appointment.id)
 
     context = {'patient': patient, 'doctor': doctor}
     return render(request, 'booking.html', context)
+
+@csrf_exempt
+@login_required(login_url="login")
+def appointment_letter(request, appointment_id):
+    try:
+        appointment = Appointment.objects.get(id=appointment_id)
+    except Appointment.DoesNotExist:
+        messages.error(request, 'Appointment not found.')
+        return redirect('patient-dashboard')
+        
+    # Ensure only the corresponding patient or doctor can access the letter
+    if request.user.is_patient:
+        patient = request.user.patient
+        if appointment.patient != patient:
+            messages.error(request, 'Access denied.')
+            return redirect('patient-dashboard')
+    elif request.user.is_doctor:
+        doctor = Doctor_Information.objects.get(user=request.user)
+        if appointment.doctor != doctor:
+            messages.error(request, 'Access denied.')
+            return redirect('doctor-dashboard')
+    else:
+        messages.error(request, 'Access denied.')
+        return redirect('hospital_home')
+
+    context = {
+        'appointment': appointment,
+        'patient': appointment.patient,
+        'doctor': appointment.doctor,
+    }
+    return render(request, 'appointment-letter.html', context)
 
 @csrf_exempt
 @login_required(login_url="doctor-login")
@@ -640,15 +690,29 @@ def report_pdf(request, pk):
 #     return render(request, 'testing.html', context)
 
 @csrf_exempt
-@login_required(login_url="login")
+@login_required(login_url="doctor-login")
 def patient_search(request, pk):
     if request.user.is_authenticated and request.user.is_doctor:
-        doctor = Doctor_Information.objects.get(doctor_id=pk)
-        id = int(request.GET['search_query'])
-        patient = Patient.objects.get(patient_id=id)
-        prescription = Prescription.objects.filter(doctor=doctor).filter(patient=patient)
-        context = {'patient': patient, 'doctor': doctor, 'prescription': prescription}
-        return render(request, 'patient-profile.html', context)
+        try:
+            doctor = Doctor_Information.objects.get(doctor_id=pk)
+        except Doctor_Information.DoesNotExist:
+            messages.error(request, 'Doctor profile not found.')
+            return redirect('doctor-dashboard')
+
+        search_query = request.GET.get('search_query', '').strip()
+        if not search_query:
+            messages.error(request, 'Please enter a Patient ID.')
+            return redirect('patient-id')
+
+        try:
+            id = int(search_query)
+            patient = Patient.objects.get(patient_id=id)
+            prescription = Prescription.objects.filter(doctor=doctor).filter(patient=patient)
+            context = {'patient': patient, 'doctor': doctor, 'prescription': prescription}
+            return render(request, 'patient-profile.html', context)
+        except (ValueError, Patient.DoesNotExist):
+            messages.error(request, f'No patient found with ID: {search_query}')
+            return redirect('patient-id')
     else:
         logout(request)
         messages.info(request, 'Not Authorized')

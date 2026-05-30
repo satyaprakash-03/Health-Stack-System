@@ -13,9 +13,9 @@ setuptools.setup(
     long_description_content_type = "text/markdown",
 
     # ── Author Info ───────────────────────────────────────────────
-    author       = "SSLCOMMERZ Developers",
-    author_email = "sajan.sslwireless@gmail.com",
-    url          = "https://github.com/sajanPoddar/sslcommerz-lib-py",
+    author       = "Satyaprakash Prajapati",
+    author_email = "satyaprakash.in33@gmail.com",
+    url          = "https://github.com/satyaprakash-03/Health-Stack-System",
 
     # ── Keywords & Packages ───────────────────────────────────────
     keywords = ["sslcommerz", "payment", "gateway", "bangladesh", "fintech"],

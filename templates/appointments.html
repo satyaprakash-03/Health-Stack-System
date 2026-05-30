@@ -90,7 +90,7 @@
                 {% for app in appointments %}
                 <div class="appointment-list">
                   <div class="profile-info-widget">
-                    <a href="patient-profile.html" class="booking-doc-img">
+                    <a href="{% url 'patient-profile' pk=app.patient.patient_id %}" class="booking-doc-img">
                       <img
                         src="{{app.patient.featured_image.url}}"
                         alt="User Image"
@@ -130,9 +130,13 @@
                       </div>
                     </div>
                   </div>
-                  <div class="appointment-action">
+                   <div class="appointment-action">
                     <a href="#" class="btn btn-sm bg-info-light" data-toggle="modal" data-target="#appt_details"><i class="far fa-eye"></i> View</a>
+                    {% if app.appointment_status == 'pending' %}
                     <a href="{% url 'accept-appointment' pk=app.id %}" onclick="return confirm('Accept appointment?');" class="btn btn-sm bg-success-light"><i class="fas fa-check"></i> Accept</a>
+                    {% else %}
+                    <span class="badge badge-pill bg-success-light" style="padding: 7px 12px; font-size: 13px;"><i class="fas fa-check"></i> Confirmed</span>
+                    {% endif %}
                     <a href="{% url 'reject-appointment' pk=app.id %}" onclick="return confirm('Reject Appointment?');" class="btn btn-sm bg-danger-light"><i class="fas fa-times"></i> Reject</a>
                   </div>
                   

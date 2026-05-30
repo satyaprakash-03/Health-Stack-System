@@ -1,0 +1,405 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0" />
+    <title>Appointment Letter — HealthStack</title>
+
+    <!-- Favicon -->
+    <link type="image/x-icon" href="{% static 'HealthStack-System/images/Normal/favicon.png' %}" rel="icon" />
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="{% static 'HealthStack-System/css/Normal/bootstrap.min.css' %}" />
+
+    <!-- Fontawesome CSS -->
+    <link rel="stylesheet" href="{% static 'HealthStack-System/plugins/Normal/fontawesome/css/fontawesome.min.css' %}" />
+    <link rel="stylesheet" href="{% static 'HealthStack-System/plugins/Normal/fontawesome/css/all.min.css' %}" />
+
+    <!-- Main CSS -->
+    <link rel="stylesheet" href="{% static 'HealthStack-System/css/Normal/style.css' %}" />
+
+    <style>
+      body {
+        font-family: 'Inter', sans-serif;
+        background-color: #f4f7f6;
+      }
+      .letter-title {
+        font-family: 'Outfit', sans-serif;
+        font-weight: 700;
+        color: #0f172a;
+      }
+      .letter-card {
+        background: #ffffff;
+        border: none;
+        border-radius: 18px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+        overflow: hidden;
+      }
+      .letter-header {
+        background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+        padding: 35px;
+        color: #ffffff;
+        position: relative;
+      }
+      .letter-header::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 8px;
+        background: #10b981;
+      }
+      .letter-logo {
+        max-height: 55px;
+        border-radius: 6px;
+      }
+      .hospital-meta h3 {
+        font-family: 'Outfit', sans-serif;
+        font-weight: 700;
+        margin-bottom: 2px;
+        letter-spacing: -0.5px;
+      }
+      .section-title {
+        font-family: 'Outfit', sans-serif;
+        font-weight: 600;
+        color: #1e3a8a;
+        border-bottom: 2px solid #e2e8f0;
+        padding-bottom: 8px;
+        margin-bottom: 18px;
+        font-size: 1.1rem;
+      }
+      .detail-row {
+        margin-bottom: 12px;
+      }
+      .detail-label {
+        font-weight: 600;
+        color: #64748b;
+        font-size: 0.85rem;
+        text-transform: uppercase;
+        margin-bottom: 2px;
+      }
+      .detail-value {
+        color: #1e293b;
+        font-weight: 500;
+        font-size: 0.95rem;
+      }
+      .serial-box {
+        background: #f8fafc;
+        border: 2px dashed #cbd5e1;
+        border-radius: 12px;
+        padding: 15px;
+        text-align: center;
+      }
+      .serial-box span {
+        display: block;
+        font-size: 0.75rem;
+        color: #64748b;
+        font-weight: 600;
+        text-transform: uppercase;
+      }
+      .serial-box h2 {
+        font-family: 'Outfit', sans-serif;
+        font-weight: 800;
+        color: #0f172a;
+        margin: 5px 0 0 0;
+        letter-spacing: 1px;
+      }
+      .status-badge {
+        font-size: 0.8rem;
+        padding: 6px 12px;
+        border-radius: 50px;
+        font-weight: 600;
+      }
+      .status-confirmed {
+        background-color: #ecfdf5;
+        color: #047857;
+      }
+      .status-pending {
+        background-color: #fffbef;
+        color: #b45309;
+      }
+      .btn-action {
+        font-family: 'Outfit', sans-serif;
+        font-weight: 600;
+        padding: 12px 25px;
+        border-radius: 10px;
+        transition: all 0.2s ease-in-out;
+      }
+      .btn-print {
+        background: #1e3a8a;
+        border: none;
+        color: #ffffff;
+      }
+      .btn-print:hover {
+        background: #1d4ed8;
+        transform: translateY(-2px);
+      }
+      .btn-dashboard {
+        background: #e2e8f0;
+        border: none;
+        color: #334155;
+      }
+      .btn-dashboard:hover {
+        background: #cbd5e1;
+        transform: translateY(-2px);
+      }
+
+      /* Print stylesheet override */
+      @media print {
+        header.header, footer, .breadcrumb-bar, .actions-row {
+          display: none !important;
+        }
+        body {
+          background-color: #ffffff !important;
+          padding: 0 !important;
+        }
+        .container {
+          max-width: 100% !important;
+          width: 100% !important;
+          padding: 0 !important;
+        }
+        .letter-card {
+          box-shadow: none !important;
+          border: 1px solid #cbd5e1 !important;
+        }
+        .letter-header {
+          background: #1e3a8a !important;
+          color: #ffffff !important;
+          -webkit-print-color-adjust: exact;
+          print-color-adjust: exact;
+        }
+        .letter-header::after {
+          background: #10b981 !important;
+          -webkit-print-color-adjust: exact;
+          print-color-adjust: exact;
+        }
+        .status-badge {
+          border: 1px solid #cbd5e1 !important;
+          -webkit-print-color-adjust: exact;
+          print-color-adjust: exact;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Main Wrapper -->
+    <div class="main-wrapper">
+      <!-- Header -->
+      <header class="header">
+        {% include 'patient_navbar.html' %}
+      </header>
+      <!-- /Header -->
+
+      <!-- Breadcrumb -->
+      <div class="breadcrumb-bar">
+        <div class="container-fluid">
+          <div class="row align-items-center">
+            <div class="col-md-12 col-12">
+              <nav aria-label="breadcrumb" class="page-breadcrumb">
+                <ol class="breadcrumb">
+                  <li class="breadcrumb-item"><a href="{% url 'patient-dashboard' %}">Home</a></li>
+                  <li class="breadcrumb-item active" aria-current="page">Appointment Letter</li>
+                </ol>
+              </nav>
+              <h2 class="breadcrumb-title">Appointment Confirmation</h2>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- /Breadcrumb -->
+
+      <!-- Page Content -->
+      <div class="content py-5">
+        <div class="container">
+          <div class="row justify-content-center">
+            <div class="col-lg-9 col-md-12">
+              
+              <!-- Message toasts -->
+              {% include 'message.html' %}
+
+              <!-- Appointment Letter Card -->
+              <div class="card letter-card mb-4">
+                
+                <!-- Card Header -->
+                <div class="letter-header">
+                  <div class="row align-items-center">
+                    <div class="col-md-7">
+                      <div class="hospital-meta">
+                        <h3>HealthStack Clinical Network</h3>
+                        <p class="mb-0 text-white-50"><i class="fas fa-hospital-alt"></i> Leading Healthcare Provider</p>
+                      </div>
+                    </div>
+                    <div class="col-md-5 text-md-right mt-3 mt-md-0">
+                      <span class="status-badge status-confirmed"><i class="fas fa-check-circle"></i> APPOINTMENT BOOKED</span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Card Body -->
+                <div class="card-body p-5">
+                  
+                  <div class="row mb-4">
+                    <div class="col-12 text-center mb-4">
+                      <h2 class="letter-title">Appointment Confirmed</h2>
+                      <p class="text-muted">Your appointment request was booked directly. Below is your official appointment letter.</p>
+                    </div>
+                  </div>
+
+                  <div class="row mb-5">
+                    <!-- Left Column: Patient Details -->
+                    <div class="col-md-6 mb-4 mb-md-0">
+                      <h4 class="section-title"><i class="fas fa-user-injured mr-2"></i> Patient Information</h4>
+                      
+                      <div class="detail-row">
+                        <div class="detail-label">Full Name</div>
+                        <div class="detail-value">{{ patient.name }}</div>
+                      </div>
+
+                      <div class="detail-row">
+                        <div class="detail-label">Age / Gender</div>
+                        <div class="detail-value">{{ patient.age }} Years / {{ patient.gender|default:"Not specified" }}</div>
+                      </div>
+
+                      <div class="detail-row">
+                        <div class="detail-label">Contact Number</div>
+                        <div class="detail-value">+880{{ patient.phone_number }}</div>
+                      </div>
+
+                      <div class="detail-row">
+                        <div class="detail-label">Email Address</div>
+                        <div class="detail-value">{{ patient.email }}</div>
+                      </div>
+                    </div>
+
+                    <!-- Right Column: Doctor Details -->
+                    <div class="col-md-6">
+                      <h4 class="section-title"><i class="fas fa-user-md mr-2"></i> Medical Specialist</h4>
+                      
+                      <div class="detail-row">
+                        <div class="detail-label">Consulting Doctor</div>
+                        <div class="detail-value">Dr. {{ doctor.name }}</div>
+                      </div>
+
+                      <div class="detail-row">
+                        <div class="detail-label">Specialization</div>
+                        <div class="detail-value">{{ doctor.specialization.specialization_name|default:doctor.department }}</div>
+                      </div>
+
+                      <div class="detail-row">
+                        <div class="detail-label">Clinic/Hospital</div>
+                        <div class="detail-value">{{ doctor.hospital_name.hospital_name }}</div>
+                      </div>
+
+                      <div class="detail-row">
+                        <div class="detail-label">Visiting Hours</div>
+                        <div class="detail-value">{{ doctor.visiting_hour|default:"Available during schedule" }}</div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="row mb-4">
+                    <!-- Appointment Details -->
+                    <div class="col-md-8">
+                      <h4 class="section-title"><i class="fas fa-calendar-alt mr-2"></i> Schedule & Details</h4>
+                      <div class="row">
+                        <div class="col-6 mb-3">
+                          <div class="detail-label">Date</div>
+                          <div class="detail-value font-weight-bold text-primary">{{ appointment.date }}</div>
+                        </div>
+                        <div class="col-6 mb-3">
+                          <div class="detail-label">Time Slot</div>
+                          <div class="detail-value font-weight-bold text-primary">{{ appointment.time }}</div>
+                        </div>
+                        <div class="col-6 mb-3">
+                          <div class="detail-label">Purpose of Visit</div>
+                          <div class="detail-value text-capitalize">{{ appointment.appointment_type }}</div>
+                        </div>
+                        <div class="col-6 mb-3">
+                          <div class="detail-label">Payment Status</div>
+                          <div class="detail-value">
+                            {% if appointment.payment_status == 'VALID' %}
+                            <span class="badge badge-pill badge-success" style="font-size: 0.8rem; padding: 4px 10px;">Paid</span>
+                            {% else %}
+                            <span class="badge badge-pill badge-warning" style="font-size: 0.8rem; padding: 4px 10px;">Pending Payment</span>
+                            {% endif %}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- Serial / ID Number -->
+                    <div class="col-md-4 align-self-center">
+                      <div class="serial-box">
+                        <span>Appointment Ticket ID</span>
+                        <h2>#APT{{ appointment.serial_number }}</h2>
+                      </div>
+                    </div>
+                  </div>
+
+                  {% if appointment.message %}
+                  <div class="row mb-4">
+                    <div class="col-12">
+                      <h4 class="section-title"><i class="far fa-comment-dots mr-2"></i> Message/Note</h4>
+                      <div class="bg-light p-3 rounded" style="border-left: 4px solid #3b82f6;">
+                        <p class="mb-0 text-muted italic">"{{ appointment.message }}"</p>
+                      </div>
+                    </div>
+                  </div>
+                  {% endif %}
+
+                  <!-- Important Instructions -->
+                  <div class="row mt-5">
+                    <div class="col-12">
+                      <div class="card bg-light border-0">
+                        <div class="card-body">
+                          <h5 class="font-weight-bold text-dark mb-3"><i class="fas fa-info-circle text-info mr-2"></i> Important Instructions:</h5>
+                          <ul class="mb-0 text-muted" style="padding-left: 20px; font-size: 0.88rem; line-height: 1.6;">
+                            <li>Please present a copy (digital or printed) of this appointment letter at the hospital reception.</li>
+                            <li>Arrive at least 15 minutes before your scheduled slot for registration formalities.</li>
+                            <li>If you need to reschedule or cancel, please contact clinical support or perform it through your dashboard.</li>
+                            <li>Carry your previous health records, reports, and ongoing prescription files if applicable.</li>
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+
+              <!-- Action Buttons -->
+              <div class="row actions-row">
+                <div class="col-12 text-center">
+                  <button onclick="window.print();" class="btn btn-action btn-print mr-3">
+                    <i class="fas fa-print mr-2"></i> Print Letter
+                  </button>
+                  <a href="{% url 'patient-dashboard' %}" class="btn btn-action btn-dashboard">
+                    <i class="fas fa-columns mr-2"></i> Return to Dashboard
+                  </a>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- /Page Content -->
+
+      <!-- Footer -->
+      {% include 'footer.html' %}
+      <!-- /Footer -->
+    </div>
+    <!-- /Main Wrapper -->
+
+    <!-- jQuery -->
+    <script src="{% static 'HealthStack-System/js/Normal/jquery.min.js' %}"></script>
+    <!-- Bootstrap Core JS -->
+    <script src="{% static 'HealthStack-System/js/Normal/popper.min.js' %}"></script>
+    <script src="{% static 'HealthStack-System/js/Normal/bootstrap.min.js' %}"></script>
+  </body>
+</html>

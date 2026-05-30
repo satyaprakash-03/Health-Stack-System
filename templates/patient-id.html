@@ -71,33 +71,75 @@
                         
                           
 						<div class="col-md-7 col-lg-8 col-xl-9" >
-							<div class="card">
-								<div class="card-body">
-									<!-- <div class="wrapper">
-										<div class="container">
-										  <form role="search" method="get" class="search-form form" action="">
-											<label>
-												<span class="screen-reader-text">Search for...</span>
-												<input type="search" class="search-field" placeholder="Patient ID" value="" name="s" title="" />
-											</label>
-											<input type="submit" class="search-submit button" value="&#xf002" />
-										</form>
+							<!-- Messages Block -->
+							{% include 'message.html' %}
+
+							<!-- Search Card -->
+							<div class="card shadow-sm mb-4" style="border-radius: 12px; border: 1px solid #e2e8f0;">
+								<div class="card-body p-4 text-center">
+									<h3 class="mb-3" style="font-weight: 700; color: #1e3a8a;"><i class="fas fa-search-plus mr-2"></i>Search Patient by ID</h3>
+									<p class="text-muted">Enter the unique Patient ID to view their full profile, prescriptions, and reports.</p>
+									<div class="row justify-content-center mt-4">
+										<div class="col-md-8 col-12">
+											<form action="{% url 'patient-search' pk=doctor.doctor_id %}" method="GET" class="d-flex">
+												<input type="text" name="search_query" class="form-control form-control-lg mr-2" placeholder="Enter Patient ID (e.g. 1)" style="border-radius: 8px;" required>
+												<button type="submit" class="btn btn-primary btn-lg" style="border-radius: 8px; font-weight: 600; padding: 0 25px;">Search</button>
+											</form>
 										</div>
-									</div>-->
-									
-									<div class="searchbar1">
-									<input class="c-checkbox" type="checkbox" id="checkbox">
-									<div class="c-formContainer">
-										<h2 style="text-align: center;">Patient ID</h2>
-										<br>
-									  	<form class="c-form" action="#">
-									    	<input class="c-form__input" placeholder="Patient ID">
-									    	<label class="c-form__buttonLabel" for="checkbox">
-									      		<button class="c-form__button" type="submit">Search</button>
-									    	</label>
-									    	<label class="c-form__toggle" for="checkbox" data-title="Search"></label>
-									  	</form>
 									</div>
+								</div>
+							</div>
+
+							<!-- Patients Table Card -->
+							<div class="card card-table shadow-sm" style="border-radius: 12px; border: 1px solid #e2e8f0; overflow: hidden;">
+								<div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
+									<h4 class="card-title mb-0" style="font-weight: 700; color: #0f172a;"><i class="fas fa-user-injured mr-2 text-primary"></i>My Patients List</h4>
+									<span class="badge badge-pill badge-primary" style="font-size: 0.9rem; padding: 6px 12px;">Total Patients: {{ total_patients }}</span>
+								</div>
+								<div class="card-body">
+									<div class="table-responsive">
+										<table class="table table-hover table-center mb-0">
+											<thead>
+												<tr style="background: #f8fafc; border-bottom: 2px solid #e2e8f0;">
+													<th>Patient ID</th>
+													<th>Patient Details</th>
+													<th>Age / Gender</th>
+													<th>Contact Number</th>
+													<th>Home Address</th>
+													<th class="text-right">Action</th>
+												</tr>
+											</thead>
+											<tbody>
+												{% for pat in patients %}
+												<tr>
+													<td><span class="font-weight-bold">#PT{{ pat.patient_id }}</span></td>
+													<td>
+														<h2 class="table-avatar mb-0">
+															<a href="{% url 'patient-profile' pk=pat.patient_id %}" class="avatar avatar-sm mr-2">
+																<img class="avatar-img rounded-circle" src="{{ pat.featured_image.url }}" alt="User Image">
+															</a>
+															<a href="{% url 'patient-profile' pk=pat.patient_id %}" class="font-weight-bold text-dark">{{ pat.name }}</a>
+														</h2>
+													</td>
+													<td>{{ pat.age }} Years / {{ pat.gender|default:"Not specified" }}</td>
+													<td>+880{{ pat.phone_number }}</td>
+													<td>{{ pat.address }}</td>
+													<td class="text-right">
+														<a href="{% url 'patient-profile' pk=pat.patient_id %}" class="btn btn-sm bg-info-light">
+															<i class="far fa-eye"></i> View Profile
+														</a>
+													</td>
+												</tr>
+												{% empty %}
+												<tr>
+													<td colspan="6" class="text-center text-muted py-4">
+														<i class="fas fa-user-times fa-2x mb-2 d-block text-black-50"></i>
+														No patients found in your records.
+													</td>
+												</tr>
+												{% endfor %}
+											</tbody>
+										</table>
 									</div>
 								</div>
 							</div>

@@ -280,12 +280,10 @@ python manage.py createsuperuser
 python manage.py collectstatic
 ```
 
-## Contributors
+## Author
 
-- Satyaprakash Prajapati
-- Shivam Dubey
-- Swapnil Tripathi
+- **Satyaprakash Prajapati** (Developer)
 
 ## License
 
-No license file is currently included in this working tree. Add a `LICENSE` file before distributing or publishing the project.
+This project is licensed under the MIT License - see the `LICENSE` file for details.
