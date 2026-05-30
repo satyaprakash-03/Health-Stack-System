@@ -33,7 +33,7 @@ SECRET_KEY = env('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env('DEBUG')
 
-ALLOWED_HOSTS = ['192.168.0.100', '127.0.0.1','5749-103-109-53-5.in.ngrok.io']
+ALLOWED_HOSTS = ['192.168.0.100', '127.0.0.1', '5749-103-109-53-5.in.ngrok.io', '.pythonanywhere.com', 'localhost']
 # ALLOWED_HOSTS = ['mobile view', 'local host','ngrok -- keeps on changing']
 
 # Application definition
@@ -80,7 +80,7 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
-            os.path.join(BASE_DIR, 'templates')
+            str(BASE_DIR.parent / 'frontend' / 'templates')
         ],
         'APP_DIRS': True,
         'OPTIONS': {
@@ -145,11 +145,13 @@ USE_TZ = True
 STATIC_URL = 'static/'
 MEDIA_URL = '/images/'
 
-MEDIA_ROOT = os.path.join(BASE_DIR, 'static/images')
+MEDIA_ROOT = str(BASE_DIR.parent / 'frontend' / 'static' / 'images')
 
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static')
+    str(BASE_DIR.parent / 'frontend' / 'static')
 ]
+
+STATIC_ROOT = str(BASE_DIR.parent / 'staticfiles')
 
 ### SSLCOMMERZ env variables
 #VARIABLE should be in capital letter.
